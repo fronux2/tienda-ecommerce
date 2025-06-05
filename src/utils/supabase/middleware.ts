@@ -15,7 +15,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
           })
@@ -61,5 +61,29 @@ export async function updateSession(request: NextRequest) {
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
 
+  const { data: usuario, error } = await supabase
+    .from('usuarios')
+    .select('rol_id') // Puedes hacer 'rol_id, roles(nombre)' si hiciste la relación
+    .eq('id', user?.id)
+    .single()
+
+  if (error || !usuario) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  const rolId = usuario.rol_id
+
+  // 👮‍♂️ Protege rutas según el rol
+  const pathname = request.nextUrl.pathname
+
+  // Ejemplo: Solo rol_id 1 (admin) puede acceder a /admin
+  if (pathname.startsWith('/admin') && rolId !== 2) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/unauthorized'
+    return NextResponse.redirect(url)
+  }
+  
   return supabaseResponse
 }
