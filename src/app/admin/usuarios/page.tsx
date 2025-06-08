@@ -18,7 +18,7 @@ export default async function Page() {
             </tr>
           </thead>
           <tbody>
-            {usuarios.map((usuario, index) => (
+            {usuarios.map((usuario) => (
               <tr key={usuario.id} className="">
                 <td className="px-4 py-2 border">{usuario.id}</td>
                 <td className="px-4 py-2 border">{usuario.email}</td>

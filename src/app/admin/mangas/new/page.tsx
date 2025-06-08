@@ -2,11 +2,11 @@
 import { nuevoMangaSchema, NuevoManga } from "@/schemas/mangasSchema";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from "react-hook-form";
-import { getCategoriasClient } from "@/lib/supabase/services/categorias";
-import { getSeriesClient } from "@/lib/supabase/services/series";
+import { getCategoriasClient } from "@/lib/supabase/services/categorias.client";
+import { getSeriesClient } from "@/lib/supabase/services/series.client";
 import { useEffect,useState } from "react";
 import { type Categoria, type Serie } from "@/types/supabase";
-import { crearManga } from "@/lib/supabase/services/mangas";
+import { crearManga } from "@/lib/supabase/services/mangas.client";
 
 export default function Page() {
 

@@ -4,7 +4,7 @@ import { } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { seriesSchema, SeriesSchema } from "@/schemas/seriesSchema";
-import agregarNuevaSerie from "@/lib/supabase/services/series";
+import agregarNuevaSerie from "@/lib/supabase/services/series.client";
 export default function Page() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);

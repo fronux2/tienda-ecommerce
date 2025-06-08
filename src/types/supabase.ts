@@ -6,7 +6,7 @@ export type Roles = {
 export type Usuario = {
   id: string
   email: string
-  roles: Roles
+  roles: Roles[]
 }
 
 export type NuevoUsuario = {
@@ -74,6 +74,27 @@ export type NuevoManga = {
   fecha_publicacion: string
   estado: string
   activo: boolean
+  fecha_creacion?: string
+}
+
+export type UpdateManga = {
+  id?: string | undefined
+  titulo?: string
+  autor?: string
+  editorial?: string
+  categoria_id?: string
+  serie_id?: string
+  volumen?: number
+  descripcion?: string
+  precio?: number
+  stock?: number
+  imagen_portada?: string
+  isbn?: string
+  numero_paginas?: number
+  idioma?: string
+  fecha_publicacion?: string
+  estado?: string
+  activo?: boolean
   fecha_creacion?: string
 }
 
