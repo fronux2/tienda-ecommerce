@@ -5,8 +5,13 @@ export type Rol = {
 
 export type Usuario = {
   id: string
-  email: string | null
+  email: string
   rol_id: number
+}
+
+export type NuevoUsuario = {
+  email: string
+  password: string
 }
 
 export type Categoria = {
@@ -17,19 +22,59 @@ export type Categoria = {
 export type Serie = {
   id: string
   nombre: string
+  descripcion: string
+  autor: string
+  estado: string
+  imagen_serie: string  
+}
+
+export type NuevaSerie = {
+  nombre: string
+  descripcion: string
+  autor: string
+  estado: string
+  imagen_serie: string  
 }
 
 export type Manga = {
   id: string
-  nombre: string
+  titulo: string
+  autor: string
+  editorial: string
+  categoria_id: string
+  serie_id: string
+  volumen: string
   descripcion: string
   precio: number
   stock: number
-  imagen_url: string
+  imagen_portada: string
+  isbn: string
+  numero_paginas: number
+  idioma: string
+  fecha_publicacion: string
+  estado: string
+  activo: boolean
+  fecha_creacion?: string
+}
+
+export type NuevoManga = {
+  titulo: string
+  autor: string
+  editorial: string
   categoria_id: string
-  categoria?: Categoria
-  serie_id?: string
-  serie?: Serie
+  serie_id: string
+  volumen: number
+  descripcion: string
+  precio: number
+  stock: number
+  imagen_portada: string
+  isbn: string
+  numero_paginas: number
+  idioma: string
+  fecha_publicacion: string
+  estado: string
+  activo: boolean
+  fecha_creacion?: string
 }
 
 export type Pedido = {
