@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/client';
 import { type NuevoManga } from '@/types/supabase';
 
 export async function getMangas() {
-  const supabase = await createClient();
+  const supabase = await createClientServer();
   const { data, error } = await supabase
     .from('mangas')
     .select('*')

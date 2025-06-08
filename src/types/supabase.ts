@@ -1,4 +1,4 @@
-export type Rol = {
+export type Roles = {
   id: number
   nombre: string
 }
@@ -6,7 +6,7 @@ export type Rol = {
 export type Usuario = {
   id: string
   email: string
-  rol_id: number
+  roles: Roles
 }
 
 export type NuevoUsuario = {
