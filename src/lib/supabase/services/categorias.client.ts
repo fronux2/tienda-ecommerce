@@ -25,3 +25,15 @@ export default async function agregarNuevaCategoria(data: { name: string }) {
     console.error('Error al crear la categoría:', error);
   }
 }
+
+
+export async function updateCategoria(id: string, updates: Partial<{ nombre: string }>) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('categorias')
+    .update(updates)
+    .eq('id', id)
+    .select('*');
+  if (error) throw error;
+  return data;
+}

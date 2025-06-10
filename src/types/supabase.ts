@@ -36,6 +36,8 @@ export type NuevaSerie = {
   imagen_serie: string  
 }
 
+
+
 export type Manga = {
   id: string
   titulo: string

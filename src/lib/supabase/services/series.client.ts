@@ -24,3 +24,15 @@ export default async function agregarNuevaSerie(data: NuevaSerie) {
     console.error('Error al crear la serie:', error);
   }
 }
+
+export async function updateSerie(id: string, data: Partial<NuevaSerie>) {
+  const supabase = await createClient();
+  const { data: updatedData, error } = await supabase
+    .from('series')
+    .update(data)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return updatedData;
+}

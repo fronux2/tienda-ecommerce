@@ -8,9 +8,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <aside className="p-4">
             <nav>
                 <ul className="flex flex-col gap-y-2">
+                    <li><Link href="/admin">Inicio Admin</Link></li>
                     <li><Link href="/admin/usuarios">Usuarios</Link></li>
                     <li><Link href="/admin/mangas">Mangas</Link></li>
-                    <li><Link href="/admin/pedidos">Pedidos</Link></li>
+                    <li><Link href="/admin/categorias">Categorias</Link></li>
+                    <li><Link href="/admin/series">Serie</Link></li>
                 </ul>
             </nav>
         </aside>
