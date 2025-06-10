@@ -7,7 +7,6 @@ import SectionMap from '@/components/SectionMap';
 export default function Home() {
   return (
     <div>
-       <h1>Hola mundo</h1>
        <Hero />
        <Popular/>
        <About />

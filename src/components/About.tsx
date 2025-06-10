@@ -10,7 +10,7 @@ export default function About() {
                 {/* Imagen a la izquierda */}
                 <div className="flex-1 flex justify-center mb-8 md:mb-0 md:mr-8">
                     <Image
-                        src="/manga-hero.png"
+                        src="/imagenes/pasillo.webp"
                         alt="Manga tienda"
                         width={200}
                         height={260}
@@ -26,7 +26,7 @@ export default function About() {
                     <div className="flex flex-col items-center mt-4">
                         <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-pink-300 mb-2">
                             <Image
-                                src="/perfil-marcos.png"
+                                src="/imagenes/pasillo.webp"
                                 alt="Marcos Muñoz"
                                 width={80}
                                 height={80}

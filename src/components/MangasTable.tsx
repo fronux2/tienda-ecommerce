@@ -81,7 +81,7 @@ export default function MangasTable({
           <tbody className="text-sm">
             {listaMangas.map((manga) => (
               <tr key={manga.id}>
-                <td className="px-4 py-2 border">{manga.id}</td>
+                <td className="px-4 py-2 border">{<p className="w-64">{manga.id}</p>}</td>
                 {/* Título */}
                 <td
                   onDoubleClick={() => manejarDobleClick(manga.id, "titulo", manga.titulo)}
@@ -97,7 +97,7 @@ export default function MangasTable({
                       autoFocus
                     />
                   ) : (
-                    manga.titulo
+                    <p className="w-56">{manga.titulo}</p>
                   )}
                 </td>
                 <td
@@ -203,7 +203,7 @@ export default function MangasTable({
                 </td>
                 <td
                   onDoubleClick={() => manejarDobleClick(manga.id, "descripcion", manga.descripcion)}
-                  className="px-4 py-2 border"
+                  className="px-4 py-2 border "
                   >
                   {editando && editando.id === manga.id && editando.campo === "descripcion" ? (
                     <input
@@ -215,7 +215,7 @@ export default function MangasTable({
                       autoFocus
                     />
                   ) : (
-                    manga.descripcion
+                    <p className="w-96">{manga.descripcion}</p>
                   )}
                 </td>
 
