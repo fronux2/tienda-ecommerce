@@ -206,7 +206,7 @@ export default function MangasTable({
                   className="px-4 py-2 border "
                   >
                   {editando && editando.id === manga.id && editando.campo === "descripcion" ? (
-                    <input
+                    <textarea
                       className="w-full px-2 py-1 border rounded"
                       value={valorEditado}
                       onChange={manejarCambio}
