@@ -7,25 +7,26 @@ import { getSeriesClient } from "@/lib/supabase/services/series.client";
 import { useEffect,useState } from "react";
 import { type Categoria, type Serie } from "@/types/supabase";
 import { crearManga } from "@/lib/supabase/services/mangas.client";
+import { createClient } from '@/utils/supabase/client';
 
 export default function Page() {
+  const supabase = createClient();
 
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [series, setSeries] = useState<Serie[]>([]);
-
+  const [file, setFile] = useState<File | null>(null);
+  const [url, setUrl] = useState('');
+  
   const { register, reset, handleSubmit, formState: { errors } } = useForm<NuevoManga>({
     resolver: zodResolver(nuevoMangaSchema),
   });
+  
  
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
         const categorias = await getCategoriasClient() as Categoria[];
         const series = await getSeriesClient() as Serie[];
-
-        // Aquí puedes hacer algo con las categorías y series, como guardarlas en el estado
-        console.log('Categorías:', categorias);
-        console.log('Series:', series);
         if (categorias) {
           setCategorias(categorias);
         }
@@ -40,13 +41,30 @@ export default function Page() {
   }, []);
 
   const onSubmit = async (data: NuevoManga) => {
-    console.log('Datos enviados:', data);
-    // Aquí puedes hacer algo con los datos enviados, como crear el manga en la base de datos
-    console.log('Categorias:', categorias);
-    console.log('Series:', series);
-    const nuevoManga = await crearManga(data);
-    console.log('Nuevo manga creado:', nuevoManga);
-    reset();
+    if (!file) return;
+    const filePath = `${file.name}`;
+
+    const { error } = await supabase.storage
+      .from('mangas')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: true,
+      });
+
+    if (error) {
+      console.error('Error al subir:', error.message);
+    } else {
+      const { data: publicUrlData } = supabase.storage
+        .from('mangas')
+        .getPublicUrl(filePath);
+
+      setUrl(publicUrlData.publicUrl);
+      
+      const nuevoManga = { ...data, imagen_portada: publicUrlData.publicUrl };
+      await crearManga(nuevoManga);
+      reset();
+    }
+    
 
   }
 
@@ -158,9 +176,9 @@ export default function Page() {
       <div>
         <label htmlFor="imagen_portada" className="block font-semibold mb-1">Imagen Portada (URL):</label>
         <input
-          type="text"
-          id="imagen_portada"
-          {...register('imagen_portada')}
+          type="file"
+          id="imagen_portada"          
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         {errors.imagen_portada && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}

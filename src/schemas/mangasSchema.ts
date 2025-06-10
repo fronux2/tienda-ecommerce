@@ -11,7 +11,7 @@ export const nuevoMangaSchema = z.object({
   descripcion: z.string().min(1),
   precio: z.number().nonnegative(),
   stock: z.number().int().nonnegative(),
-  imagen_portada: z.string().url(),
+  imagen_portada: z.string().optional(),
   isbn: z.string().min(10), // puedes afinar esta validación si es necesario
   numero_paginas: z.number().int().positive(),
   idioma: z.string().min(1),
