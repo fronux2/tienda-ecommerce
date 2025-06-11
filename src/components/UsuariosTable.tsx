@@ -1,4 +1,4 @@
-import { getUsuarios } from "@/lib/supabase/services/usuarios";
+import { getUsuarios } from "@/lib/supabase/services/usuarios.server";
 
 export default async function UsuariosTable() {
   const usuarios = await getUsuarios();

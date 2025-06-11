@@ -9,19 +9,13 @@ export default function Page() {
   });
 
   const onSubmit = async (data: NuevoUsuario) => {
-    console.log('Datos enviados:', data);
-    // Aquí puedes hacer algo con los datos enviados, como crear el usuario en la base de datos
-    console.log('Usuario:', data);
     const res = await fetch('/api/crear-usuario', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: data.email, password: data.password }),
     });
-
-    const data1 = await res.json();
-    console.log('Datos:', data1);
-    reset();
-   
+    await res.json();
+    reset();   
   }
 
   return(<>

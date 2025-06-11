@@ -1,12 +1,20 @@
 import Image from "next/image";
+import {AddToCartButton} from "./AddToCarButton";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Card1({ imagen, titulo, autor, editorial, precio }: {
+export default async function Card1({ id, imagen, titulo, autor, editorial, precio }: {
+  id: string;
   imagen: string;
   titulo: string;
   autor: string;
   editorial: string;
   precio: number;
 }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || !id) return
+  console.log('user1', user)
+  console.log('id1', id)
   return (
     <main className="">
         <section className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center w-64">
@@ -21,6 +29,7 @@ export default function Card1({ imagen, titulo, autor, editorial, precio }: {
         <p className="text-sm text-gray-700 mb-1">Autor: <span className="font-semibold">{autor}</span></p>
         <p className="text-sm text-gray-700 mb-2">Editorial: <span className="font-semibold">{editorial}</span></p>
         <p className="text-xl font-bold text-red-500">${precio}</p>
+        <AddToCartButton mangaId={id} userId={user.id}/>
         </section>
         
     </main>

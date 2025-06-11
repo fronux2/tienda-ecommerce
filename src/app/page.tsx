@@ -1,12 +1,22 @@
 import About from '@/components/About';
+import Cart from '@/components/Cart';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import Invitation from '@/components/Invitation';
 import Popular from '@/components/Popular';
 import SectionMap from '@/components/SectionMap';
-export default function Home() {
+import { createClient } from '@/utils/supabase/server'
+export default async function Home() {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  
   return (
     <div>
+       <Cart userId={user?.id || ''}/>
        <Hero />
        <Popular/>
        <About />

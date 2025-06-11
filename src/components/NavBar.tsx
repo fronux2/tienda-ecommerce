@@ -1,6 +1,6 @@
 // app/components/Navbar.tsx (server)
 import { createClient } from '@/utils/supabase/server'
-import { getRolUsuario } from '@/lib/supabase/services/usuarios'
+import { getRolUsuario } from '@/lib/supabase/services/usuarios.server'
 import NavbarClient from '@/components/NavbarClient'
 
 export async function Navbar() {

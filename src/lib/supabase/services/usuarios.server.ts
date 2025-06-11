@@ -42,3 +42,22 @@ export const getUsuarios = async (): Promise<Usuario[]> => {
 
   return usuarios
 }
+
+//getUserForId
+export const getUserForId = async (userId: string): Promise<Usuario | null> => {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('usuarios')
+    .select('id, email, roles:rol_id(id,nombre)')
+    .eq('id', userId)
+    .single()
+
+  if (error) {
+    console.error('Error al obtener el usuario:', error.message)
+    return null
+  }
+
+  return data ?? null
+}
+
