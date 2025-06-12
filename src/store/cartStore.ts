@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-//import { addToCartSupabase, clearCartSupabase, removeFromCartSupabase, updateCartQuantitySupabase } from '@/lib/supabase/services/carrito.cliente'
+import { addToCartSupabase, clearCartSupabase, removeFromCartSupabase, updateCartQuantitySupabase } from '@/lib/supabase/services/carrito.cliente'
 export type CartItem = { 
   id?: string
   user_id: string | null
@@ -51,11 +51,11 @@ export const useCartStore = create<CartState>((set) => ({
   },
 
   clearCart: async (usuario_id) => {
-    //await clearCartSupabase(usuario_id)
+    await clearCartSupabase(usuario_id)
     set({ cart: [] })},
 
   updateQuantity: async (usuario_id, manga_id, cantidad) =>{
-    //await updateCartQuantitySupabase(usuario_id, manga_id, cantidad)
+    await updateCartQuantitySupabase(usuario_id, manga_id, cantidad)
     set((state) => ({
       cart: state.cart.map((item) =>
         item.manga_id === manga_id ? { ...item, cantidad } : item

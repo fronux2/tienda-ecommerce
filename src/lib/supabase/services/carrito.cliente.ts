@@ -30,21 +30,22 @@ export const addToCartSupabase = async (item: CartItem) => {
 };
 
 // Eliminar del carrito
-export const removeFromCartSupabase = async (user_id: string, manga_id: string) => {
+export const removeFromCartSupabase = async (usuario_id: string, manga_id: string) => {
   const { error } = await supabase
     .from("carrito")
     .delete()
-    .match({ user_id, manga_id });
+    .match({ usuario_id, manga_id });
 
   if (error) throw error;
 };
 
 // Actualizar cantidad
-export const updateCartQuantitySupabase = async (user_id: string, manga_id: string, cantidad: number) => {
+export const updateCartQuantitySupabase = async (usuario_id: string, manga_id: string, cantidad: number) => {
+  console.log('updateCartQuantitySupabase', usuario_id, manga_id, cantidad);
   const { error } = await supabase
     .from("carrito")
     .update({ cantidad })
-    .match({ user_id, manga_id });
+    .match({ usuario_id, manga_id });
 
   if (error) throw error;
 };
