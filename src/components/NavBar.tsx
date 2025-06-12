@@ -4,8 +4,7 @@ import { getRolUsuario } from '@/lib/supabase/services/usuarios.server'
 import NavbarClient from '@/components/NavbarClient'
 
 export async function Navbar() {
-  const supabase = await createClient()
-
+ const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

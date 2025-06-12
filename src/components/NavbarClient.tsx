@@ -3,15 +3,30 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-
+import { useCartStore } from '@/store/cartStore'
+import { fetchCartFromSupabase } from '@/lib/supabase/services/carrito.cliente'
+import { useEffect } from 'react'
 type Props = {
   user: object | null
   rolId: number | null
 }
 
 export default function NavbarClient({ user, rolId }: Props) {
+  const setCart = useCartStore((state) => state.setCart)
+  const cart = useCartStore((state) => state.cart)
+  
+  
   const pathname = usePathname()
   const isHome = pathname === '/'
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const items = await fetchCartFromSupabase(user?.id || '')
+      setCart(items)
+    }
+    fetchCart()
+  }, [user, setCart])
+
 
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-800 text-white flex-wrap gap-4">

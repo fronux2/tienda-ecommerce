@@ -5,18 +5,17 @@ import Hero from '@/components/Hero';
 import Invitation from '@/components/Invitation';
 import Popular from '@/components/Popular';
 import SectionMap from '@/components/SectionMap';
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from "@/utils/supabase/server";
 export default async function Home() {
-  const supabase = await createClient()
 
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
-  
+  if (!user) return <div>No tienes usuario</div>
   return (
     <div>
-       <Cart userId={user?.id || ''}/>
+       <Cart userId={user?.id}/>
        <Hero />
        <Popular/>
        <About />
