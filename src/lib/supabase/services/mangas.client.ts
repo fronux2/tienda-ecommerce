@@ -22,3 +22,14 @@ export async function updateManga(id: string, mangaData:UpdateManga) {
   if (error) throw error;
   return data;
 }
+
+//manga por id
+export async function getMangaById(id: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('mangas')
+    .select('*')
+    .eq('id', id);
+  if (error) throw error;
+  return data;
+}
