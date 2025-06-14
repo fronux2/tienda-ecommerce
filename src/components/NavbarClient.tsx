@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
 import { fetchCartFromSupabase } from '@/lib/supabase/services/carrito.cliente'
 import { useEffect } from 'react'
+import Cart from '@/components/Cart'
 type Props = {
   user: object | null
   rolId: number | null
@@ -29,7 +30,7 @@ export default function NavbarClient({ user, rolId }: Props) {
 
 
   return (
-    <nav className="flex justify-between items-center p-4 bg-gray-800 text-white flex-wrap gap-4">
+    <nav className="flex justify-between items-center p-4 bg-gray-800 text-white flex-wrap gap-4 pr-24">
       <Link href="/">Home</Link>
       <Link href="/mangas">Mangas</Link>
       {isHome && (
@@ -48,6 +49,7 @@ export default function NavbarClient({ user, rolId }: Props) {
         </>
       )}
       {!user && <Link href="/login">Login</Link>}
+      <Cart userId={user?.id} />
     </nav>
   )
 }

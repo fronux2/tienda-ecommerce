@@ -15,7 +15,6 @@ export default async function Home() {
   if (!user) return <div>No tienes usuario</div>
   return (
     <div>
-       <Cart userId={user?.id}/>
        <Hero />
        <Popular/>
        <About />
