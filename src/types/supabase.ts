@@ -77,6 +77,7 @@ export type NuevoManga = {
   estado: string
   activo: boolean
   fecha_creacion?: string
+  es_popular?: boolean
 }
 
 export type UpdateManga = {
@@ -98,6 +99,7 @@ export type UpdateManga = {
   estado?: string
   activo?: boolean
   fecha_creacion?: string
+  es_popular?: boolean
 }
 
 export type Pedido = {

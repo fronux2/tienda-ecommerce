@@ -26,6 +26,7 @@ export async function getTopMangas(limit = 4) {
   const { data, error } = await supabase
     .from('mangas')
     .select('*') // o especifica campos: 'id, title, cover_url'
+    .eq('es_popular', true)
     .limit(limit)
 
   if (error) {

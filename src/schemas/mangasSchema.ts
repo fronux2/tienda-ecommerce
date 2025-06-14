@@ -19,6 +19,7 @@ export const nuevoMangaSchema = z.object({
   estado: z.string().min(1),
   activo: z.boolean(),
   fecha_creacion: z.string().optional(), // igual que arriba, podrías usar fecha si es una real
+  es_popular: z.boolean().optional(),
 })
 
 // Tipo TypeScript inferido desde el esquema

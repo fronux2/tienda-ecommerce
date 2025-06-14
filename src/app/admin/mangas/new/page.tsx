@@ -245,7 +245,20 @@ export default function Page() {
           className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-400"
         />
         <label htmlFor="activo" className="font-semibold">Activo</label>
-      </div>     
+      </div>    
+      <div>
+          <label htmlFor="es_popular" className="block font-semibold mb-1">Es popular:</label>
+          <select
+            id="es_popular"
+            {...register('es_popular')}
+            className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">Selecciona un estado(opcional)</option>
+            <option value="true">Si</option>
+            <option value="false">No</option>
+          </select>
+          {errors.es_popular && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+      </div> 
 
       <button 
         type="submit" 

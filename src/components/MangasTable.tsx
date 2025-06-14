@@ -19,10 +19,17 @@ export default function MangasTable({
   const [valorEditado, setValorEditado] = useState<string | number>("");
   const [listaMangas, setListaMangas] = useState(mangas);
 
-  const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined | number) => {
+  const manejarDobleClick = (id: string | undefined, campo: string, valor: any) => {
     if (!id || valor === undefined) return;
+    
+    // Convertir valores booleanos a string para inputs
+    if (campo === "activo" || campo === "es_popular") {
+      setValorEditado(valor.toString()); // "true" o "false"
+    } else {
+      setValorEditado(valor);
+    }
+    
     setEditando({ id, campo });
-    setValorEditado(valor);
   };
 
   const manejarCambio = (
@@ -33,11 +40,29 @@ export default function MangasTable({
 
   const manejarGuardar = async () => {
     if (!editando) return;
+    
+    let valorFinal: any = valorEditado;
+    
+    // Convertir campos booleanos
+    if (editando.campo === "es_popular" || editando.campo === "activo") {
+      valorFinal = valorEditado === "true"; // Convertir a booleano
+    }
+    // Convertir campos numéricos
+    else if (editando.campo === "volumen" || 
+             editando.campo === "precio" || 
+             editando.campo === "stock" || 
+             editando.campo === "numero_paginas") {
+      valorFinal = Number(valorEditado);
+    }
+
     try {
-      await updateManga(editando.id, { [editando.campo]: valorEditado });
-      setListaMangas((prev) =>
-        prev.map((manga) =>
-          manga.id === editando.id ? { ...manga, [editando.campo]: valorEditado } : manga
+      await updateManga(editando.id, { [editando.campo]: valorFinal });
+      
+      setListaMangas(prev => 
+        prev.map(manga => 
+          manga.id === editando.id 
+            ? { ...manga, [editando.campo]: valorFinal } 
+            : manga
         )
       );
     } catch (error) {
@@ -54,7 +79,7 @@ export default function MangasTable({
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 mr-16">
       <div className="rounded-lg border border-gray-300 shadow">
         <table className="min-w-full w-full table-auto border-collapse">
           <thead className="bg-gray-100 text-sm text-gray-700">
@@ -76,6 +101,7 @@ export default function MangasTable({
               <th className="px-4 py-2 border">Publicación</th>
               <th className="px-4 py-2 border">Estado</th>
               <th className="px-4 py-2 border">Activo</th>
+              <th className="px-4 py-2 border">Es popular</th>
             </tr>
           </thead>
           <tbody className="text-sm">
@@ -351,22 +377,45 @@ export default function MangasTable({
                   )}
                 </td>
                 <td
-                onDoubleClick={() => manejarDobleClick(manga.id, "activo", manga.activo ? "1" : "0")}
-                className="px-4 py-2 border">
+                  onDoubleClick={() => manejarDobleClick(manga.id, "activo", manga.activo)}
+                  className="px-4 py-2 border"
+                >
                   {editando && editando.id === manga.id && editando.campo === "activo" ? (
-                    <input
-                      type="checkbox"
+                    <select
                       className="w-full px-2 py-1 border rounded"
                       value={valorEditado}
                       onChange={manejarCambio}
                       onBlur={manejarGuardar}
                       onKeyDown={manejarEnter}
                       autoFocus
-                    />
+                    >
+                      <option value="true">Sí</option>
+                      <option value="false">No</option>
+                    </select>
                   ) : (
                     manga.activo ? "Sí" : "No"
                   )}
                 </td>
+                <td
+                onDoubleClick={() => manejarDobleClick(manga.id, "es_popular", manga.es_popular)}
+                className="px-4 py-2 border"
+              >
+                {editando && editando.id === manga.id && editando.campo === "es_popular" ? (
+                  <select
+                    className="w-full px-2 py-1 border rounded"
+                    value={valorEditado}
+                    onChange={manejarCambio}
+                    onBlur={manejarGuardar}
+                    onKeyDown={manejarEnter}
+                    autoFocus
+                  >
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                  </select>
+                ) : (
+                  manga.es_popular ? "Sí" : "No"
+                )}
+              </td>
               </tr>
             ))}
           </tbody>
