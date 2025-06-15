@@ -19,7 +19,7 @@ export default function MangasTable({
   const [valorEditado, setValorEditado] = useState<string | number>("");
   const [listaMangas, setListaMangas] = useState(mangas);
 
-  const manejarDobleClick = (id: string | undefined, campo: string, valor: any) => {
+  const manejarDobleClick = (id: string | undefined, campo: string, valor: any ) => {
     if (!id || valor === undefined) return;
     
     // Convertir valores booleanos a string para inputs

@@ -104,9 +104,14 @@ export type UpdateManga = {
 
 export type Pedido = {
   id: string
-  user_id: string
-  fecha: string
+  usuario_id: string
+  direccion_id: string
   total: number
+  estado: string
+  metodo_pago: string
+  notas_pedido: string
+  fecha_pedido: string
+  fecha_actualizacion: string
 }
 
 export type DetallePedido = {

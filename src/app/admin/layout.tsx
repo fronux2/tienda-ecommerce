@@ -13,6 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <li><Link href="/admin/mangas">Mangas</Link></li>
                     <li><Link href="/admin/categorias">Categorias</Link></li>
                     <li><Link href="/admin/series">Serie</Link></li>
+                    <li><Link href="/admin/pedidos">Pedidos</Link></li>
                 </ul>
             </nav>
         </aside>
