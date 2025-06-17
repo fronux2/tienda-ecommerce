@@ -1,4 +1,4 @@
-import Card1 from "./Card1"
+import Card1 from "./Card1.server"
 import { getTopMangas } from "@/lib/supabase/services/mangas.server";
 import { Manga } from "@/types/supabase";
 export default async function Popular() {

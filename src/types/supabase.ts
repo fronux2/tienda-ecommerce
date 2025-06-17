@@ -43,8 +43,10 @@ export type Manga = {
   titulo: string
   autor: string
   editorial: string
-  categoria_id: string
+  categoria_id: string  
+  categorias?: Categoria
   serie_id: string
+  series?: Serie
   volumen: string
   descripcion: string
   precio: number

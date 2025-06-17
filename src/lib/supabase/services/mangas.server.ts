@@ -5,7 +5,7 @@ export async function getMangas() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('mangas')
-    .select('*')
+    .select('*, categorias(*), series(*)')
     .order('titulo');
   if (error) throw error;
   return data;
@@ -35,4 +35,16 @@ export async function getTopMangas(limit = 4) {
   }
 
   return data
+}
+
+//getmangaid
+
+export async function getMangaById(id: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('mangas')
+    .select('*, categorias(*)')
+    .eq('id', id);
+  if (error) throw error;
+  return data;
 }
