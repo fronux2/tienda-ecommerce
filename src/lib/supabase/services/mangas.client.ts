@@ -33,3 +33,24 @@ export async function getMangaById(id: string) {
   if (error) throw error;
   return data;
 }
+
+//getmanga
+export async function getMangas() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('mangas')
+    .select('*, categorias(*), series(*)')
+  if (error) throw error;
+  return data;
+}
+
+export async function getMangasPopulares() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('mangas')
+    .select('*, categorias(*), series(*)')
+    .eq('es_popular', true)
+    .order('titulo');
+  if (error) throw error;
+  return data;
+}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import {Navbar} from "@/components/NavBar";
+import { unstable_ViewTransition as ViewTransition } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,7 +53,9 @@ export default function RootLayout({
         className={`${geistRoboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        {children}
+        <ViewTransition name='page'>
+          {children}
+        </ViewTransition>
       </body>
     </html>
   );

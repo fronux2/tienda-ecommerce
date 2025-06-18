@@ -1,15 +1,19 @@
-import {getMangaById} from '@/lib/supabase/services/mangas.server'
-import { Manga } from '@/types/supabase'
+"use client"
 import Image from 'next/image'
+import { use } from 'react'
+import { useMangaStore } from '@/store/mangaStore'
 type Props = {
   params: {
     id: string
   }
 }
 
-export default async function Page({params}: Props) {
-  const manga: Manga[] = await getMangaById(params.id)
-  console.log(manga)
+export default function Page({params}: Props) {
+  const {id} = params
+  const mangas = useMangaStore((state) => state.mangas)
+  const manga = mangas.filter((manga) => manga.id === id)  
+
+  console.log(mangas)
      return (
       <div className="max-w-3xl mx-auto p-6 bg-purple-50 shadow-lg rounded-2xl mt-8">
         <h1 className="text-3xl font-bold text-purple-700 mb-6 text-center">Detalles del Manga</h1>

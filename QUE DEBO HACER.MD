@@ -14,10 +14,10 @@
 - [x] Crear componente de pagina de error
 - [ ] Registrar usuarios
 - [x] Ruta detalle de manga
-- [ ] Filtrar mangas por categoria
+- [X] Filtrar mangas por categoria
 - [ ] Filtrar mangas por stock
 - [ ] Filtrar mangas por precio
-- [ ] Filtrar mangas por autor
+- [X] Filtrar mangas por autor
 - [ ] Filtrar mangas por editor
 - [ ] Filtrar mangas por estado
 - [ ] Filtrar mangas por tipo
@@ -31,6 +31,7 @@
 - [ ] cambiar en pedidos el id direccion por su nombre
 - [ ] agregar editar a rol en admin/usuarios
 - [ ] corregir el metodo de ingreso de direcciones
+.
 ## Backend
 
 - [x] Crear esquema de datos

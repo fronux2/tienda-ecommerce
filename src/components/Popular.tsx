@@ -1,8 +1,15 @@
-import Card1 from "./Card1.server"
-import { getTopMangas } from "@/lib/supabase/services/mangas.server";
-import { Manga } from "@/types/supabase";
-export default async function Popular() {
-    const mangas: Manga[] = await getTopMangas(4);
+"use client"
+import Card1 from "./Card1.client"
+//import { getTopMangas } from "@/lib/supabase/services/mangas.server";
+import { useMangaStore } from "@/store/mangaStore";
+//import { Manga } from "@/types/supabase";
+import { useEffect } from "react";
+export default function Popular() {
+    const loadMangasPopulares = useMangaStore((state) => state.loadMangasPopulares)
+    const mangas = useMangaStore((state) => state.mangas)
+    useEffect(() => {
+        loadMangasPopulares()
+    }, [loadMangasPopulares])
     return (
         <div className="grid justify-center items-center lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4 lg:p-16 md:p-6 sm:p-4 py-20">
             {mangas.map(manga => (
