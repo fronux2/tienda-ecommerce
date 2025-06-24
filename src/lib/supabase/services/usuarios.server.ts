@@ -1,5 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
-import type { Usuario } from '@/types/supabase'
+import type { Usuario, Roles } from '@/types/supabase'
 
 // Obtener el rol del usuario
 export const getRolUsuario = async (userId: string): Promise<number | null> => {
@@ -61,3 +61,37 @@ export const getUserForId = async (userId: string): Promise<Usuario | null> => {
   return data ?? null
 }
 
+//updateUsuario
+export const updateUsuario = async (userId: string, data: Record<string, unknown>): Promise<void> => {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('usuarios')
+    .update(data)
+    .eq('id', userId)
+
+  if (error) {
+    console.error('Error al actualizar el usuario:', error.message)
+  }
+}
+
+// getRoles
+export const getRoles = async (): Promise<Roles[]> => {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('roles')
+    .select('id, nombre')
+
+  if (error) {
+    console.error('Error al obtener los roles:', error.message)
+    return []
+  }
+
+  const roles = data.map((role: Roles) => ({
+    id: role.id,
+    nombre: role.nombre,
+  }))
+
+  return roles
+} 

@@ -22,15 +22,12 @@
 - [ ] Filtrar mangas por estado
 - [ ] Filtrar mangas por tipo
 - [ ] Filtrar mangas por género
-- [ ] Filtrar mangas por fecha de publicación
-- [ ] Filtrar mangas por fecha de finalización
-- [ ] Filtrar mangas por fecha de lanzamiento
-- [ ] Filtrar mangas por fecha de actualización
 - [ ] mejorar estilos de la web entera
 - [ ] cambiar en pedidos el id usuario por su nombre 
 - [ ] cambiar en pedidos el id direccion por su nombre
 - [ ] agregar editar a rol en admin/usuarios
 - [ ] corregir el metodo de ingreso de direcciones
+- [] infinit scroll
 .
 ## Backend
 
@@ -39,4 +36,4 @@
 - [x] Crear función de registro
 - [x] Crear función de registro de usuario
 - [x] Crear función de registro de usuario
-- [ ] Poblar la base de datos con datos de prueba
+- [x] Poblar la base de datos con datos de prueba

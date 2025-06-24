@@ -10,8 +10,11 @@ type Props = {
 
 export default function Page({params}: Props) {
   const {id} = params
+  console.log(id)
   const mangas = useMangaStore((state) => state.mangas)
+  console.log(mangas)
   const manga = mangas.filter((manga) => manga.id === id)  
+  console.log(manga)
 
   console.log(mangas)
      return (

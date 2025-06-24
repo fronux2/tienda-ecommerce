@@ -28,9 +28,7 @@ export const addToCartSupabase = async (item: CartItem) => {
 };
 
 // Eliminar del carrito
-export const removeFromCartSupabase = async (manga_id: string ,usuario_id: string) => {
-  console.log('usuario_id  ', usuario_id)
-  console.log('manga_id  ',  manga_id)
+export const removeFromCartSupabase = async (manga_id: string ,usuario_id: string) => { 
   const { error, data } = await supabase
     .from("carrito")
     .delete()
@@ -41,7 +39,6 @@ export const removeFromCartSupabase = async (manga_id: string ,usuario_id: strin
 
 // Actualizar cantidad
 export const updateCartQuantitySupabase = async (usuario_id: string, manga_id: string, cantidad: number) => {
-  console.log('updateCartQuantitySupabase', usuario_id, manga_id, cantidad);
   const { error } = await supabase
     .from("carrito")
     .update({ cantidad })

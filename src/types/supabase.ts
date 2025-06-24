@@ -3,6 +3,11 @@ export type Roles = {
   nombre: string
 }
 
+export type Rol = {
+  id: string
+  nombre: string
+}
+
 export type Usuario = {
   id: string
   email: string
@@ -59,6 +64,7 @@ export type Manga = {
   estado: string
   activo: boolean
   fecha_creacion?: string
+  es_popular?: boolean
 }
 
 export type NuevoManga = {

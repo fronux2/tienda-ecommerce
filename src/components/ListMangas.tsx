@@ -4,6 +4,7 @@ import { getSeriesClient } from "@/lib/supabase/services/series.client";
 import { getCategoriasClient } from "@/lib/supabase/services/categorias.client";
 import { Categoria, Serie, type Manga } from "@/types/supabase";
 import { useEffect, useMemo, useState } from "react";
+import { useMangaStore } from "@/store/mangaStore";
 
 export default function ListMangas({ mangas }: { mangas: Manga[] }) {
   const [series, setSeries] = useState<Serie[]>([])
@@ -11,7 +12,9 @@ export default function ListMangas({ mangas }: { mangas: Manga[] }) {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todos");
   const [serieSeleccionada, setserieSeleccionada] = useState("Todas");
   const [mangasFiltrados, setMangasFiltrados] = useState<Manga[]>([]);
+  const addMangas = useMangaStore((state) => state.addMangas)
 
+ 
   // Filtrado flexible por categoría y/o serieSeleccionada
   const filterMangas = useMemo(() => {
     return (categoriaSeleccionada: string, serieSeleccionada: string) => {
@@ -27,6 +30,7 @@ export default function ListMangas({ mangas }: { mangas: Manga[] }) {
   }, [mangas]);
 
   useEffect(() => {
+    addMangas(mangas)
     const fetchSeriesCat = async () => {
       const categoria = await getCategoriasClient();
       setCategoria(categoria);

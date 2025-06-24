@@ -2,14 +2,16 @@
 import Image from "next/image";
 //import {AddCardButton2 } from "@/components/AddCardButton2";
 import Link from "next/link";
+import { AddCardButton2 } from "./AddCardButton2";
 
-export default function Card1({ id, imagen, titulo, autor, editorial, precio }: {
+export default function Card1({ id, imagen, titulo, autor, editorial, precio, userId }: {
   id: string;
   imagen: string;
   titulo: string;
   autor: string;
   editorial: string;
   precio: number;
+  userId: string;
 }) {
   
   return (
@@ -29,7 +31,7 @@ export default function Card1({ id, imagen, titulo, autor, editorial, precio }: 
         <p className="text-sm text-gray-700 mb-1">Autor: <span className="font-semibold">{autor}</span></p>
         <p className="text-sm text-gray-700 mb-2">Editorial: <span className="font-semibold">{editorial}</span></p>
         <p className="text-xl font-bold text-red-500">${precio}</p>
-        
+        <AddCardButton2 mangaId={id} userId={userId} />
         </section>
         
     </main>
