@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { updateManga } from "@/lib/supabase/services/mangas.client";
 import { type UpdateManga } from "@/types/supabase";
 
@@ -18,13 +18,40 @@ export default function MangasTable({
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string | number>("");
   const [listaMangas, setListaMangas] = useState(mangas);
+  const [terminoBusqueda, setTerminoBusqueda] = useState("");
 
-  const manejarDobleClick = (id: string | undefined, campo: string, valor: any ) => {
+  const mangasFiltrados = useMemo(() => {
+  if (!terminoBusqueda) return listaMangas;
+  
+  const termino = terminoBusqueda.toLowerCase();
+  
+  return listaMangas.filter(manga => {
+    const categoriaNombre = categorias.find(c => c.id === manga.categoria_id)?.nombre.toLowerCase();
+    const serieNombre = series.find(s => s.id === manga.serie_id)?.nombre.toLowerCase();
+    
+    return (
+      manga.titulo?.toLowerCase().includes(termino) ||
+      manga.autor?.toLowerCase().includes(termino) ||
+      manga.editorial?.toLowerCase().includes(termino) ||
+      manga.isbn?.toLowerCase().includes(termino) ||
+      manga.idioma?.toLowerCase().includes(termino) ||
+      manga.estado?.toLowerCase().includes(termino) ||
+      manga.descripcion?.toLowerCase().includes(termino) ||
+      manga.volumen?.toString().includes(termino) ||
+      manga.precio?.toString().includes(termino) ||
+      manga.stock?.toString().includes(termino) ||
+      manga.numero_paginas?.toString().includes(termino) ||
+      categoriaNombre?.includes(termino) ||
+      serieNombre?.includes(termino)
+    );
+  });
+}, [terminoBusqueda, listaMangas, categorias, series]);
+
+  const manejarDobleClick = (id: string | undefined, campo: string, valor: any) => {
     if (!id || valor === undefined) return;
     
-    // Convertir valores booleanos a string para inputs
     if (campo === "activo" || campo === "es_popular") {
-      setValorEditado(valor.toString()); // "true" o "false"
+      setValorEditado(valor.toString());
     } else {
       setValorEditado(valor);
     }
@@ -43,12 +70,9 @@ export default function MangasTable({
     
     let valorFinal: any = valorEditado;
     
-    // Convertir campos booleanos
     if (editando.campo === "es_popular" || editando.campo === "activo") {
-      valorFinal = valorEditado === "true"; // Convertir a booleano
-    }
-    // Convertir campos numéricos
-    else if (editando.campo === "volumen" || 
+      valorFinal = valorEditado === "true";
+    } else if (editando.campo === "volumen" || 
              editando.campo === "precio" || 
              editando.campo === "stock" || 
              editando.campo === "numero_paginas") {
@@ -79,22 +103,38 @@ export default function MangasTable({
   };
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen">
+    <div className="p-4 bg-gray-50 min-h-screen min-w-screen md:mid-w-auto">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex md:justify-between flex-col md:flex-row items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Panel de Mangas</h1>
             <p className="text-gray-600 mt-2">Administra y actualiza tu catálogo de mangas</p>
           </div>
-          <div className="bg-purple-100 p-3 rounded-lg">
-            <p className="text-purple-800 font-medium">
-              Total de mangas: <span className="font-bold">{listaMangas.length}</span>
-            </p>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Buscar mangas..."
+                className="pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64"
+                value={terminoBusqueda}
+                onChange={(e) => setTerminoBusqueda(e.target.value)}
+              />
+              <div className="absolute left-3 top-2.5 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="bg-purple-100 p-3 rounded-lg">
+              <p className="text-purple-800 font-medium">
+                Total de mangas: <span className="font-bold">{mangasFiltrados.length}</span>
+              </p>
+            </div>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-[calc(100vh-200px)] scroll-smooth">
             <table className="min-w-full w-full">
               <thead className="bg-gray-100">
                 <tr>
@@ -119,13 +159,12 @@ export default function MangasTable({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {listaMangas.map((manga) => (
+                {mangasFiltrados.map((manga) => (
                   <tr key={manga.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <p className="truncate max-w-xs">{manga.id}</p>
                     </td>
                     
-                    {/* Título */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {editando?.id === manga.id && editando.campo === "titulo" ? (
                         <input
@@ -146,7 +185,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Autor */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "autor" ? (
                         <input
@@ -167,7 +205,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Editorial */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "editorial" ? (
                         <input
@@ -188,7 +225,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Categoría */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "categoria_id" ? (
                         <select
@@ -215,7 +251,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Serie */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "serie_id" ? (
                         <select
@@ -242,7 +277,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Volumen */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-medium">
                       {editando?.id === manga.id && editando.campo === "volumen" ? (
                         <input
@@ -264,7 +298,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Descripción */}
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
                       {editando?.id === manga.id && editando.campo === "descripcion" ? (
                         <textarea
@@ -286,7 +319,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Precio */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-700">
                       {editando?.id === manga.id && editando.campo === "precio" ? (
                         <input
@@ -308,7 +340,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Stock */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                       {editando?.id === manga.id && editando.campo === "stock" ? (
                         <input
@@ -334,7 +365,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* URL de portada */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs">
                       {editando?.id === manga.id && editando.campo === "imagen_portada" ? (
                         <input
@@ -356,7 +386,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* ISBN */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "isbn" ? (
                         <input
@@ -377,7 +406,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Páginas */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                       {editando?.id === manga.id && editando.campo === "numero_paginas" ? (
                         <input
@@ -399,7 +427,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Idioma */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "idioma" ? (
                         <input
@@ -420,7 +447,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Fecha Publicación */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {editando?.id === manga.id && editando.campo === "fecha_publicacion" ? (
                         <input
@@ -441,7 +467,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Estado */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editando?.id === manga.id && editando.campo === "estado" ? (
                         <input
@@ -466,7 +491,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Activo */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editando?.id === manga.id && editando.campo === "activo" ? (
                         <select
@@ -492,7 +516,6 @@ export default function MangasTable({
                       )}
                     </td>
                     
-                    {/* Es popular */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       {editando?.id === manga.id && editando.campo === "es_popular" ? (
                         <select
@@ -523,9 +546,11 @@ export default function MangasTable({
             </table>
           </div>
           
-          {listaMangas.length === 0 && (
+          {mangasFiltrados.length === 0 && (
             <div className="text-center py-10 bg-gray-50">
-              <p className="text-gray-500 text-lg">No hay mangas disponibles</p>
+              <p className="text-gray-500 text-lg">
+                {terminoBusqueda ? "No se encontraron mangas con ese criterio" : "No hay mangas disponibles"}
+              </p>
             </div>
           )}
         </div>

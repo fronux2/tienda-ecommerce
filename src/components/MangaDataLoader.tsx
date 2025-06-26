@@ -9,7 +9,6 @@ export default async function MangaDataLoader() {
   const categorias = await getCategorias();
   return (
     <div className="p-4">
-      <h2 className="mb-2 text-gray-700 text-2xl font-bold">Lista de Mangas</h2>
       <MangasTable mangas={mangas} series={series} categorias={categorias} />
     </div>
   );

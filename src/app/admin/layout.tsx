@@ -20,7 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="min-h-screen bg-[#FFF8F0] flex">
+    <div className="min-h-screen bg-black flex flex-col md:flex-row">
       {/* Barra de toggle */}
       <div 
         className={`fixed top-0 bottom-0 z-20 w-6 bg-black flex items-center justify-center cursor-pointer transition-all duration-300 ${

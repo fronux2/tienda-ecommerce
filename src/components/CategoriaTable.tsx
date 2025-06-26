@@ -41,7 +41,7 @@ export default function CategoriaTable({ categorias }: { categorias: Categoria[]
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 min-h-screen min-w-screen md:mid-w-auto">
       <h1 className="text-2xl font-bold mb-4">Panel de Administración</h1>
       <p className="mb-2 text-gray-700">Lista de Categorias</p>
       <div className="rounded-lg border border-gray-300 shadow">

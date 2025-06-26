@@ -50,18 +50,13 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
     : listaSeries;
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen">
+    <div className="p-4 bg-gray-50 min-h-screen min-w-screen md:mid-w-auto">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between md:items-center mb-6 flex-col md:flex-row">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Panel de Series</h1>
             <p className="text-gray-600 mt-2">Administra las series de tu catálogo</p>
-          </div>
-          <div className="bg-indigo-100 p-3 rounded-lg">
-            <p className="text-indigo-800 font-medium">
-              Total de series: <span className="font-bold">{listaSeries.length}</span>
-            </p>
-          </div>
+          </div>          
         </div>
 
         {/* Barra de búsqueda */}
@@ -70,7 +65,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
             <label htmlFor="buscar-series" className="block text-sm font-medium text-gray-700 mb-1">
               Buscar series
             </label>
-            <div className="relative">
+            <div className="relative flex items-center gap-4">
               <input
                 type="text"
                 id="buscar-series"
@@ -87,6 +82,11 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
                   ✕
                 </button>
               )}
+              <div className="bg-indigo-100 p-3 rounded-lg">
+                <p className="text-indigo-800 font-medium">
+                  Total de series: <span className="font-bold">{listaSeries.length}</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>

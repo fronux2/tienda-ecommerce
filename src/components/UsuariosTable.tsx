@@ -52,9 +52,11 @@ export default function UsuariosTable() {
   }, []);
 
   return (
-    <main className="flex flex-col items-center justify-start min-h-screen py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
-      <p className="text-xl mb-4">Lista de Usuarios</p>
+    <main className="flex flex-col items-center justify-start min-w-screen md:min-w-auto min-h-screen py-8 px-4">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-800">Panel de Usuarios</h1>
+        <p className="text-gray-600 mt-2">Administra y actualiza a los usuarios</p>
+      </div>
 
       <div className="overflow-x-auto w-full max-w-4xl rounded-lg border border-gray-300 shadow">
         <table className="w-full table-auto text-sm">
