@@ -29,22 +29,30 @@ export const useCartStore = create<CartState>((set,get) => ({
   addToCart: async (item) => {
     const state = get()
     const existingItem = state.cart.find(i => i.manga_id === item.manga_id && i.usuario_id === item.usuario_id)
-    console.log('itemmmmmmmm', item)
     if (existingItem) {
-      console.log('holaaaa1')
-      const nuevaCantidad = existingItem.cantidad + item.cantidad
-      await updateCartQuantitySupabase(item.usuario_id, item.manga_id, nuevaCantidad)
-      set({
-        cart: state.cart.map(i =>
-          i.manga_id === item.manga_id
-            ? { ...i, cantidad: nuevaCantidad }
-            : i
-        )
-      })
+      try {
+        const nuevaCantidad = existingItem.cantidad + item.cantidad
+        await updateCartQuantitySupabase(item.usuario_id, item.manga_id, nuevaCantidad)
+        set({
+          cart: state.cart.map(i =>
+            i.manga_id === item.manga_id
+              ? { ...i, cantidad: nuevaCantidad }
+              : i
+          )
+        })
+        
+      } catch (error) {
+        console.log('error con updateCartQuantitySupabase', error)
+      }
     } else {
-      console.log(item)
-      await addToCartSupabase(item)
-      set({ cart: [...state.cart, item] })
+      try {
+        await addToCartSupabase(item)
+        set({ cart: [...state.cart, item] })        
+      } catch (error) {
+        if(error.code === '23505') {
+          alert('Tienes un conflicto con otro dispositivo. Refresca la página para continuar')
+        }
+      }
     }
   },
 
