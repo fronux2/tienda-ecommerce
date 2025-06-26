@@ -1,3 +1,4 @@
+// components/Cart.tsx
 'use client'
 import { useState } from 'react'
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaTimes } from 'react-icons/fa'
@@ -19,81 +20,107 @@ const Cart = ({ userId }: { userId: string | null }) => {
   if (!userId) return null
 
   return (
-    <>
-      {/* Botón flotante del carrito */}
+    <div className="relative">
+      {/* Botón del carrito en el navbar */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition"
+        className="relative p-2 group"
+        aria-label="Abrir carrito"
       >
-        <FaShoppingCart size={20} />
+        <FaShoppingCart 
+          className="text-[#FFF8F0] group-hover:text-red-500 transition-colors" 
+          size={20} 
+        />
         {cart.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-xs rounded-full px-1">
+          <span className="absolute -top-1 -right-1 bg-red-600 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center">
             {cart.length}
           </span>
         )}
       </button>
 
-      {/* Drawer del carrito */}
-      <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-40 transform transition-transform ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="p-4 flex justify-between items-center border-b">
-          <h2 className="text-xl font-bold text-gray-800">Tu Carrito</h2>
-          <button onClick={() => setIsOpen(false)} className="text-gray-600 hover:text-gray-800">
-            <FaTimes />
+      {/* Panel del carrito */}
+      <div 
+        className={`fixed top-0 right-0 h-full w-full md:w-96 bg-white z-50 shadow-2xl transform transition-transform ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Encabezado */}
+        <div className="bg-red-600 p-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-white">Tu Carrito</h2>
+          <button 
+            onClick={() => setIsOpen(false)}
+            className="text-white hover:text-gray-200 transition-colors"
+            aria-label="Cerrar carrito"
+          >
+            <FaTimes size={20} />
           </button>
         </div>
 
-        <div className="p-4 overflow-y-auto h-[calc(100%-200px)]">
+        {/* Lista de productos */}
+        <div className="p-4 overflow-y-auto h-[calc(100%-150px)]">
           {cart.length === 0 ? (
-            <p className="text-gray-500 text-center mt-10">Tu carrito está vacío 🛒</p>
+            <div className="text-center py-8">
+              <div className="mx-auto bg-[#FFF8F0] w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                <FaShoppingCart className="text-red-600" size={24} />
+              </div>
+              <p className="text-gray-700">Tu carrito está vacío</p>
+              <p className="text-gray-500 text-sm mt-1">Agrega algunos mangas para empezar</p>
+            </div>
           ) : (
             <div className="space-y-4">
               {cart.map(item => (
-                <div key={item.manga_id} className="flex gap-3 border p-2 rounded-lg shadow-sm">
+                <div key={item.manga_id} className="flex gap-3 border-b pb-4 last:border-b-0 last:pb-0">
                   {item.mangas && (
                     <>
-                      <Image
-                        src={item.mangas.imagen_portada}
-                        alt={item.mangas.titulo}
-                        width={60}
-                        height={90}
-                        className="rounded-md object-cover"
-                      />
+                      <div className="flex-shrink-0">
+                        <Image
+                          src={item.mangas.imagen_portada}
+                          alt={item.mangas.titulo}
+                          width={60}
+                          height={90}
+                          className="rounded-md object-cover border border-gray-200"
+                        />
+                      </div>
+                      
                       <div className="flex-1">
-                        <h3 className="text-sm font-semibold">{item.mangas.titulo}</h3>
-                        <p className="text-xs text-gray-500">${item.mangas.precio}</p>
+                        <h3 className="font-semibold text-gray-800 line-clamp-1">{item.mangas.titulo}</h3>
+                        <p className="text-sm text-gray-600">${item.mangas.precio.toFixed(2)}</p>
 
-                        <div className="flex items-center mt-1 gap-2">
+                        <div className="flex items-center mt-2 gap-2">
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad - 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full"
+                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100"
                             disabled={item.cantidad <= 1}
+                            aria-label="Reducir cantidad"
                           >
                             <FaMinus size={10} />
                           </button>
 
-                          <span className="text-sm">{item.cantidad}</span>
+                          <span className="text-sm w-6 text-center">{item.cantidad}</span>
 
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad + 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-full"
-                            disabled={item.cantidad >= item.mangas.stock}
+                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100"
+                            disabled={item.cantidad >= (item.mangas.stock || 10)}
+                            aria-label="Aumentar cantidad"
                           >
                             <FaPlus size={10} />
                           </button>
                         </div>
+                      </div>
 
-                        <p className="text-sm mt-1 font-semibold text-blue-600">
+                      <div className="flex flex-col items-end justify-between">
+                        <button
+                          onClick={() => removeFromCart(item.manga_id, userId)}
+                          className="text-red-600 hover:text-red-800 transition-colors"
+                          aria-label="Eliminar del carrito"
+                        >
+                          <FaTrash size={16} />
+                        </button>
+                        <p className="font-semibold text-red-600">
                           ${(item.cantidad * item.mangas.precio).toFixed(2)}
                         </p>
                       </div>
-
-                      <button
-                        onClick={() => removeFromCart(item.manga_id, userId)}
-                        className="text-red-500 hover:text-red-600"
-                        title="Eliminar"
-                      >
-                        <FaTrash />
-                      </button>
                     </>
                   )}
                 </div>
@@ -102,30 +129,45 @@ const Cart = ({ userId }: { userId: string | null }) => {
           )}
         </div>
 
-        {/* Footer del carrito */}
-        <div className="p-4 border-t bg-gray-50">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-700 font-medium">Total:</span>
-            <span className="text-blue-600 font-bold">${total.toFixed(2)}</span>
+        {/* Footer con total y botones */}
+        {cart.length > 0 && (
+          <div className="border-t p-4 bg-[#FFF8F0]">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-medium text-gray-800">Total:</span>
+              <span className="text-xl font-bold text-red-600">${total.toFixed(2)}</span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition flex items-center justify-center"
+                onClick={() => clearCart(userId)}
+              >
+                <FaTrash className="mr-1" size={14} />
+                Vaciar
+              </button>
+              
+              <button
+                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition"
+                onClick={() => {
+                  setIsOpen(false)
+                  window.location.href = '/checkout'
+                }}
+              >
+                Comprar
+              </button>
+            </div>
           </div>
-          <button
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition mb-2"
-            onClick={() => {
-              setIsOpen(false)
-              window.location.href = '/checkout'
-            }}
-          >
-            Finalizar Compra
-          </button>
-          <button
-            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
-            onClick={() => clearCart(userId)}
-          >
-            Vaciar Carrito
-          </button>
-        </div>
+        )}
       </div>
-    </>
+      
+      {/* Fondo oscuro para móviles */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </div>
   )
 }
 

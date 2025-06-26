@@ -20,9 +20,9 @@ export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: s
     <button
       onClick={() => addToCart({ manga_id: mangaId, cantidad: 1, usuario_id: userId, mangas: manga })}
       type="button"
-      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg shadow transition-colors duration-300"
     >
-      Añadir al Carrito22
+      Añadir al Carrito
     </button>
   )
 }

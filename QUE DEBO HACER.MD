@@ -25,9 +25,9 @@
 - [ ] mejorar estilos de la web entera
 - [ ] cambiar en pedidos el id usuario por su nombre 
 - [ ] cambiar en pedidos el id direccion por su nombre
-- [ ] agregar editar a rol en admin/usuarios
+- [x] agregar editar a rol en admin/usuarios
 - [ ] corregir el metodo de ingreso de direcciones
-- [] infinit scroll
+- [ ] infinit scroll
 .
 ## Backend
 

@@ -12,15 +12,14 @@ export default async function Home() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) return <div>No tienes usuario</div>
   return (
-    <div>
+    <main>
        <Hero />
        <Popular id={user?.id} />
        <About />
        <SectionMap/>
        <Invitation/>
        <Footer />
-    </div>
+    </main>
   );
 }
