@@ -1,28 +1,72 @@
 "use client"
-
-import { useCartStore } from '@/store/cartStore';
+import { useCart } from '@/context/CartContext';
 import { useEffect, useState } from 'react';
 import { getMangaById } from '@/lib/supabase/services/mangas.client';
-import { NuevoManga } from '@/types/supabase';
-export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: string }) {
-  const [manga, setManga] = useState<NuevoManga | null>(null)
-  useEffect(() => {
-    const fetchManga = async () => {
-      const data = await getMangaById(mangaId)
-      setManga(data[0])
-    }
-    fetchManga()
-  }, [])
 
-  const addToCart = useCartStore((state) => state.addToCart)
-  if (!userId) return
+export default function AddCardButton2({ mangaId, userId }: { mangaId: string; userId: string }) {
+  const [manga, setManga] = useState<NuevoManga | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { addToCart, loading: cartLoading, syncCart } = useCart();
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchManga = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getMangaById(mangaId);
+        if (isMounted && data.length > 0) {
+          setManga(data[0]);
+        }
+      } catch (error) {
+        console.error("Error loading manga:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    if (userId && mangaId) {
+      fetchManga();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [mangaId, userId]);
+
+  if (!userId) return null;
+
+  const handleAddToCart = async () => {
+    if (!manga || !userId) return;
+    
+    await addToCart({
+      usuario_id: userId,
+      manga_id: mangaId,
+      cantidad: 1,
+      mangas: manga
+    });
+
+    // Sincronizar después de agregar
+    await syncCart(userId);
+  };
+
   return (
     <button
-      onClick={() => addToCart({ manga_id: mangaId, cantidad: 1, usuario_id: userId, mangas: manga })}
+      onClick={handleAddToCart}
       type="button"
-      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg shadow transition-colors duration-300"
+      disabled={isLoading || cartLoading || !manga}
+      className={`bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg shadow transition-colors duration-300 ${
+        isLoading || cartLoading ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+      aria-label={isLoading ? "Cargando..." : "Añadir al carrito"}
     >
-      Añadir al Carrito
+      {isLoading || cartLoading ? (
+        <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      ) : (
+        'Añadir al Carrito'
+      )}
     </button>
-  )
+  );
 }

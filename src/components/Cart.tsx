@@ -1,34 +1,34 @@
-// components/Cart.tsx
 'use client'
 import { useState } from 'react'
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaTimes } from 'react-icons/fa'
 import Image from "next/image"
-import { useCartStore } from '@/store/cartStore'
+import { useCart } from '@/context/CartContext'
 
 const Cart = ({ userId }: { userId: string | null }) => {
   const [isOpen, setIsOpen] = useState(false)
-
   const {
     cart,
+    loading,
     updateQuantity,
     removeFromCart,
     clearCart,
-  } = useCartStore()
-
-  const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
+    totalPrice
+  } = useCart()
 
   if (!userId) return null
 
   return (
-    <div className="relative">
-      {/* Botón del carrito en el navbar */}
+    <div className="relative ml-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 group"
         aria-label="Abrir carrito"
+        disabled={loading}
       >
         <FaShoppingCart 
-          className="text-[#FFF8F0] group-hover:text-red-500 transition-colors" 
+          className={`text-[#FFF8F0] group-hover:text-red-500 transition-colors ${
+            loading ? 'opacity-50' : ''
+          }`} 
           size={20} 
         />
         {cart.length > 0 && (
@@ -45,7 +45,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
         }`}
       >
         {/* Encabezado */}
-        <div className="bg-red-600 p-4 flex justify-between items-center">
+        <div className="bg-black p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">Tu Carrito</h2>
           <button 
             onClick={() => setIsOpen(false)}
@@ -58,7 +58,12 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
         {/* Lista de productos */}
         <div className="p-4 overflow-y-auto h-[calc(100%-150px)]">
-          {cart.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+              <p className="text-gray-700">Cargando tu carrito...</p>
+            </div>
+          ) : cart.length === 0 ? (
             <div className="text-center py-8">
               <div className="mx-auto bg-[#FFF8F0] w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <FaShoppingCart className="text-red-600" size={24} />
@@ -89,9 +94,8 @@ const Cart = ({ userId }: { userId: string | null }) => {
                         <div className="flex items-center mt-2 gap-2">
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad - 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100"
-                            disabled={item.cantidad <= 1}
-                            aria-label="Reducir cantidad"
+                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50"
+                            disabled={item.cantidad <= 1 || loading}
                           >
                             <FaMinus size={10} />
                           </button>
@@ -100,9 +104,8 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad + 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100"
-                            disabled={item.cantidad >= (item.mangas.stock || 10)}
-                            aria-label="Aumentar cantidad"
+                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50"
+                            disabled={item.cantidad >= (item.mangas.stock || 10) || loading}
                           >
                             <FaPlus size={10} />
                           </button>
@@ -112,8 +115,8 @@ const Cart = ({ userId }: { userId: string | null }) => {
                       <div className="flex flex-col items-end justify-between">
                         <button
                           onClick={() => removeFromCart(item.manga_id, userId)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
-                          aria-label="Eliminar del carrito"
+                          className="text-red-600 hover:text-red-800 transition-colors disabled:opacity-50"
+                          disabled={loading}
                         >
                           <FaTrash size={16} />
                         </button>
@@ -129,29 +132,27 @@ const Cart = ({ userId }: { userId: string | null }) => {
           )}
         </div>
 
-        {/* Footer con total y botones */}
-        {cart.length > 0 && (
+        {cart.length > 0 && !loading && (
           <div className="border-t p-4 bg-[#FFF8F0]">
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium text-gray-800">Total:</span>
-              <span className="text-xl font-bold text-red-600">${total.toFixed(2)}</span>
+              <span className="text-xl font-bold text-red-600">${totalPrice.toFixed(2)}</span>
             </div>
             
             <div className="grid grid-cols-2 gap-2">
               <button
-                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition flex items-center justify-center"
+                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition flex items-center justify-center disabled:opacity-50"
                 onClick={() => clearCart(userId)}
+                disabled={loading}
               >
                 <FaTrash className="mr-1" size={14} />
                 Vaciar
               </button>
               
               <button
-                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition"
-                onClick={() => {
-                  setIsOpen(false)
-                  window.location.href = '/checkout'
-                }}
+                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition disabled:opacity-50"
+                onClick={() => setIsOpen(false)}
+                disabled={loading}
               >
                 Comprar
               </button>
@@ -160,7 +161,6 @@ const Cart = ({ userId }: { userId: string | null }) => {
         )}
       </div>
       
-      {/* Fondo oscuro para móviles */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"

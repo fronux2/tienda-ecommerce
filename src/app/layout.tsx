@@ -3,6 +3,9 @@ import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import {Navbar} from "@/components/NavBar";
 import { unstable_ViewTransition as ViewTransition } from "react";
+import { CartProvider } from '@/context/CartContext';
+import CartInitializer from '@/components/CartInitializer';
+import { AppProviders } from "@/providers/AppProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,11 +55,15 @@ export default function RootLayout({
       <body
         className={`${geistRoboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
+        
         <ViewTransition name='page'>
+        <AppProviders>
+          <Navbar />
           {children}
+        </AppProviders>
         </ViewTransition>
       </body>
     </html>
   );
 }
+

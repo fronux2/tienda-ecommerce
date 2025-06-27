@@ -1,34 +1,27 @@
-// app/components/NavbarClient.tsx
 'use client'
-
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useCartStore } from '@/store/cartStore'
-import { fetchCartFromSupabase } from '@/lib/supabase/services/carrito.cliente'
 import { useEffect, useState } from 'react'
 import Cart from '@/components/Cart'
+import { useCart } from '@/context/CartContext'
 
 type Props = {
-  user: object | null
+  user: { id: string } | null
   rolId: number | null
 }
 
 export default function NavbarClient({ user, rolId }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const setCart = useCartStore((state) => state.setCart)
-  const cart = useCartStore((state) => state.cart)
-  
+  const { syncCart } = useCart()
   const pathname = usePathname()
   const isHome = pathname === '/'
 
   useEffect(() => {
-    const fetchCart = async () => {
-      const items = await fetchCartFromSupabase(user?.id || '')
-      setCart(items)
+    if (user?.id) {
+      syncCart(user.id)
     }
-    fetchCart()
-  }, [user, setCart])
+  }, [user, syncCart])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,7 +50,7 @@ export default function NavbarClient({ user, rolId }: Props) {
     >
       {children}
     </Link>
-  );
+  )
 
   const Button: React.FC<{ type?: "button" | "submit" | "reset"; children: React.ReactNode }> = ({ type = 'button', children }) => (
     <button 
@@ -66,7 +59,7 @@ export default function NavbarClient({ user, rolId }: Props) {
     >
       {children}
     </button>
-  );
+  )
 
   return (
     <>
@@ -123,15 +116,15 @@ export default function NavbarClient({ user, rolId }: Props) {
                   <form action="/logout" method="post" className="hidden md:block">
                     <Button type="submit">Cerrar sesión</Button>
                   </form>
-                  {rolId === 2 && <NavLink href="/admin" className="hidden md:block">Admin</NavLink>}
-                  {rolId === 1 && <NavLink href="/admin" className="hidden md:block">Normal</NavLink>}
+                  {rolId === 2 && <NavLink href="/admin">Admin</NavLink>}
+                  {rolId === 1 && <NavLink href="/admin">Normal</NavLink>}
                 </>
               ) : (
-                <NavLink href="/login" className="hidden md:block">Iniciar sesión</NavLink>
+                <NavLink href="/login">Iniciar sesión</NavLink>
               )}
               
               {/* Carrito visible en todos los dispositivos */}
-              <Cart userId={user?.id} />
+              <Cart userId={user?.id || null} />
             </div>
           </div>
         </div>
