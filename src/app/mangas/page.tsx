@@ -9,8 +9,8 @@ export default async function MangasPage() {
     data: { user },
   } = await supabase.auth.getUser()
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Mangas</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Nuestra Colección de Mangas</h1>
       <ListMangas mangas={data} userId={user?.id || ''} />
     </div>
   );
