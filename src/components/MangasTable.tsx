@@ -1,51 +1,53 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { updateManga } from "@/lib/supabase/services/mangas.client";
-import { type UpdateManga } from "@/types/supabase";
+import { useMangaStore } from "@/store/mangaStore";
 
 type Serie = { id: string; nombre: string };
 type Categoria = { id: string; nombre: string };
 
 export default function MangasTable({
-  mangas,
   series,
   categorias,
 }: {
-  mangas: UpdateManga[];
   series: Serie[];
   categorias: Categoria[];
 }) {
+  const { mangas, loadMangas } = useMangaStore();
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string | number>("");
-  const [listaMangas, setListaMangas] = useState(mangas);
   const [terminoBusqueda, setTerminoBusqueda] = useState("");
 
+  useEffect(() => {
+    loadMangas();
+  }, [loadMangas]);
+
   const mangasFiltrados = useMemo(() => {
-  if (!terminoBusqueda) return listaMangas;
-  
-  const termino = terminoBusqueda.toLowerCase();
-  
-  return listaMangas.filter(manga => {
-    const categoriaNombre = categorias.find(c => c.id === manga.categoria_id)?.nombre.toLowerCase();
-    const serieNombre = series.find(s => s.id === manga.serie_id)?.nombre.toLowerCase();
+    if (!terminoBusqueda) return mangas;
     
-    return (
-      manga.titulo?.toLowerCase().includes(termino) ||
-      manga.autor?.toLowerCase().includes(termino) ||
-      manga.editorial?.toLowerCase().includes(termino) ||
-      manga.isbn?.toLowerCase().includes(termino) ||
-      manga.idioma?.toLowerCase().includes(termino) ||
-      manga.estado?.toLowerCase().includes(termino) ||
-      manga.descripcion?.toLowerCase().includes(termino) ||
-      manga.volumen?.toString().includes(termino) ||
-      manga.precio?.toString().includes(termino) ||
-      manga.stock?.toString().includes(termino) ||
-      manga.numero_paginas?.toString().includes(termino) ||
-      categoriaNombre?.includes(termino) ||
-      serieNombre?.includes(termino)
-    );
-  });
-}, [terminoBusqueda, listaMangas, categorias, series]);
+    const termino = terminoBusqueda.toLowerCase();
+    
+    return mangas.filter(manga => {
+      const categoriaNombre = categorias.find(c => c.id === manga.categoria_id)?.nombre.toLowerCase();
+      const serieNombre = series.find(s => s.id === manga.serie_id)?.nombre.toLowerCase();
+      
+      return (
+        manga.titulo?.toLowerCase().includes(termino) ||
+        manga.autor?.toLowerCase().includes(termino) ||
+        manga.editorial?.toLowerCase().includes(termino) ||
+        manga.isbn?.toLowerCase().includes(termino) ||
+        manga.idioma?.toLowerCase().includes(termino) ||
+        manga.estado?.toLowerCase().includes(termino) ||
+        manga.descripcion?.toLowerCase().includes(termino) ||
+        manga.volumen?.toString().includes(termino) ||
+        manga.precio?.toString().includes(termino) ||
+        manga.stock?.toString().includes(termino) ||
+        manga.numero_paginas?.toString().includes(termino) ||
+        categoriaNombre?.includes(termino) ||
+        serieNombre?.includes(termino)
+      );
+    });
+  }, [terminoBusqueda, mangas, categorias, series]);
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: any) => {
     if (!id || valor === undefined) return;
@@ -82,13 +84,9 @@ export default function MangasTable({
     try {
       await updateManga(editando.id, { [editando.campo]: valorFinal });
       
-      setListaMangas(prev => 
-        prev.map(manga => 
-          manga.id === editando.id 
-            ? { ...manga, [editando.campo]: valorFinal } 
-            : manga
-        )
-      );
+      // No necesitamos actualizar el estado local ya que Zustand manejará esto
+      // cuando se recarguen los mangas
+      loadMangas(); // Recargamos los mangas para reflejar los cambios
     } catch (error) {
       console.error("Error al actualizar:", error);
     } finally {

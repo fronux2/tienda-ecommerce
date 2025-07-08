@@ -1,7 +1,7 @@
 // Hero.tsx
 import Link from "next/link";
 import Image from "next/image";
-
+import Librero from '../../public/imagenes/librero.webp';
 export default function Hero() {
   return (
     <section className="bg-[#FFF8F0] border-b-2 border-red-600 py-12 px-6 md:px-24">
@@ -23,11 +23,12 @@ export default function Hero() {
 
         <div className="md:w-1/2 flex justify-center">
           <Image
-            src="/imagenes/librero.webp"
+            src={Librero}
             alt="Librero de mangas"
             width={500}
             height={500}
             className="w-full max-w-md h-auto object-contain rounded-lg shadow-xl"
+            placeholder="blur"
             priority
           />
         </div>
