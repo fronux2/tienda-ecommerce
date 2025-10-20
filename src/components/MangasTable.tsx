@@ -49,13 +49,13 @@ export default function MangasTable({
     });
   }, [terminoBusqueda, mangas, categorias, series]);
 
-  const manejarDobleClick = (id: string | undefined, campo: string, valor: any) => {
+  const manejarDobleClick = (id: string | undefined, campo: string, valor: string | number | boolean | undefined) => {
     if (!id || valor === undefined) return;
     
     if (campo === "activo" || campo === "es_popular") {
-      setValorEditado(valor.toString());
+      setValorEditado(String(valor));
     } else {
-      setValorEditado(valor);
+      setValorEditado(valor as string | number);
     }
     
     setEditando({ id, campo });
@@ -70,7 +70,7 @@ export default function MangasTable({
   const manejarGuardar = async () => {
     if (!editando) return;
     
-    let valorFinal: any = valorEditado;
+    let valorFinal: string | number | boolean = valorEditado;
     
     if (editando.campo === "es_popular" || editando.campo === "activo") {
       valorFinal = valorEditado === "true";

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import useDebounce from '@/hooks/useDebounce';
+import Image from 'next/image';
 
 type Manga = {
   id: string;
@@ -65,7 +66,7 @@ export default function SearchBar() {
             <li key={manga.id} className="p-2 hover:bg-gray-200 cursor-pointer">
               <div className="flex items-center gap-2">
                 {manga.imagen_portada && (
-                  <img
+                  <Image
                     src={manga.imagen_portada}
                     alt={manga.titulo}
                     className="w-8 h-8 object-cover rounded"

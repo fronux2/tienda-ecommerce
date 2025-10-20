@@ -1,17 +1,25 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
 
 const CheckoutPage = () => {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+
+  type Address = {
+    id: string
+    usuario_id?: string
+    nombre_direccion: string
+    direccion: string
+    ciudad: string
+    codigo_postal?: string
+  }
 
   const [addressId, setAddressId] = useState('')
-  const [addresses, setAddresses] = useState<any[]>([])
+  const [addresses, setAddresses] = useState<Address[]>([])
   const [paymentMethod, setPaymentMethod] = useState('tarjeta')
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
-  const [loadingUser, setLoadingUser] = useState(true)
 
   const [showAddressForm, setShowAddressForm] = useState(false)
   const [newAddress, setNewAddress] = useState({
@@ -23,23 +31,12 @@ const CheckoutPage = () => {
 
   const {
     cart,
-    updateQuantity,
     clearCart,
   } = useCartStore()
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUserId(user?.id || null)
-      setLoadingUser(false)
-      if (user?.id) fetchAddresses(user.id)
-    }
-    fetchUser()
-  }, [])
-
-  const fetchAddresses = async (userId: string) => {
+  const fetchAddresses = useCallback(async (userId: string) => {
     const { data, error } = await supabase
       .from('direcciones')
       .select('*')
@@ -48,7 +45,16 @@ const CheckoutPage = () => {
     if (!error && data) {
       setAddresses(data)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUserId(user?.id || null)
+      if (user?.id) fetchAddresses(user.id)
+    }
+    fetchUser()
+  }, [fetchAddresses, supabase])
 
   const handleAddAddress = async () => {
     if (!userId) return alert('Usuario no identificado')
@@ -96,12 +102,14 @@ const CheckoutPage = () => {
       console.log('order', order)
       if (orderError) throw orderError
 
-      const orderDetails = cart.map(item => ({
-        pedido_id: order[0].id,
-        manga_id: item.mangas.id,
-        cantidad: item.cantidad,
-        precio_unitario: item.mangas.precio
-      }))
+      const orderDetails = cart
+        .filter(item => item.mangas)
+        .map(item => ({
+          pedido_id: order[0].id,
+          manga_id: item.mangas?.id ?? '',
+          cantidad: item.cantidad,
+          precio_unitario: item.mangas?.precio ?? 0
+        }))
 
       const { error: detailsError } = await supabase
         .from('detalle_pedidos')
@@ -110,13 +118,15 @@ const CheckoutPage = () => {
       if (detailsError) throw detailsError
 
 
-      //no tengo la funcion decrement_stock asi que tengo que cambiar esto!!!!!!!!!!!!
-      const stockUpdates = cart.map(item =>
-        supabase.rpc('decrement_stock', {
-          manga_id: item.mangas.id,
-          decrement_by: item.cantidad
-        })
-      )
+      // Filtrar items sin 'mangas' y usar aserción no-nula para acceder al id
+      const stockUpdates = cart
+        .filter(item => item.mangas)
+        .map(item =>
+          supabase.rpc('decrement_stock', {
+            manga_id: item.mangas!.id,
+            decrement_by: item.cantidad
+          })
+        )
 
       await Promise.all(stockUpdates)
 
@@ -126,7 +136,7 @@ const CheckoutPage = () => {
         .eq('usuario_id', userId)
         .eq('checked_out', false)
 
-      clearCart(userId)
+      if (userId) clearCart(userId)
 
       //window.location.href = `/order-confirmed/${order.id}`
 
@@ -214,12 +224,16 @@ const CheckoutPage = () => {
       {/* Resumen del pedido */}
       <div className="border p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-4">Resumen del Pedido</h2>
-        {cart.map(item => (
-          <div key={item.id} className="flex justify-between mb-2">
-            <span>{item.mangas.titulo} x {item.cantidad}</span>
-            <span>${(item.cantidad * item.mangas.precio).toFixed(2)}</span>
-          </div>
-        ))}
+        {cart.map(item => {
+          const title = item.mangas?.titulo ?? 'Manga desconocido'
+          const price = item.mangas?.precio ?? 0
+          return (
+            <div key={item.id} className="flex justify-between mb-2">
+              <span>{title} x {item.cantidad}</span>
+              <span>${(item.cantidad * price).toFixed(2)}</span>
+            </div>
+          )
+        })}
         <div className="flex justify-between mt-4 pt-4 border-t">
           <span className="font-bold">Total:</span>
           <span className="font-bold">${total.toFixed(2)}</span>

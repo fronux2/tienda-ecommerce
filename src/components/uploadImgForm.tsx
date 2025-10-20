@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
 
 export default function UploadImgForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -53,7 +54,7 @@ export default function UploadImgForm() {
       {url && (
         <div className="mt-4">
           <p>Imagen subida:</p>
-          <img src={url} alt="Preview" className="w-32 mt-2" />
+          <Image src={url} alt="Preview" className="w-32 mt-2" />
           <code className="text-sm break-all">{url}</code>
         </div>
       )}

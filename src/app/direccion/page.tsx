@@ -8,7 +8,8 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 // Fix para los íconos que no cargan bien en Next.js
-delete (L.Icon.Default.prototype as any)._getIconUrl
+type IconDefaultPrototype = { _getIconUrl?: () => string | undefined }
+delete (L.Icon.Default.prototype as IconDefaultPrototype)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
