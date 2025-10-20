@@ -20,7 +20,7 @@ export default function Page() {
 
   return(<>
   <main className="flex flex-col items-center justify-center min-h-screen py-2">
-    <h1 className="text-3xl font-bold mb-8">Admin</h1>
+    <h1 className="text-3xl font-bold mb-8">Crear un Nuevo Usuario</h1>
     <form 
       onSubmit={handleSubmit(onSubmit)}
       className=" shadow-lg rounded-lg p-8 w-full max-w-md space-y-6"

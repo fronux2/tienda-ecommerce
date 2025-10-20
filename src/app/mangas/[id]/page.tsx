@@ -1,6 +1,5 @@
 "use client"
 import Image from 'next/image'
-import { use } from 'react'
 import { useMangaStore } from '@/store/mangaStore'
 type Props = {
   params: {

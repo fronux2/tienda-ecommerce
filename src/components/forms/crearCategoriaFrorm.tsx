@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { crearCategoria } from '../actions/categorias'
+import { crearCategoria } from '@/components/actions/categorias'
 
 const schema = z.object({
   name: z.string().min(1, 'El nombre es obligatorio').max(100),
@@ -31,7 +31,7 @@ export default function CrearCategoriaForm() {
       onSubmit={handleSubmit(onSubmit)}
       className='max-w-md mx-auto p-4 border rounded shadow space-y-4'
     >
-      <h2 className='text-xl font-bold'>Crear Categoría</h2>
+      <h2 className='text-xl font-bold'>Crear una nueva Categoría</h2>
 
       <div>
         <label htmlFor='name' className='block mb-1'>
