@@ -2,7 +2,6 @@ import { createClient } from '@/utils/supabase/client';
 import { type NuevoManga, type UpdateManga } from '@/types/supabase';
 
 export async function crearManga(manga: NuevoManga) {
-  console.log('Creando manga:', manga);
   const supabase = await createClient(); // <-- usa el server client
   const { data, error } = await supabase
     .from('mangas')

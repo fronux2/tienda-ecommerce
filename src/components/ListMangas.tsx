@@ -39,7 +39,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
     };
     fetchSeriesCat();
     setMangasFiltrados(filterMangas(categoriaSeleccionada, serieSeleccionada));
-  }, [categoriaSeleccionada, serieSeleccionada, filterMangas]);
+  }, [categoriaSeleccionada, serieSeleccionada, filterMangas, mangas, addMangas]);
 
   return (
     <section className="space-y-8">

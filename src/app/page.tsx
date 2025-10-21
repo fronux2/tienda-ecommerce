@@ -14,7 +14,7 @@ export default async function Home() {
   return (
     <main>
       <Hero />
-      <Popular id={user?.id} />
+      <Popular id={user?.id ?? ''} />
       <About />
       <SectionMap />
       <Invitation />

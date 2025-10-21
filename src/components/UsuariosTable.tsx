@@ -11,8 +11,6 @@ export default function UsuariosTable() {
   const [valorEditado, setValorEditado] = useState<string>("");
   const [roles, setRoles] = useState<Roles[]>([]);
 
-  console.log(JSON.stringify(usuarios));
-
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined) => {
     if (!id || valor === undefined) return;
     setEditando({ id, campo });
@@ -49,7 +47,7 @@ export default function UsuariosTable() {
   useEffect(() => {
     getUsuarios();
     getRoles().then(setRoles);
-  }, []);
+  }, [ getUsuarios ]);
 
   return (
     <main className="flex flex-col items-center justify-start min-w-screen md:min-w-auto min-h-screen py-8 px-4">
@@ -77,7 +75,7 @@ export default function UsuariosTable() {
                     manejarDobleClick(usuario.id, "email", usuario.email)
                   }
                 >
-                  {editando?.id === usuario.id && editando.campo === "email" ? (
+                  {editando?.id === usuario.id && editando?.campo === "email" ? (
                     <input
                       type="text"
                       value={valorEditado}
@@ -95,7 +93,7 @@ export default function UsuariosTable() {
                   className="px-4 py-2 border"
                   onDoubleClick={() => manejarDobleClick(usuario.id, "rol_id", usuario.rol_id)}>
                     {
-                      editando?.id === usuario.id && editando.campo === "rol_id" ? (
+                      editando?.id === usuario.id && editando?.campo === "rol_id" ? (
                         <select
                           className="w-full px-2 py-1 border rounded"
                           value={valorEditado}
@@ -110,7 +108,7 @@ export default function UsuariosTable() {
                             </option>
                           ))}
                         </select>
-                      ) : (<p>{usuario.roles.nombre}</p>)
+                      ) : (<p>{usuario.roles[0].nombre}</p>)
                     }
                 </td>
               </tr>

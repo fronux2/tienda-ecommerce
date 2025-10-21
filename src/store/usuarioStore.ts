@@ -1,16 +1,8 @@
 import { create } from 'zustand'
-import { getUsuarios as fetchUsuarios } from '@/lib/supabase/services/usuarios.client'
+import { getUsuarios as fetchUsuarios} from '@/lib/supabase/services/usuarios.client'
+import { Usuario } from '@/types/supabase'
 
-export type Usuario = {
-  id: string
-  email: string
-  rol_id: string
-  roles: {
-    id: string
-    nombre: string
-    rol: string
-  }
-}
+
 
 export type UsuarioState = {
   usuarios: Usuario[] | null
@@ -36,7 +28,7 @@ export const useUsuarioStore = create<UsuarioState>((set) => ({
             roles: {
               ...u.roles,
               id: valor,
-              nombre: rolesMap?.[valor] || u.roles.nombre
+              nombre: rolesMap?.[valor] || u.roles[0].nombre
             }
           }
         }

@@ -42,7 +42,7 @@ export default function SearchBar() {
     };
 
     buscar();
-  }, [debouncedBusqueda]);
+  }, [debouncedBusqueda, supabase]);
 
   return (
     <div className="relative max-w-md mx-auto mt-6">

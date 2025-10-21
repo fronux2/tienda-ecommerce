@@ -83,11 +83,9 @@ const CheckoutPage = () => {
   }
 
   const handleCheckout = async () => {
-    console.log('handleCheckout', userId)
     setLoading(true)
 
     try {
-      console.log(userId, addressId, total, paymentMethod)
       const { data: order, error: orderError } = await supabase
         .from('pedidos')
         .insert([{
@@ -99,7 +97,6 @@ const CheckoutPage = () => {
         }])
         .select('*')
 
-      console.log('order', order)
       if (orderError) throw orderError
 
       const orderDetails = cart

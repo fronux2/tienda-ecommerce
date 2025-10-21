@@ -14,6 +14,9 @@ export default async function getPedidos() {
   return data;
 }
 
+// Define UpdatePedido type to satisfy TypeScript; adjust fields to match your schema if needed.
+export type UpdatePedido = Record<string, unknown>;
+
 //update
 
 export async function updatePedido(id: string, pedidoData: UpdatePedido) {

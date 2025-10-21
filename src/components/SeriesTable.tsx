@@ -144,7 +144,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
           {seriesFiltradas.length === 0 && busqueda && (
             <div className="text-center py-10 bg-gray-50">
               <p className="text-gray-500">
-                No se encontraron series para: <span className="font-semibold">"{busqueda}"</span>
+                No se encontraron series para: <span className="font-semibold">&quot;{busqueda}&quot;</span>
               </p>
             </div>
           )}

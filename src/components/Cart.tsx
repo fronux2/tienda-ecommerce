@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaTimes } from 'react-icons/fa'
 import Image from "next/image"
 import { useCartStore } from '@/store/cartStore'
+import { useRouter } from 'next/navigation'
 
 const Cart = ({ userId }: { userId: string | null }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,7 +17,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
   } = useCartStore()
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
-
+  const router = useRouter()
   if (!userId) return null
 
   return (
@@ -150,7 +151,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                 className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition"
                 onClick={() => {
                   setIsOpen(false)
-                  window.location.href = '/checkout'
+                  /*window.location.href = '/checkout'*/ router.push('/checkout')
                 }}
               >
                 Comprar

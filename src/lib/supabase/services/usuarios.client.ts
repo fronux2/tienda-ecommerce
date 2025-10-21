@@ -3,8 +3,6 @@ import { createClient } from "@/utils/supabase/client"
 //update user
 export const updateUsuario = async (userId: string, data: Partial<Usuario>): Promise<void> => {
   const supabase = await createClient()
-  console.log('Datos a actualizar:', data)
-  console.log('ID del usuario:', userId)
   const { error } = await supabase
     .from('usuarios')
     .update(data)
@@ -46,7 +44,7 @@ export const getRoles = async (): Promise<Roles[]> => {
 
   const roles = data.map((role: Roles) => ({
     id: role.id,
-    nombre: role.nombre,
+    nombre: role.nombre
   }))
 
   return roles

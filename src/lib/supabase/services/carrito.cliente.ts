@@ -29,7 +29,7 @@ export const addToCartSupabase = async (item: CartItem) => {
 
 // Eliminar del carrito
 export const removeFromCartSupabase = async (manga_id: string ,usuario_id: string) => { 
-  const { error, data } = await supabase
+  const { error } = await supabase
     .from("carrito")
     .delete()
     .eq("usuario_id", usuario_id)

@@ -1,6 +1,7 @@
 export type Roles = {
   id: number
   nombre: string
+  rol?: string
 }
 
 export type Rol = {
@@ -9,8 +10,9 @@ export type Rol = {
 }
 
 export type Usuario = {
-  id: string
+  id?: string
   email: string
+  rol_id?: string
   roles: Roles[]
 }
 
@@ -22,6 +24,7 @@ export type NuevoUsuario = {
 export type Categoria = {
   id: string
   nombre: string
+  descripcion: string
 }
 
 export type Serie = {

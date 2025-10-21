@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import Cart from '@/components/Cart'
 
 type Props = {
-  user: object | null
+  user: { id: string } | null
   rolId: number | null
 }
 
@@ -17,7 +17,7 @@ export default function NavbarClient({ user, rolId }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const setCart = useCartStore((state) => state.setCart)
-  const cart = useCartStore((state) => state.cart)
+  //const cart = useCartStore((state) => state.cart)
   
   const pathname = usePathname()
   const isHome = pathname === '/'
@@ -49,15 +49,20 @@ export default function NavbarClient({ user, rolId }: Props) {
     document.body.style.overflow = 'auto'
   }
 
-  const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
-    <Link 
-      href={href} 
-      className="text-[#FFF8F0] hover:text-red-500 transition-colors py-2 px-3 rounded-md font-medium text-lg"
-      onClick={closeMenu}
-    >
-      {children}
-    </Link>
-  );
+  const NavLink: React.FC<{ href: string; children: React.ReactNode; className?: string }> = ({ href, children, className }) => {
+    const baseClasses = "text-[#FFF8F0] hover:text-red-500 transition-colors py-2 px-3 rounded-md font-medium text-lg";
+    const combinedClasses = className ? `${baseClasses} ${className}` : baseClasses;
+
+    return (
+      <Link 
+        href={href} 
+        className={combinedClasses}
+        onClick={closeMenu}
+      >
+        {children}
+      </Link>
+    );
+  };
 
   const Button: React.FC<{ type?: "button" | "submit" | "reset"; children: React.ReactNode }> = ({ type = 'button', children }) => (
     <button 
@@ -131,7 +136,7 @@ export default function NavbarClient({ user, rolId }: Props) {
               )}
               
               {/* Carrito visible en todos los dispositivos */}
-              <Cart userId={user?.id} />
+              <Cart userId={user?.id ?? null} />
             </div>
           </div>
         </div>

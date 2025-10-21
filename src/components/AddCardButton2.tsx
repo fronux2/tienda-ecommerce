@@ -12,13 +12,15 @@ export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: s
       setManga(data[0])
     }
     fetchManga()
-  }, [])
+  }, [ mangaId ])
 
   const addToCart = useCartStore((state) => state.addToCart)
   if (!userId) return
   return (
     <button
-      onClick={() => addToCart({ manga_id: mangaId, cantidad: 1, usuario_id: userId, mangas: manga })}
+      onClick={() => {
+        if (!manga) return;
+        addToCart({ manga_id: mangaId, cantidad: 1, usuario_id: userId, mangas: manga })}}
       type="button"
       className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg shadow transition-colors duration-300"
     >

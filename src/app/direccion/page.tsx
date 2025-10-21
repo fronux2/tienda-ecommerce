@@ -1,20 +1,9 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import L from 'leaflet'
 
-// Importar los estilos de Leaflet
-import 'leaflet/dist/leaflet.css'
-
-// Fix para los íconos que no cargan bien en Next.js
-type IconDefaultPrototype = { _getIconUrl?: () => string | undefined }
-delete (L.Icon.Default.prototype as IconDefaultPrototype)._getIconUrl
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-})
+const MapComponent = dynamic(() => import('../../components/MapComponent'), { ssr: false })
 
 type Resultado = {
   display_name: string
@@ -22,7 +11,7 @@ type Resultado = {
   lon: string
 }
 
-export default function BusquedaDireccion() {
+export default function BusquedaDireccionPage() {
   const [busqueda, setBusqueda] = useState('')
   const [resultados, setResultados] = useState<Resultado[]>([])
   const [seleccionado, setSeleccionado] = useState<Resultado | null>(null)
@@ -30,9 +19,13 @@ export default function BusquedaDireccion() {
   useEffect(() => {
     const delay = setTimeout(() => {
       if (busqueda.length >= 3) {
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(busqueda)}&format=json&addressdetails=1&limit=5`)
-          .then(res => res.json())
-          .then(data => setResultados(data))
+        fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+            busqueda
+          )}&format=json&addressdetails=1&limit=5`
+        )
+          .then((res) => res.json())
+          .then((data) => setResultados(data))
       } else {
         setResultados([])
       }
@@ -74,23 +67,9 @@ export default function BusquedaDireccion() {
           <h2 className="font-bold mb-2">Dirección seleccionada:</h2>
           <p className="mb-4">{seleccionado.display_name}</p>
 
-          <MapContainer
-            center={[parseFloat(seleccionado.lat), parseFloat(seleccionado.lon)]}
-            zoom={17}
-            scrollWheelZoom={false}
-            style={{ height: '400px', width: '100%' }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[parseFloat(seleccionado.lat), parseFloat(seleccionado.lon)]}>
-              <Popup>{seleccionado.display_name}</Popup>
-            </Marker>
-          </MapContainer>
+          <MapComponent seleccionado={seleccionado} />
         </div>
       )}
     </div>
   )
 }
-

@@ -5,7 +5,7 @@ export type CartItem = {
   usuario_id: string | null
   manga_id: string
   mangas?: {
-    id: string
+    id?: string
     titulo: string
     precio: number
     imagen_portada: string
@@ -32,7 +32,9 @@ export const useCartStore = create<CartState>((set,get) => ({
     if (existingItem) {
       try {
         const nuevaCantidad = existingItem.cantidad + item.cantidad
-        await updateCartQuantitySupabase(item.usuario_id, item.manga_id, nuevaCantidad)
+        if (item.usuario_id) {
+          await updateCartQuantitySupabase(item.usuario_id, item.manga_id, nuevaCantidad)
+        }
         set({
           cart: state.cart.map(i =>
             i.manga_id === item.manga_id
@@ -40,24 +42,29 @@ export const useCartStore = create<CartState>((set,get) => ({
               : i
           )
         })
-        
       } catch (error) {
-        console.log('error con updateCartQuantitySupabase', error)
+        console.error('Error al actualizar la cantidad del carrito:', error)
       }
     } else {
       try {
         await addToCartSupabase(item)
         set({ cart: [...state.cart, item] })        
-      } catch (error) {
-        if(error.code === '23505') {
+      } catch (error: unknown) {
+        const hasCode = (err: unknown): err is { code: string } =>
+          typeof err === 'object' &&
+          err !== null &&
+          'code' in err &&
+          typeof (err as Record<string, unknown>).code === 'string'
+        if (hasCode(error) && error.code === '23505') {
           alert('Tienes un conflicto con otro dispositivo. Refresca la página para continuar')
+        } else {
+          console.error('Error al agregar al carrito:', error)
         }
       }
     }
   },
 
   removeFromCart: async(manga_id, usuario_id) =>{
-    console.log('removeFromCart', manga_id, usuario_id)
     if(usuario_id) await removeFromCartSupabase(manga_id, usuario_id)
     set((state) => ({
       cart: state.cart.filter((item) => item.manga_id !== manga_id),

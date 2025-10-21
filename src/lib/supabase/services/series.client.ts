@@ -13,12 +13,10 @@ export async function getSeriesClient() {
 }
 
 export default async function agregarNuevaSerie(data: NuevaSerie) {
-  console.log('agregarNuevaSerie', data);
   const supabase = await createClient();
   // Insertar la nueva serie en la tabla 'series'
   try {
-      const insertado = await supabase.from('series').insert(data)
-      console.log('insertado', insertado);
+      await supabase.from('series').insert(data)
     
   } catch (error) {
     console.error('Error al crear la serie:', error);
