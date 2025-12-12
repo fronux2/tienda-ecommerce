@@ -5,6 +5,8 @@ import React from 'react'
 import Link from 'next/link' // Importamos Link para el botón de volver
 import { useMangaStore } from '@/store/mangaStore'
 import { type Manga } from '@/types/supabase'
+import { AddCardButton2 } from '@/components/AddCardButton2'
+import useUser from '@/hooks/useUser'
 
 type Props = {
   id?: string
@@ -13,6 +15,7 @@ type Props = {
 const MangaDetailClient = ({ id }: Props) => {
   const mangas: Manga[] = useMangaStore((state) => state.mangas)
   const manga = mangas.find((m) => m.id === id)
+  const { user } = useUser()
 
   // -- UI para ID no válido --
   if (!id) {
@@ -46,14 +49,14 @@ const MangaDetailClient = ({ id }: Props) => {
     <div className="min-h-screen bg-[#0a0a0a] text-[#FFF8F0] pb-20">
       
       {/* Fondo decorativo difuminado (Opcional, da un toque muy pro) */}
-      <div className="absolute top-0 left-0 w-full h-[400px] overflow-hidden opacity-20 pointer-events-none z-0">
+      <div className="absolute top-0 left-0 w-full h-100 overflow-hidden opacity-20 pointer-events-none z-0">
          <Image
             src={manga.imagen_portada || "/placeholder.jpg"}
             alt="Background blur"
             fill
             className="object-cover blur-3xl"
          />
-         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-[#0a0a0a]"></div>
+         <div className="absolute inset-0 bg-linear-to-b from-black/20 to-[#0a0a0a]"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 relative z-10">
@@ -70,7 +73,7 @@ const MangaDetailClient = ({ id }: Props) => {
           
           {/* COLUMNA IZQUIERDA: Imagen */}
           <div className="md:col-span-5 lg:col-span-4 flex flex-col">
-            <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl shadow-red-900/20 border-2 border-neutral-800">
+            <div className="relative aspect-2/3 w-full rounded-xl overflow-hidden shadow-2xl shadow-red-900/20 border-2 border-neutral-800">
               <Image
                 src={manga.imagen_portada || "/placeholder.jpg"}
                 alt={`Portada de ${manga.titulo}`}
@@ -117,7 +120,7 @@ const MangaDetailClient = ({ id }: Props) => {
               </p>
             </div>
 
-            {/* Precio y Acción (Simulado ya que no vi precio en tus props, pero el stock sí) */}
+            {/* Precio y Acción */}
             <div className="p-6 bg-neutral-900/50 border border-neutral-800 rounded-xl backdrop-blur-sm">
                 <div className="flex items-center justify-between mb-4">
                     <span className="text-gray-400">Disponibilidad:</span>
@@ -125,17 +128,17 @@ const MangaDetailClient = ({ id }: Props) => {
                         {manga.stock} unidades
                     </span>
                 </div>
-                {/* Aquí podrías poner el botón de "Agregar al Carrito" en el futuro */}
-                <button 
-                  disabled={!isAvailable}
-                  className={`w-full py-3 px-4 rounded-lg font-bold text-lg transition-all ${
-                    isAvailable 
-                    ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/30 hover:shadow-red-900/50' 
-                    : 'bg-neutral-800 text-gray-500 cursor-not-allowed'
-                  }`}
-                >
-                  {isAvailable ? 'Agregar al Carrito' : 'Sin Stock'}
-                </button>
+                {/* Botón para agregar al carrito */}
+                {isAvailable ? (
+                  <AddCardButton2 mangaId={manga.id} userId={user?.id || ''} />
+                ) : (
+                  <button 
+                    disabled
+                    className="w-full py-3 px-4 rounded-lg font-bold text-lg bg-neutral-800 text-gray-500 cursor-not-allowed"
+                  >
+                    Sin Stock
+                  </button>
+                )}
             </div>
 
             {/* Descripción */}
