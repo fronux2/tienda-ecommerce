@@ -9,7 +9,7 @@ export async function Navbar() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const rolId = await getRolUsuario(user?.id || '')
+  const rolId = user ? await getRolUsuario(user.id) : null
 
   return <NavbarClient user={user} rolId={rolId} />
 }
