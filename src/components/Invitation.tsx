@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Invitation() {
   return (
-    <section className="w-full bg-gradient-to-r from-[#FFF8F0] to-[#FFF0E0] py-20 border-t-2 border-red-600 relative overflow-hidden">
+    <section className="w-full bg-linear-to-r from-[#FFF8F0] to-[#FFF0E0] py-20 border-t-2 border-red-600 relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
           ¿Listo para tu próxima <span className="text-red-600">aventura</span>?

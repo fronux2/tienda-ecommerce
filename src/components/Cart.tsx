@@ -73,7 +73,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                 <div key={item.manga_id} className="flex gap-3 border-b pb-4 last:border-b-0 last:pb-0">
                   {item.mangas && (
                     <>
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <Image
                           src={item.mangas.imagen_portada}
                           alt={item.mangas.titulo}

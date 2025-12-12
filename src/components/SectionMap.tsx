@@ -49,7 +49,7 @@ export default function SectionMap() {
           <div className="flex-1 flex flex-col gap-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
             {contactInfo.map((item, index) => (
                 <div key={index} className="flex items-start gap-5">
-                    <div className="bg-red-600 p-3 rounded-full flex-shrink-0">
+                    <div className="bg-red-600 p-3 rounded-full shrink-0">
                         {item.icon}
                     </div>
                     <div>

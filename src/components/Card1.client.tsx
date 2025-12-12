@@ -41,11 +41,11 @@ export default function Card1({ id, imagen, titulo, autor, editorial, precio, us
         
         <div className="space-y-1 mb-3">
           <p className="text-sm text-gray-800 flex items-start">
-            <span className="font-semibold text-black min-w-[70px]">Autor:</span> 
+            <span className="font-semibold text-black min-w-17.5">Autor:</span> 
             <span className="flex-1">{autor}</span>
           </p>
           <p className="text-sm text-gray-800 flex items-start">
-            <span className="font-semibold text-black min-w-[70px]">Editorial:</span> 
+            <span className="font-semibold text-black min-w-17.5">Editorial:</span> 
             <span className="flex-1">{editorial}</span>
           </p>
         </div>
