@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tienda Ecommerce de Mangas
 
-## Getting Started
+Aplicación web construida con Next.js para gestionar una tienda de mangas: catálogo, administración de productos y series, gestión de usuarios y seguimiento de pedidos.
 
-First, run the development server:
+## Dominio de negocio
+
+Este proyecto está enfocado en una **tienda de mangas** con dos grandes áreas:
+
+- **Experiencia pública**: navegación del catálogo y flujos de compra para clientes.
+- **Backoffice administrativo**: mantenimiento de mangas, categorías, series, usuarios y pedidos.
+
+La autenticación y el control de permisos se realizan con Supabase, permitiendo diferenciar entre usuarios normales y administrativos.
+
+## Arquitectura (rutas y módulos clave)
+
+- `src/app/admin`
+  - Rutas del panel de administración (`/admin` y subrutas como `/admin/mangas`, `/admin/series`, `/admin/categorias`, `/admin/usuarios`, `/admin/pedidos`).
+  - Incluye validación de rol para restringir el acceso a usuarios autorizados.
+
+- `src/lib/supabase/services`
+  - Servicios de acceso a datos con Supabase.
+  - Separación por contexto de ejecución:
+    - `*.server.ts`: lógica para Server Components / contexto servidor.
+    - `*.client.ts`: lógica usada desde componentes cliente.
+
+- `src/store`
+  - Estado global del frontend (Zustand).
+  - Útil para manejar estado de sesión/usuario y estados compartidos de UI.
+
+## Variables de entorno
+
+Configura estas variables en tu `.env.local`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+### Contexto de uso
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+  - URL del proyecto de Supabase.
+  - Se usa tanto en cliente como en servidor para inicializar el SDK.
+  - Al tener prefijo `NEXT_PUBLIC_`, puede exponerse al frontend.
+
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - Clave pública (anónima) de Supabase.
+  - Se usa en cliente/servidor para operaciones permitidas por RLS.
+  - Es pública por diseño (siempre protegida por políticas RLS adecuadas).
+
+- `SUPABASE_SERVICE_ROLE_KEY`
+  - Clave con privilegios elevados para operaciones administrativas.
+  - **Uso exclusivo en backend** (por ejemplo, rutas API del servidor).
+  - **Nunca** debe exponerse en componentes cliente ni enviarse al navegador.
+
+## Desarrollo local
+
+### Prerrequisitos
+
+- Node.js 20+ recomendado.
+- npm (incluido con Node.js).
+- Proyecto/configuración de Supabase con las variables de entorno anteriores.
+
+### Instalación
+
+```bash
+npm install
+```
+
+### Comandos disponibles
+
+- Desarrollo:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Build de producción:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Lint:
 
-## Learn More
+```bash
+npm run lint
+```
 
-To learn more about Next.js, take a look at the following resources:
+- Tests:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Permisos y roles
 
-## Deploy on Vercel
+El sistema utiliza `rol_id` para controlar acceso.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `rol_id === 2`
+  - Usuario con permisos de administración.
+  - Puede acceder a rutas de administración y operar sobre módulos de gestión.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `rol_id !== 2`
+  - Usuario sin permisos administrativos.
+  - Debe ser redirigido o bloqueado al intentar entrar a rutas admin.
+
+### Rutas administrativas esperadas
+
+- `/admin`
+- `/admin/mangas`
+- `/admin/series`
+- `/admin/categorias`
+- `/admin/usuarios`
+- `/admin/pedidos`
+
+Comportamiento esperado:
+
+- Si el usuario autenticado tiene `rol_id === 2`, la app muestra y habilita el panel admin.
+- Si no cumple ese rol, la app evita el acceso al backoffice y devuelve al flujo permitido para su perfil.
