@@ -108,7 +108,7 @@ export default function UsuariosTable() {
                             </option>
                           ))}
                         </select>
-                      ) : (<p>{usuario.roles[0].nombre}</p>)
+                      ) : (<p>{usuario.roles?.[0]?.nombre || 'Sin rol'}</p>)
                     }
                 </td>
               </tr>
