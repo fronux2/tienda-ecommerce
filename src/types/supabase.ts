@@ -134,6 +134,15 @@ export type DetallePedido = {
   manga?: Manga
 }
 
+export type Direccion = {
+  id: string
+  usuario_id?: string
+  nombre_direccion: string
+  direccion: string
+  ciudad: string
+  codigo_postal?: string
+}
+
 export type CarritoItem = {
   id: string
   user_id: string
