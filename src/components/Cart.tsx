@@ -9,6 +9,7 @@ import { formatPrice } from '@/lib/formatPrice'
 
 const Cart = ({ userId }: { userId: string | null }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [cartLoading, setCartLoading] = useState(false)
 
   const {
     cart,
@@ -24,7 +25,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
       {/* Botón del carrito en el navbar */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 group"
+        className="relative p-2 group active:scale-90 transition-transform"
         aria-label="Abrir carrito"
       >
         <FaShoppingCart 
@@ -47,9 +48,9 @@ const Cart = ({ userId }: { userId: string | null }) => {
         {/* Encabezado */}
         <div className="bg-red-600 p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">Tu Carrito</h2>
-          <button 
+          <button
             onClick={() => setIsOpen(false)}
-            className="text-white hover:text-gray-200 transition-colors"
+            className="text-white hover:text-gray-200 active:scale-90 transition-all"
             aria-label="Cerrar carrito"
           >
             <FaTimes size={20} />
@@ -89,8 +90,8 @@ const Cart = ({ userId }: { userId: string | null }) => {
                         <div className="flex items-center mt-2 gap-2">
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad - 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100"
-                            disabled={item.cantidad <= 1}
+                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={item.cantidad <= 1 || cartLoading}
                             aria-label="Reducir cantidad"
                           >
                             <FaMinus size={10} />
@@ -100,8 +101,8 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad + 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100"
-                            disabled={item.cantidad >= (item.mangas.stock || 10)}
+                            className="w-6 h-6 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={item.cantidad >= (item.mangas.stock || 10) || cartLoading}
                             aria-label="Aumentar cantidad"
                           >
                             <FaPlus size={10} />
@@ -111,8 +112,14 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
                       <div className="flex flex-col items-end justify-between">
                         <button
-                          onClick={() => removeFromCart(item.manga_id, userId)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
+                          onClick={async () => {
+                            if (cartLoading) return
+                            setCartLoading(true)
+                            try { await removeFromCart(item.manga_id, userId) }
+                            finally { setCartLoading(false) }
+                          }}
+                          className="text-red-600 hover:text-red-800 active:scale-90 transition-all disabled:opacity-50"
+                          disabled={cartLoading}
                           aria-label="Eliminar del carrito"
                         >
                           <FaTrash size={16} />
@@ -139,15 +146,21 @@ const Cart = ({ userId }: { userId: string | null }) => {
             
             <div className="grid grid-cols-2 gap-2">
               <button
-                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition flex items-center justify-center"
-                onClick={() => clearCart(userId)}
+                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={async () => {
+                  if (cartLoading) return
+                  setCartLoading(true)
+                  try { await clearCart(userId) }
+                  finally { setCartLoading(false) }
+                }}
+                disabled={cartLoading}
               >
                 <FaTrash className="mr-1" size={14} />
                 Vaciar
               </button>
               
               <button
-                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition"
+                className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition active:scale-95"
                 onClick={() => {
                   setIsOpen(false)
                   /*window.location.href = '/checkout'*/ router.push('/checkout')

@@ -41,6 +41,48 @@
 
 - Prefer full state replacement (`set({ key: data })`) over merge helpers that filter duplicates by id. The `mangaStore.addMangas` function filters out items whose `id` already exists — after updating a manga in Supabase, calling `loadMangas` (which used `addMangas`) would silently discard the updated record.
 
+## Button UX patterns
+
+### LoadingButton (`src/components/LoadingButton.tsx`)
+Componente reutilizable para botones con operaciones async. Incluye:
+- Spinner SVG animado cuando `loading={true}`
+- `active:scale-95` para feedback táctil de presionado
+- `disabled` automático mientras carga
+
+```tsx
+import LoadingButton from '@/components/LoadingButton'
+
+<LoadingButton onClick={handleClick} loading={loading} className="bg-red-600...">
+  Añadir al Carrito
+</LoadingButton>
+```
+
+Para botones que **no** usan `LoadingButton`, agregar las clases `active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed` manualmente.
+
+### Prevención de doble clic en tablas admin
+Todas las tablas con edición inline (`MangasTable`, `UsuariosTable`, `CategoriaTable`, `SeriesTable`, `PedidosTable`) usan un `useRef(false)` como flag `guardandoRef` para evitar que `manejarGuardar` se ejecute múltiples veces:
+
+```tsx
+const guardandoRef = useRef(false)
+
+const manejarGuardar = async () => {
+  if (!editando || guardandoRef.current) return
+  guardandoRef.current = true
+  try {
+    // ... operación async ...
+  } finally {
+    setEditando(null)
+    guardandoRef.current = false
+  }
+}
+```
+
+### Formularios con submit async
+Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
+1. Se setea a `true` antes de la operación async
+2. Se restaura a `false` en `finally`
+3. Deshabilita el botón (`disabled={loading}`) y cambia el texto (ej: `'Guardando...'`)
+
 ## Admin inline editing
 
 - `MangasTable`, `UsuariosTable`, `CategoriaTable`, `SeriesTable` all follow the same pattern: double-click to edit, Enter to save.

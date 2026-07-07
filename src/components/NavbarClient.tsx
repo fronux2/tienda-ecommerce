@@ -76,10 +76,11 @@ export default function NavbarClient({ user, rolId }: Props) {
     );
   };
 
-  const Button: React.FC<{ type?: "button" | "submit" | "reset"; children: React.ReactNode }> = ({ type = 'button', children }) => (
+  const Button: React.FC<{ type?: "button" | "submit" | "reset"; disabled?: boolean; children: React.ReactNode }> = ({ type = 'button', disabled = false, children }) => (
     <button 
-      type={type} 
-      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-red-700"
+      type={type}
+      disabled={disabled}
+      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-red-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {children}
     </button>

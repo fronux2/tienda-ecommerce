@@ -2,7 +2,7 @@
 
 import getPedidos from "@/lib/supabase/services/pedidos.client";
 import { updatePedido } from "@/lib/supabase/services/pedidos.client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { type Pedido } from "@/types/supabase";
 import { formatPrice } from "@/lib/formatPrice";
 
@@ -11,6 +11,7 @@ export default function Page() {
   const [valorEditado, setValorEditado] = useState<string>("");
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [filtroUsuarioId, setFiltroUsuarioId] = useState<string>(""); // Estado para el filtro
+  const guardandoRef = useRef(false)
 
   // Filtrar pedidos por usuario_id
   const pedidosFiltrados = filtroUsuarioId
@@ -29,7 +30,8 @@ export default function Page() {
   };
 
   const manejarGuardar = async () => {
-    if (!editando) return;
+    if (!editando || guardandoRef.current) return;
+    guardandoRef.current = true;
     try {
       await updatePedido(editando.id, { [editando.campo]: valorEditado });
       setPedidos((prev) =>
@@ -41,6 +43,7 @@ export default function Page() {
       console.error("Error al actualizar:", error);
     } finally {
       setEditando(null);
+      guardandoRef.current = false;
     }
   };
 

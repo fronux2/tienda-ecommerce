@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { type Categoria } from "@/types/supabase";
 import { updateCategoria } from "@/lib/supabase/services/categorias.client";
 
@@ -7,6 +7,7 @@ export default function CategoriaTable({ categorias }: { categorias: Categoria[]
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string>("");
   const [listaCategorias, setListaCategorias] = useState(categorias);
+  const guardandoRef = useRef(false)
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined) => {
     if (!id || valor === undefined) return;
@@ -19,7 +20,8 @@ export default function CategoriaTable({ categorias }: { categorias: Categoria[]
   };
 
   const manejarGuardar = async () => {
-    if (!editando) return;
+    if (!editando || guardandoRef.current) return;
+    guardandoRef.current = true;
     try {
       await updateCategoria(editando.id, { [editando.campo]: valorEditado });
       setListaCategorias((prev) =>
@@ -31,6 +33,7 @@ export default function CategoriaTable({ categorias }: { categorias: Categoria[]
       console.error("Error al actualizar:", error);
     } finally {
       setEditando(null);
+      guardandoRef.current = false;
     }
   };
 

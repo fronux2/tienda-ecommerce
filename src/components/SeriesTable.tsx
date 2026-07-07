@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Serie } from '@/types/supabase';
 import { updateSerie } from '@/lib/supabase/services/series.client';
 
@@ -8,6 +8,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
   const [valorEditado, setValorEditado] = useState<string>("");
   const [listaSeries, setListaSeries] = useState<Serie[]>(series);
   const [busqueda, setBusqueda] = useState("");
+  const guardandoRef = useRef(false)
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined) => {
     if (!id || valor === undefined) return;
@@ -20,7 +21,8 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
   };
 
   const manejarGuardar = async () => {
-    if (!editando) return;
+    if (!editando || guardandoRef.current) return;
+    guardandoRef.current = true;
     try {
       await updateSerie(editando.id, { [editando.campo]: valorEditado });
       setListaSeries((prev) =>
@@ -32,6 +34,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
       console.error("Error al actualizar:", error);
     } finally {
       setEditando(null);
+      guardandoRef.current = false;
     }
   };
 

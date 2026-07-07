@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { updateManga } from "@/lib/supabase/services/mangas.client";
 import { useMangaStore } from "@/store/mangaStore";
 import { formatPrice } from "@/lib/formatPrice";
@@ -18,6 +18,7 @@ export default function MangasTable({
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string | number>("");
   const [terminoBusqueda, setTerminoBusqueda] = useState("");
+  const guardandoRef = useRef(false)
 
   useEffect(() => {
     loadMangas();
@@ -69,7 +70,8 @@ export default function MangasTable({
   };
 
   const manejarGuardar = async () => {
-    if (!editando) return;
+    if (!editando || guardandoRef.current) return;
+    guardandoRef.current = true;
     
     let valorFinal: string | number | boolean = valorEditado;
     
@@ -92,6 +94,7 @@ export default function MangasTable({
       console.error("Error al actualizar:", error);
     } finally {
       setEditando(null);
+      guardandoRef.current = false;
     }
   };
 

@@ -3,19 +3,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from "react-hook-form";
 import { nuevoUsuarioSchema, NuevoUsuarioSchema } from "@/schemas/usuarioShema";
 import { type NuevoUsuario } from '@/types/supabase';
+import { useState } from 'react';
 export default function Page() {
   const { register, reset, handleSubmit, formState: { errors } } = useForm<NuevoUsuarioSchema>({
     resolver: zodResolver(nuevoUsuarioSchema),
   });
+  const [loading, setLoading] = useState(false)
 
   const onSubmit = async (data: NuevoUsuario) => {
-    const res = await fetch('/api/crear-usuario', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: data.email, password: data.password }),
-    });
-    await res.json();
-    reset();   
+    if (loading) return
+    setLoading(true)
+    try {
+      const res = await fetch('/api/crear-usuario', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+      });
+      await res.json();
+      reset();
+    } finally {
+      setLoading(false)
+    }
   }
 
   return(<>
@@ -49,9 +57,10 @@ export default function Page() {
 
       <button 
         type="submit" 
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+        disabled={loading}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Crear
+        {loading ? 'Creando...' : 'Crear'}
       </button>
     </form>
   </main>

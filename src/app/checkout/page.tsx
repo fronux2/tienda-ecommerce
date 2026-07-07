@@ -57,8 +57,12 @@ const CheckoutPage = () => {
     fetchUser()
   }, [fetchAddresses, supabase])
 
+  const [savingAddress, setSavingAddress] = useState(false)
+
   const handleAddAddress = async () => {
     if (!userId) return alert('Usuario no identificado')
+    if (savingAddress) return
+    setSavingAddress(true)
 
     const { error } = await supabase.from('direcciones').insert([
       {
@@ -81,6 +85,7 @@ const CheckoutPage = () => {
       })
       fetchAddresses(userId)
     }
+    setSavingAddress(false)
   }
 
   const handleCheckout = async () => {
@@ -193,9 +198,10 @@ const CheckoutPage = () => {
             />
             <button
               onClick={handleAddAddress}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              disabled={savingAddress}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all"
             >
-              Guardar dirección
+              {savingAddress ? 'Guardando...' : 'Guardar dirección'}
             </button>
           </div>
         )}

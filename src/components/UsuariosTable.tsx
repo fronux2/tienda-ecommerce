@@ -1,6 +1,6 @@
 "use client";
 import { useUsuarioStore } from "@/store/usuarioStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { updateUsuario } from "@/lib/supabase/services/usuarios.client";
 import { getRoles } from "@/lib/supabase/services/roles.client";
 import {type Roles} from "@/types/supabase";
@@ -10,6 +10,7 @@ export default function UsuariosTable() {
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string>("");
   const [roles, setRoles] = useState<Roles[]>([]);
+  const guardandoRef = useRef(false)
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined) => {
     if (!id || valor === undefined) return;
@@ -22,7 +23,8 @@ export default function UsuariosTable() {
   };
 
   const manejarGuardar = async () => {
-    if (!editando) return;
+    if (!editando || guardandoRef.current) return;
+    guardandoRef.current = true;
     try {
       await updateUsuario(editando.id, { [editando.campo]: valorEditado });
       updateUsuarioEnStore(
@@ -35,6 +37,7 @@ export default function UsuariosTable() {
       console.error("Error al actualizar:", error);
     } finally {
       setEditando(null);
+      guardandoRef.current = false;
     }
   };
 
