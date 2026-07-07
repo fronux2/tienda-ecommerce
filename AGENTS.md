@@ -109,12 +109,33 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - Admin forms are in `src/components/forms/`
 - Server actions (with `revalidatePath`) are in `src/components/actions/`
 
+## Email notifications (Resend)
+
+- **Provider**: Resend (`resend` package). API key via `RESEND_API_KEY` env var.
+- **Service**: `src/lib/email.ts` — lazy-initializes Resend client; returns `{ data: null, error }` if `RESEND_API_KEY` is not set (no crash).
+- **API route**: `src/app/api/enviar-email/route.ts` — POST endpoint, protected (verifies Supabase session). Accepts `{ type, to, data }`.
+  - `type: "pedido-confirmado"` — sends `PedidoConfirmado` template
+  - `type: "pedido-actualizado"` — sends `PedidoActualizado` template
+- **Templates** (React Email):
+  - `src/emails/PedidoConfirmado.tsx` — order summary (items, total, address, date)
+  - `src/emails/PedidoActualizado.tsx` — status change (previous → new, contextual message per status)
+- **Triggers**:
+  - **Checkout** (`src/app/checkout/page.tsx:152`): after successful order creation, sends confirmation to the user's email (uses `fetch` to the API route, fails silently on error).
+  - **PedidosTable** (`src/components/PedidosTable.tsx:37`): when admin changes `estado`, sends update email to the customer's email (only if the value actually changed).
+- **Env vars**:
+  ```
+  RESEND_API_KEY=re_...
+  EMAIL_FROM=Tienda Mangas <no-reply@tiendamangas.cl>
+  ```
+
 ## Env vars (required)
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+RESEND_API_KEY=
+EMAIL_FROM=
 ```
 
 `.env*` files are gitignored.

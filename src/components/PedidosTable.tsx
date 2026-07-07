@@ -39,6 +39,28 @@ export default function Page() {
           pedido.id === editando.id ? { ...pedido, [editando.campo]: valorEditado } : pedido
         )
       );
+
+      if (editando.campo === "estado") {
+        const pedidoOriginal = pedidos.find((p) => p.id === editando.id);
+        const emailCliente = pedidoOriginal?.usuarios?.email;
+
+        if (emailCliente && pedidoOriginal?.estado !== valorEditado) {
+          fetch("/api/enviar-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              type: "pedido-actualizado",
+              to: emailCliente,
+              data: {
+                pedidoId: editando.id,
+                estadoAnterior: pedidoOriginal.estado,
+                estadoNuevo: valorEditado,
+                fecha: new Date().toLocaleDateString("es-CL"),
+              },
+            }),
+          }).catch((err) => console.error("Error al enviar email:", err));
+        }
+      }
     } catch (error) {
       console.error("Error al actualizar:", error);
     } finally {

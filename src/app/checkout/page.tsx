@@ -23,6 +23,7 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState('tarjeta')
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
 
   const [showAddressForm, setShowAddressForm] = useState(false)
   const [newAddress, setNewAddress] = useState({
@@ -55,6 +56,7 @@ const CheckoutPage = () => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUserId(user?.id || null)
+      setUserEmail(user?.email || null)
       if (user?.id) fetchAddresses(user.id)
     }
     fetchUser()
@@ -149,6 +151,37 @@ const CheckoutPage = () => {
         .eq('checked_out', false)
 
       if (userId) clearCart(userId)
+
+      if (userEmail) {
+        const direccionSel = addresses.find(a => a.id === addressId)
+        const direccionStr = direccionSel
+          ? `${direccionSel.nombre_direccion} - ${direccionSel.direccion} #${direccionSel.numero_casa}, ${direccionSel.ciudad}`
+          : ''
+
+        const emailItems = cart
+          .filter(item => item.mangas)
+          .map(item => ({
+            nombre: item.mangas!.titulo,
+            cantidad: item.cantidad,
+            precio: item.mangas!.precio,
+          }))
+
+        fetch('/api/enviar-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'pedido-confirmado',
+            to: userEmail,
+            data: {
+              pedidoId: order[0].id,
+              items: emailItems,
+              total,
+              direccion: direccionStr,
+              fecha: new Date().toLocaleDateString('es-CL'),
+            },
+          }),
+        }).catch(err => console.error('Error al enviar email:', err))
+      }
 
       //window.location.href = `/order-confirmed/${order.id}`
 
