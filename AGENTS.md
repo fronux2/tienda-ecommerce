@@ -28,6 +28,8 @@
 - Service-role key (`SUPABASE_SERVICE_ROLE_KEY`) must never reach the browser. Use `supabaseAdmin` from `src/utils/supabase/admin.ts` in API routes / server actions only.
 - Role check: `rol_id === 2` grants admin access. Enforced in admin routes.
 - **Supabase joins with nullable FK**: `roles:rol_id(id,nombre)` returns `null` when `rol_id` is null. Always use optional chaining: `roles?.[0]?.nombre || fallback` — never `roles[0].nombre`.
+- **Cart service validation**: All functions in `carrito.cliente.ts` (`fetchCartFromSupabase`, `addToCartSupabase`, `removeFromCartSupabase`, `updateCartQuantitySupabase`, `clearCartSupabase`) throw if `usuario_id` is empty — never pass `""` as user ID.
+- **NavbarClient cart fetch**: `src/components/NavbarClient.tsx:26` guards with `if (!user?.id) return` before calling `fetchCartFromSupabase`, preventing queries with null/empty user ID on public pages.
 
 ## Zustand store patterns
 
@@ -42,7 +44,7 @@
 
 ## Middleware
 
-`middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
+`middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
 
 ## Testing patterns
 
