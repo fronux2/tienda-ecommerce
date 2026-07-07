@@ -152,68 +152,57 @@ const CheckoutPage = () => {
 
       if (userId) clearCart(userId)
 
+      const direccionSel = addresses.find(a => a.id === addressId)
+      const direccionStr = direccionSel
+        ? `${direccionSel.nombre_direccion} - ${direccionSel.direccion} #${direccionSel.numero_casa}, ${direccionSel.ciudad}`
+        : ''
+
+      const emailItems = cart
+        .filter(item => item.mangas)
+        .map(item => ({
+          nombre: item.mangas!.titulo,
+          cantidad: item.cantidad,
+          precio: item.mangas!.precio,
+        }))
+
+      const enviarEmail = (body: object) =>
+        fetch('/api/enviar-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }).then(async res => {
+          if (!res.ok) {
+            const err = await res.json()
+            console.error('Error en email API:', err)
+          }
+        }).catch(err => console.error('Error de red al enviar email:', err))
+
       if (userEmail) {
-        const direccionSel = addresses.find(a => a.id === addressId)
-        const direccionStr = direccionSel
-          ? `${direccionSel.nombre_direccion} - ${direccionSel.direccion} #${direccionSel.numero_casa}, ${direccionSel.ciudad}`
-          : ''
-
-        const emailItems = cart
-          .filter(item => item.mangas)
-          .map(item => ({
-            nombre: item.mangas!.titulo,
-            cantidad: item.cantidad,
-            precio: item.mangas!.precio,
-          }))
-
-        fetch('/api/enviar-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'pedido-confirmado',
-            to: userEmail,
-            data: {
-              pedidoId: order[0].id,
-              items: emailItems,
-              total,
-              direccion: direccionStr,
-              fecha: new Date().toLocaleDateString('es-CL'),
-            },
-          }),
-        }).catch(err => console.error('Error al enviar email al cliente:', err))
+        enviarEmail({
+          type: 'pedido-confirmado',
+          to: userEmail,
+          data: {
+            pedidoId: order[0].id,
+            items: emailItems,
+            total,
+            direccion: direccionStr,
+            fecha: new Date().toLocaleDateString('es-CL'),
+          },
+        })
       }
 
-      {
-        const direccionSel = addresses.find(a => a.id === addressId)
-        const direccionStr = direccionSel
-          ? `${direccionSel.nombre_direccion} - ${direccionSel.direccion} #${direccionSel.numero_casa}, ${direccionSel.ciudad}`
-          : ''
-
-        const emailItems = cart
-          .filter(item => item.mangas)
-          .map(item => ({
-            nombre: item.mangas!.titulo,
-            cantidad: item.cantidad,
-            precio: item.mangas!.precio,
-          }))
-
-        fetch('/api/enviar-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'pedido-recibido-admin',
-            to: '', // el servidor lee NOTIFICATION_EMAILS
-            data: {
-              pedidoId: order[0].id,
-              clienteEmail: userEmail || '',
-              items: emailItems,
-              total,
-              direccion: direccionStr,
-              fecha: new Date().toLocaleDateString('es-CL'),
-            },
-          }),
-        }).catch(err => console.error('Error al enviar email a admin:', err))
-      }
+      enviarEmail({
+        type: 'pedido-recibido-admin',
+        to: '',
+        data: {
+          pedidoId: order[0].id,
+          clienteEmail: userEmail || '',
+          items: emailItems,
+          total,
+          direccion: direccionStr,
+          fecha: new Date().toLocaleDateString('es-CL'),
+        },
+      })
 
     } catch (error) {
       console.error('Checkout error:', error)
