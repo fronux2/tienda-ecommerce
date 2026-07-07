@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice } from '@/lib/formatPrice'
@@ -33,6 +34,8 @@ const CheckoutPage = () => {
     ciudad: '',
     codigo_postal: ''
   })
+
+  const router = useRouter()
 
   const {
     cart,
@@ -203,6 +206,9 @@ const CheckoutPage = () => {
           fecha: new Date().toLocaleDateString('es-CL'),
         },
       })
+
+      alert('¡Pedido confirmado con éxito!')
+      router.push('/')
 
     } catch (error) {
       console.error('Checkout error:', error)

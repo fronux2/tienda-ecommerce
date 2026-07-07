@@ -121,8 +121,9 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
   - `src/emails/PedidoConfirmado.tsx` — order summary (items, total, address, date)
   - `src/emails/PedidoActualizado.tsx` — status change (previous → new, contextual message per status)
   - `src/emails/PedidoRecibidoAdmin.tsx` — new order notification for admins (items, total, address, client email)
+- **Checkout post-order**: `src/app/checkout/page.tsx:210` — after successful order creation, shows `alert('¡Pedido confirmado con éxito!')` and redirects to `/`.
 - **Triggers**:
-  - **Checkout** (`src/app/checkout/page.tsx:152`): after successful order creation, sends confirmation to the user's email AND notification to admins (uses `fetch` to the API route, fails silently on error).
+  - **Checkout** (`src/app/checkout/page.tsx:183`): after successful order creation, sends confirmation to the user's email AND notification to admins (uses `fetch` to the API route, fails silently on error).
   - **PedidosTable** (`src/components/PedidosTable.tsx:37`): when admin changes `estado`, sends update email to the customer's email (only if the value actually changed).
 - **Admin notification**: uses `NOTIFICATION_EMAILS` env var (server-side, comma-separated emails, e.g. `admin1@mail.com,admin2@mail.com`). Set in `.env.local` and Vercel.
 - **Note**: Without a verified domain in Resend, `EMAIL_FROM` must use `onboarding@resend.dev` as the sender. Add recipient emails as "verified recipients" in Resend dashboard for test mode.
