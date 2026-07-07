@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { type, to, data } = body
 
-    if (!to || !data) {
+    if (!data) {
       return NextResponse.json({ error: 'Faltan campos requeridos' }, { status: 400 })
     }
 
@@ -69,13 +69,23 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Datos incompletos para pedido-recibido-admin' }, { status: 400 })
         }
 
-        await sendEmail({
-          to,
-          subject: `📦 Nuevo Pedido #${pedidoId} - Tienda Mangas`,
-          react: PedidoRecibidoAdmin({ pedidoId, clienteEmail, items, total, direccion, fecha }),
-        })
+        const adminEmails = process.env.NOTIFICATION_EMAILS
+        if (!adminEmails) {
+          return NextResponse.json({ error: 'NOTIFICATION_EMAILS no configurado' }, { status: 500 })
+        }
 
-        return NextResponse.json({ success: true })
+        const emails = adminEmails.split(',').map(e => e.trim()).filter(Boolean)
+        const results = await Promise.allSettled(
+          emails.map(email =>
+            sendEmail({
+              to: email,
+              subject: `📦 Nuevo Pedido #${pedidoId} - Tienda Mangas`,
+              react: PedidoRecibidoAdmin({ pedidoId, clienteEmail, items, total, direccion, fecha }),
+            })
+          )
+        )
+
+        return NextResponse.json({ success: true, sent: results.length })
       }
 
       default:

@@ -124,13 +124,13 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - **Triggers**:
   - **Checkout** (`src/app/checkout/page.tsx:152`): after successful order creation, sends confirmation to the user's email AND notification to admins (uses `fetch` to the API route, fails silently on error).
   - **PedidosTable** (`src/components/PedidosTable.tsx:37`): when admin changes `estado`, sends update email to the customer's email (only if the value actually changed).
-- **Admin notification**: uses `NEXT_PUBLIC_NOTIFICATION_EMAILS` env var (comma-separated emails, e.g. `admin1@mail.com,admin2@mail.com`). Set in `.env.local` and Vercel.
+- **Admin notification**: uses `NOTIFICATION_EMAILS` env var (server-side, comma-separated emails, e.g. `admin1@mail.com,admin2@mail.com`). Set in `.env.local` and Vercel.
 - **Note**: Without a verified domain in Resend, `EMAIL_FROM` must use `onboarding@resend.dev` as the sender. Add recipient emails as "verified recipients" in Resend dashboard for test mode.
 - **Env vars**:
   ```
   RESEND_API_KEY=re_...
   EMAIL_FROM=Tienda Mangas <onboarding@resend.dev>
-  NEXT_PUBLIC_NOTIFICATION_EMAILS=admin1@mail.com,admin2@mail.com
+  NOTIFICATION_EMAILS=admin1@mail.com,admin2@mail.com
   ```
 
 ## Env vars (required)
@@ -141,7 +141,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 RESEND_API_KEY=
 EMAIL_FROM=
-NEXT_PUBLIC_NOTIFICATION_EMAILS=
+  NOTIFICATION_EMAILS=
 ```
 
 `.env*` files are gitignored.
