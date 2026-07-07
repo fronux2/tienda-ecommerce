@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import { sendEmail } from '@/lib/email'
 import PedidoConfirmado from '@/emails/PedidoConfirmado'
 import PedidoActualizado from '@/emails/PedidoActualizado'
+import PedidoRecibidoAdmin from '@/emails/PedidoRecibidoAdmin'
 
 export async function POST(request: Request) {
   try {
@@ -56,6 +57,22 @@ export async function POST(request: Request) {
           to,
           subject: `Tu pedido #${pedidoId} ahora está ${(estadoLabels[estadoNuevo] || estadoNuevo).toLowerCase()} - Tienda Mangas`,
           react: PedidoActualizado({ pedidoId, estadoAnterior, estadoNuevo, fecha }),
+        })
+
+        return NextResponse.json({ success: true })
+      }
+
+      case 'pedido-recibido-admin': {
+        const { pedidoId, clienteEmail, items, total, direccion, fecha } = data
+
+        if (!pedidoId || !clienteEmail || !items || total === undefined || !direccion || !fecha) {
+          return NextResponse.json({ error: 'Datos incompletos para pedido-recibido-admin' }, { status: 400 })
+        }
+
+        await sendEmail({
+          to,
+          subject: `📦 Nuevo Pedido #${pedidoId} - Tienda Mangas`,
+          react: PedidoRecibidoAdmin({ pedidoId, clienteEmail, items, total, direccion, fecha }),
         })
 
         return NextResponse.json({ success: true })
