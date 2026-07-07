@@ -5,6 +5,7 @@ import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaTimes } from 'react-icons/f
 import Image from "next/image"
 import { useCartStore } from '@/store/cartStore'
 import { useRouter } from 'next/navigation'
+import { formatPrice } from '@/lib/formatPrice'
 
 const Cart = ({ userId }: { userId: string | null }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -83,7 +84,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                       
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-800 line-clamp-1">{item.mangas.titulo}</h3>
-                        <p className="text-sm text-gray-600">${item.mangas.precio.toFixed(2)}</p>
+                        <p className="text-sm text-gray-600">{formatPrice(item.mangas.precio)}</p>
 
                         <div className="flex items-center mt-2 gap-2">
                           <button
@@ -117,7 +118,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                           <FaTrash size={16} />
                         </button>
                         <p className="font-semibold text-red-600">
-                          ${(item.cantidad * item.mangas.precio).toFixed(2)}
+                          {formatPrice(item.cantidad * item.mangas.precio)}
                         </p>
                       </div>
                     </>
@@ -133,7 +134,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
           <div className="border-t p-4 bg-[#FFF8F0]">
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium text-gray-800">Total:</span>
-              <span className="text-xl font-bold text-red-600">${total.toFixed(2)}</span>
+              <span className="text-xl font-bold text-red-600">{formatPrice(total)}</span>
             </div>
             
             <div className="grid grid-cols-2 gap-2">

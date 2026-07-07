@@ -21,6 +21,10 @@
 - **Leaflet + react-leaflet** for maps
 - Content is in **Spanish (es_ES)** — UI text, schemas, tests, comments
 
+## Utilities
+
+- **`src/lib/formatPrice.ts`** — `formatPrice(price: number): string` formatea precios en CLP con separador de miles (`.`), sin decimales. Ej: `29960` → `$29.960`. Usa `Intl.NumberFormat('es-CL', { currency: 'CLP' })`. Importar con `import { formatPrice } from '@/lib/formatPrice'`.
+
 ## Data layer quirks
 
 - Files `src/lib/supabase/services/*.client.ts` and `*.server.ts` mirror the same logic for each entity. The `.client.ts` files incorrectly `await createClient()` even though `createBrowserClient` is sync — do not propagate this pattern.

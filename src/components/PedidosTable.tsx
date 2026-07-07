@@ -4,6 +4,7 @@ import getPedidos from "@/lib/supabase/services/pedidos.client";
 import { updatePedido } from "@/lib/supabase/services/pedidos.client";
 import { useEffect, useState } from "react";
 import { type Pedido } from "@/types/supabase";
+import { formatPrice } from "@/lib/formatPrice";
 
 export default function Page() {
   const [editando, setEditando] = useState<{id: string, campo: string} | null>(null);
@@ -156,7 +157,7 @@ export default function Page() {
                           className="cursor-pointer"
                           onDoubleClick={() => manejarDobleClick(pedido.id, "total", pedido.total)}
                         >
-                          ${pedido.total}
+                          {formatPrice(pedido.total)}
                         </div>
                       )}
                     </td>

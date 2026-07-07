@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
+import { formatPrice } from '@/lib/formatPrice'
 
 const CheckoutPage = () => {
   const supabase = useMemo(() => createClient(), [])
@@ -227,13 +228,13 @@ const CheckoutPage = () => {
           return (
             <div key={item.id} className="flex justify-between mb-2">
               <span>{title} x {item.cantidad}</span>
-              <span>${(item.cantidad * price).toFixed(2)}</span>
+              <span>{formatPrice(item.cantidad * price)}</span>
             </div>
           )
         })}
         <div className="flex justify-between mt-4 pt-4 border-t">
           <span className="font-bold">Total:</span>
-          <span className="font-bold">${total.toFixed(2)}</span>
+          <span className="font-bold">{formatPrice(total)}</span>
         </div>
       </div>
 

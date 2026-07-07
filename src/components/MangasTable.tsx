@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { updateManga } from "@/lib/supabase/services/mangas.client";
 import { useMangaStore } from "@/store/mangaStore";
+import { formatPrice } from "@/lib/formatPrice";
 
 type Serie = { id: string; nombre: string };
 type Categoria = { id: string; nombre: string };
@@ -333,7 +334,7 @@ export default function MangasTable({
                           className="cursor-pointer"
                           onDoubleClick={() => manejarDobleClick(manga.id, "precio", manga.precio)}
                         >
-                          ${manga.precio}
+                          {formatPrice(manga.precio)}
                         </div>
                       )}
                     </td>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AddCardButton2 } from "./AddCardButton2";
+import { formatPrice } from "@/lib/formatPrice";
 
 type CardProps = {
   id: string;
@@ -51,7 +52,7 @@ export default function Card1({ id, imagen, titulo, autor, editorial, precio, us
         </div>
 
         <div className="flex items-center justify-between mt-4">
-          <p className="text-xl font-bold text-red-600">${precio}</p>
+          <p className="text-xl font-bold text-red-600">{formatPrice(precio)}</p>
           <AddCardButton2 mangaId={id} userId={userId} />
         </div>
       </div>
