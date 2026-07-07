@@ -124,7 +124,7 @@ export type Pedido = {
   fecha_pedido: string
   fecha_actualizacion: string
   usuarios?: { email: string } | null
-  direcciones?: { nombre_direccion: string; direccion: string; ciudad: string } | null
+  direcciones?: { nombre_direccion: string; direccion: string; numero_casa: string; ciudad: string } | null
 }
 
 export type DetallePedido = {
@@ -141,6 +141,7 @@ export type Direccion = {
   usuario_id?: string
   nombre_direccion: string
   direccion: string
+  numero_casa: string
   ciudad: string
   codigo_postal?: string
 }

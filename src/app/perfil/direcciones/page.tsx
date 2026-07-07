@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { getDirecciones, addDireccion, updateDireccion, deleteDireccion } from '@/lib/supabase/services/direcciones.client'
 import type { Direccion } from '@/types/supabase'
+import { direccionSchema } from '@/schemas/direccionesSchema'
 
 export default function MisDirecciones() {
   const supabase = createClient()
@@ -16,6 +17,7 @@ export default function MisDirecciones() {
   const [form, setForm] = useState({
     nombre_direccion: '',
     direccion: '',
+    numero_casa: '',
     ciudad: '',
     codigo_postal: '',
   })
@@ -37,13 +39,18 @@ export default function MisDirecciones() {
   }, [supabase, cargarDirecciones])
 
   const resetForm = () => {
-    setForm({ nombre_direccion: '', direccion: '', ciudad: '', codigo_postal: '' })
+    setForm({ nombre_direccion: '', direccion: '', numero_casa: '', ciudad: '', codigo_postal: '' })
     setShowForm(false)
     setEditandoId(null)
   }
 
   const handleSubmit = async () => {
     if (saving || !userId) return
+    const parsed = direccionSchema.safeParse(form)
+    if (!parsed.success) {
+      alert(parsed.error.errors[0].message)
+      return
+    }
     setSaving(true)
     try {
       if (editandoId) {
@@ -64,6 +71,7 @@ export default function MisDirecciones() {
     setForm({
       nombre_direccion: d.nombre_direccion,
       direccion: d.direccion,
+      numero_casa: d.numero_casa,
       ciudad: d.ciudad,
       codigo_postal: d.codigo_postal ?? '',
     })
@@ -123,6 +131,13 @@ export default function MisDirecciones() {
             />
             <input
               type="text"
+              placeholder="N° Casa"
+              value={form.numero_casa}
+              onChange={(e) => setForm({ ...form, numero_casa: e.target.value })}
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="text"
               placeholder="Ciudad"
               value={form.ciudad}
               onChange={(e) => setForm({ ...form, ciudad: e.target.value })}
@@ -137,7 +152,7 @@ export default function MisDirecciones() {
             />
             <button
               onClick={handleSubmit}
-              disabled={saving || !form.nombre_direccion || !form.direccion || !form.ciudad}
+              disabled={saving || !form.nombre_direccion || !form.direccion || !form.numero_casa || !form.ciudad}
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
             >
               {saving ? 'Guardando...' : editandoId ? 'Actualizar' : 'Guardar'}
@@ -157,7 +172,7 @@ export default function MisDirecciones() {
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">{d.nombre_direccion}</p>
-                  <p className="text-sm text-gray-600">{d.direccion}</p>
+                  <p className="text-sm text-gray-600">{d.direccion} #{d.numero_casa}</p>
                   <p className="text-sm text-gray-600">{d.ciudad}</p>
                   {d.codigo_postal && (
                     <p className="text-sm text-gray-500">CP: {d.codigo_postal}</p>

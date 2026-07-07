@@ -126,7 +126,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
               <h3 className="font-semibold mb-3">Dirección de envío</h3>
               <div className="text-sm text-gray-600 space-y-1">
                 <p className="font-medium text-gray-800">{direccion.nombre_direccion}</p>
-                <p>{direccion.direccion}</p>
+                <p>{direccion.direccion} #{direccion.numero_casa}</p>
                 <p>{direccion.ciudad}</p>
                 {direccion.codigo_postal && <p>CP: {direccion.codigo_postal}</p>}
               </div>

@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice } from '@/lib/formatPrice'
+import { direccionSchema } from '@/schemas/direccionesSchema'
 
 const CheckoutPage = () => {
   const supabase = useMemo(() => createClient(), [])
@@ -12,6 +13,7 @@ const CheckoutPage = () => {
     usuario_id?: string
     nombre_direccion: string
     direccion: string
+    numero_casa: string
     ciudad: string
     codigo_postal?: string
   }
@@ -26,6 +28,7 @@ const CheckoutPage = () => {
   const [newAddress, setNewAddress] = useState({
     nombre_direccion: '',
     direccion: '',
+    numero_casa: '',
     ciudad: '',
     codigo_postal: ''
   })
@@ -62,6 +65,11 @@ const CheckoutPage = () => {
   const handleAddAddress = async () => {
     if (!userId) return alert('Usuario no identificado')
     if (savingAddress) return
+    const parsed = direccionSchema.safeParse(newAddress)
+    if (!parsed.success) {
+      alert(parsed.error.errors[0].message)
+      return
+    }
     setSavingAddress(true)
 
     const { error } = await supabase.from('direcciones').insert([
@@ -80,6 +88,7 @@ const CheckoutPage = () => {
       setNewAddress({
         nombre_direccion: '',
         direccion: '',
+        numero_casa: '',
         ciudad: '',
         codigo_postal: ''
       })
@@ -184,6 +193,13 @@ const CheckoutPage = () => {
             />
             <input
               type="text"
+              placeholder="N° Casa"
+              value={newAddress.numero_casa}
+              onChange={(e) => setNewAddress({ ...newAddress, numero_casa: e.target.value })}
+              className="w-full mb-2 p-2 border rounded"
+            />
+            <input
+              type="text"
               placeholder="Ciudad"
               value={newAddress.ciudad}
               onChange={(e) => setNewAddress({ ...newAddress, ciudad: e.target.value })}
@@ -216,7 +232,7 @@ const CheckoutPage = () => {
             <option value="">Selecciona una dirección</option>
             {addresses.map(addr => (
               <option key={addr.id} value={addr.id}>
-                {addr.nombre_direccion} - {addr.direccion}, {addr.ciudad}
+                {addr.nombre_direccion} - {addr.direccion} #{addr.numero_casa}, {addr.ciudad}
               </option>
             ))}
           </select>

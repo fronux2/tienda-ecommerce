@@ -143,7 +143,7 @@ export default function Page() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {pedido.direcciones
-                        ? `${pedido.direcciones.nombre_direccion} - ${pedido.direcciones.direccion}, ${pedido.direcciones.ciudad}`
+                        ? `${pedido.direcciones.nombre_direccion} - ${pedido.direcciones.direccion} #${pedido.direcciones.numero_casa}, ${pedido.direcciones.ciudad}`
                         : pedido.direccion_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

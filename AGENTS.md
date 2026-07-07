@@ -36,6 +36,7 @@
 - **NavbarClient cart fetch**: `src/components/NavbarClient.tsx:26` guards with `if (!user?.id) return` before calling `fetchCartFromSupabase`, preventing queries with null/empty user ID on public pages.
 - **Guest cart**: Non-registered users can add items to cart (stored in localStorage via `src/lib/cartLocalStorage.ts`). Login is required at checkout (`/checkout` is protected by middleware). When a guest logs in, the local cart is automatically merged into Supabase via `NavbarClient`.
 - **Cart store guest logic**: `src/store/cartStore.ts` — all operations (`addToCart`, `removeFromCart`, `clearCart`, `updateQuantity`) skip Supabase calls when `usuario_id` is falsy and persist to localStorage instead. The store types accept `string | null` for `usuario_id`.
+- **Direcciones — `numero_casa` field**: The `direcciones` table has a required `numero_casa` (VARCHAR NOT NULL) field. The TypeScript type is `Direccion` in `src/types/supabase.ts:142` with `numero_casa: string`. Zod validation is in `src/schemas/direccionesSchema.ts` (`direccionSchema`) — both the profile direcciones page and checkout page validate with `safeParse` before inserting/updating. The `Pedido.direcciones` join also includes `numero_casa` — always use optional chaining when accessing it in queries.
 
 ## Zustand store patterns
 
