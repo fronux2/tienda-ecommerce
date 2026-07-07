@@ -130,7 +130,7 @@ const MangaDetailClient = ({ id }: Props) => {
                 </div>
                 {/* Botón para agregar al carrito */}
                 {isAvailable ? (
-                  <AddCardButton2 mangaId={manga.id} userId={user?.id || ''} />
+                  <AddCardButton2 mangaId={manga.id} userId={user?.id ?? null} />
                 ) : (
                   <button 
                     disabled

@@ -11,7 +11,7 @@ type CardProps = {
   autor: string;
   editorial: string;
   precio: number;
-  userId: string;
+  userId: string | null;
 };
 
 export default function Card1({ id, imagen, titulo, autor, editorial, precio, userId }: CardProps) {

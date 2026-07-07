@@ -18,8 +18,6 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
   const router = useRouter()
-  if (!userId) return null
-
   return (
     <div className="relative">
       {/* Botón del carrito en el navbar */}

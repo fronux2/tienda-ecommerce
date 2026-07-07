@@ -4,7 +4,7 @@ import { useCartStore } from '@/store/cartStore';
 import { useEffect, useState } from 'react';
 import { getMangaById } from '@/lib/supabase/services/mangas.client';
 import { NuevoManga } from '@/types/supabase';
-export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: string }) {
+export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: string | null }) {
   const [manga, setManga] = useState<NuevoManga | null>(null)
   useEffect(() => {
     const fetchManga = async () => {
@@ -15,7 +15,6 @@ export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: s
   }, [ mangaId ])
 
   const addToCart = useCartStore((state) => state.addToCart)
-  if (!userId) return
   return (
     <button
       onClick={() => {

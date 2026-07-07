@@ -4,7 +4,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
-import { fetchCartFromSupabase } from '@/lib/supabase/services/carrito.cliente'
+import { fetchCartFromSupabase, addToCartSupabase } from '@/lib/supabase/services/carrito.cliente'
+import { loadCartFromLocalStorage, clearCartFromLocalStorage } from '@/lib/cartLocalStorage'
 import { useEffect, useState } from 'react'
 import Cart from '@/components/Cart'
 
@@ -23,12 +24,22 @@ export default function NavbarClient({ user, rolId }: Props) {
   const isHome = pathname === '/'
 
   useEffect(() => {
-    if (!user?.id) return
-    const fetchCart = async () => {
-      const items = await fetchCartFromSupabase(user.id)
-      setCart(items)
+    const initCart = async () => {
+      if (user?.id) {
+        const guestCart = loadCartFromLocalStorage()
+        if (guestCart.length > 0) {
+          for (const item of guestCart) {
+            await addToCartSupabase({ ...item, usuario_id: user.id })
+          }
+          clearCartFromLocalStorage()
+        }
+        const items = await fetchCartFromSupabase(user.id)
+        setCart(items)
+      } else {
+        setCart(loadCartFromLocalStorage())
+      }
     }
-    fetchCart()
+    initCart()
   }, [user, setCart])
 
   useEffect(() => {

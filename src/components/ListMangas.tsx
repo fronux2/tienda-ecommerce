@@ -6,7 +6,7 @@ import { Categoria, Serie, type Manga } from "@/types/supabase";
 import { useEffect, useMemo, useState } from "react";
 import { useMangaStore } from "@/store/mangaStore";
 
-export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId: string }) {
+export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId: string | null }) {
   const [series, setSeries] = useState<Serie[]>([])
   const [categoria, setCategoria] = useState<Categoria[]>([])
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todos");
