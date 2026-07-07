@@ -86,7 +86,7 @@ export default function MangasTable({
       
       // No necesitamos actualizar el estado local ya que Zustand manejará esto
       // cuando se recarguen los mangas
-      loadMangas(); // Recargamos los mangas para reflejar los cambios
+      await loadMangas(); // Recargamos los mangas para reflejar los cambios
     } catch (error) {
       console.error("Error al actualizar:", error);
     } finally {

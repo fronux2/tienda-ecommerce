@@ -31,7 +31,7 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
   loadMangas: async () => {
     const todos = await getMangas()
-    get().addMangas(todos)
+    set({ mangas: todos })
   },
 
 }))
