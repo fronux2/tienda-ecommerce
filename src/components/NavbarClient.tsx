@@ -23,8 +23,9 @@ export default function NavbarClient({ user, rolId }: Props) {
   const isHome = pathname === '/'
 
   useEffect(() => {
+    if (!user?.id) return
     const fetchCart = async () => {
-      const items = await fetchCartFromSupabase(user?.id || '')
+      const items = await fetchCartFromSupabase(user.id)
       setCart(items)
     }
     fetchCart()

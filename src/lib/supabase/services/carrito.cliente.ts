@@ -5,6 +5,8 @@ const supabase = createClient()
 
 // Obtener carrito del usuario
 export const fetchCartFromSupabase = async (usuario_id: string) => {
+  if (!usuario_id) throw new Error('usuario_id es requerido')
+
   const { data, error } = await supabase
     .from("carrito")
     .select("*, mangas(*)")
@@ -17,6 +19,8 @@ export const fetchCartFromSupabase = async (usuario_id: string) => {
 
 // Agregar al carrito
 export const addToCartSupabase = async (item: CartItem) => {
+  if (!item.usuario_id) throw new Error('usuario_id es requerido')
+
   const { error } = await supabase
     .from("carrito")
     .insert({
@@ -29,6 +33,8 @@ export const addToCartSupabase = async (item: CartItem) => {
 
 // Eliminar del carrito
 export const removeFromCartSupabase = async (manga_id: string ,usuario_id: string) => { 
+  if (!usuario_id) throw new Error('usuario_id es requerido')
+
   const { error } = await supabase
     .from("carrito")
     .delete()
@@ -39,6 +45,8 @@ export const removeFromCartSupabase = async (manga_id: string ,usuario_id: strin
 
 // Actualizar cantidad
 export const updateCartQuantitySupabase = async (usuario_id: string, manga_id: string, cantidad: number) => {
+  if (!usuario_id) throw new Error('usuario_id es requerido')
+
   const { error } = await supabase
     .from("carrito")
     .update({ cantidad })
@@ -50,6 +58,8 @@ export const updateCartQuantitySupabase = async (usuario_id: string, manga_id: s
 
 // Limpiar carrito
 export const clearCartSupabase = async (usuario_id: string) => {
+  if (!usuario_id) throw new Error('usuario_id es requerido')
+
   const { error } = await supabase
     .from("carrito")
     .delete()
