@@ -123,6 +123,8 @@ export type Pedido = {
   notas_pedido: string
   fecha_pedido: string
   fecha_actualizacion: string
+  usuarios?: { email: string } | null
+  direcciones?: { nombre_direccion: string; direccion: string; ciudad: string } | null
 }
 
 export type DetallePedido = {

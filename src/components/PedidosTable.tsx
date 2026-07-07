@@ -138,11 +138,13 @@ export default function Page() {
                 {pedidosFiltrados.map((pedido) => (
                   <tr key={pedido.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pedido.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                      {pedido.usuario_id}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {pedido.usuarios?.email || pedido.usuario_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {pedido.direccion_id}
+                      {pedido.direcciones
+                        ? `${pedido.direcciones.nombre_direccion} - ${pedido.direcciones.direccion}, ${pedido.direcciones.ciudad}`
+                        : pedido.direccion_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {editando && editando.id === pedido.id && editando.campo === "total" ? (
