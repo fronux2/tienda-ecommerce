@@ -116,6 +116,18 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - Los filtros activos se muestran como badges con botón ✕ para limpiarlos individualmente.
 - El mensaje "no hay mangas disponibles" solo se muestra si no hay filtros activos.
 
+## Mangas listing — Paginación
+
+`src/components/ListMangas.tsx` implementa paginación cliente con "Cargar más" (no páginas numéricas):
+- **`ITEMS_POR_PAGINA = 12`** — constante definida fuera del componente.
+- **`paginaActual`** — estado `number` que se incrementa al hacer clic en "Cargar más mangas".
+- **`mangasPaginados`** — `useMemo` que hace `slice(0, paginaActual * ITEMS_POR_PAGINA)` sobre el array filtrado.
+- **`totalPaginas`** — `useMemo` calculado desde `mangasFiltrados.length`.
+- **Reseteo**: `setPaginaActual(1)` en el `useEffect` cada vez que cambian filtros o la lista de mangas.
+- **UI**: botón "Cargar más mangas" (rojo, solo visible si `paginaActual < totalPaginas`) + texto "Mostrando X de Y resultados".
+- **No usar páginas numéricas** — el patrón es "show more" progresivo, no paginación con números.
+- **Admin MangasTable** no tiene paginación — muestra todos los mangas en una sola tabla.
+
 ## Middleware
 
 `middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`, `/registro`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.

@@ -6,12 +6,15 @@ import { Categoria, Serie, type Manga } from "@/types/supabase";
 import { useEffect, useMemo, useState } from "react";
 import { useMangaStore } from "@/store/mangaStore";
 
+const ITEMS_POR_PAGINA = 12;
+
 export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId: string | null }) {
   const [series, setSeries] = useState<Serie[]>([])
   const [categoria, setCategoria] = useState<Categoria[]>([])
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todos");
   const [serieSeleccionada, setserieSeleccionada] = useState("Todas");
   const [mangasFiltrados, setMangasFiltrados] = useState<Manga[]>([]);
+  const [paginaActual, setPaginaActual] = useState(1);
   const addMangas = useMangaStore((state) => state.addMangas)
 
  
@@ -29,6 +32,16 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
     };
   }, [mangas]);
 
+  const totalPaginas = useMemo(
+    () => Math.max(1, Math.ceil(mangasFiltrados.length / ITEMS_POR_PAGINA)),
+    [mangasFiltrados]
+  );
+
+  const mangasPaginados = useMemo(
+    () => mangasFiltrados.slice(0, paginaActual * ITEMS_POR_PAGINA),
+    [mangasFiltrados, paginaActual]
+  );
+
   useEffect(() => {
     addMangas(mangas)
     const fetchSeriesCat = async () => {
@@ -39,6 +52,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
     };
     fetchSeriesCat();
     setMangasFiltrados(filterMangas(categoriaSeleccionada, serieSeleccionada));
+    setPaginaActual(1);
   }, [categoriaSeleccionada, serieSeleccionada, filterMangas, mangas, addMangas]);
 
   return (
@@ -110,21 +124,38 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
       {/* Resultados */}
       <section>
         {mangasFiltrados.length > 0 ? (
-          <ul className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {mangasFiltrados.map((manga) => (
-              <li key={manga.id} className="w-full max-w-xs">
-                <Card1
-                  id={manga.id}
-                  imagen={manga.imagen_portada}
-                  titulo={manga.titulo}
-                  autor={manga.autor}
-                  editorial={manga.editorial}
-                  precio={manga.precio}
-                  userId={userId}
-                />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {mangasPaginados.map((manga) => (
+                <li key={manga.id} className="w-full max-w-xs">
+                  <Card1
+                    id={manga.id}
+                    imagen={manga.imagen_portada}
+                    titulo={manga.titulo}
+                    autor={manga.autor}
+                    editorial={manga.editorial}
+                    precio={manga.precio}
+                    userId={userId}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            {/* Info + Cargar más */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                Mostrando {mangasPaginados.length} de {mangasFiltrados.length} resultado{mangasFiltrados.length !== 1 ? "s" : ""}
+              </p>
+              {paginaActual < totalPaginas && (
+                <button
+                  onClick={() => setPaginaActual((prev) => prev + 1)}
+                  className="px-6 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cargar más mangas
+                </button>
+              )}
+            </div>
+          </>
         ) : (
           <article className="bg-white rounded-xl p-8 border-2 border-dashed border-gray-300 text-center max-w-2xl mx-auto">
             <div className="text-5xl mb-4">📚</div>
