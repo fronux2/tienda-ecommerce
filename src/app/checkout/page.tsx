@@ -107,6 +107,34 @@ const CheckoutPage = () => {
     webpayLoading.current = true
     setLoading(true)
 
+    const idsMangas = cart.filter(i => i.mangas).map(i => i.mangas!.id ?? i.manga_id)
+    if (idsMangas.length > 0) {
+      const { data: stockData, error: stockError } = await supabase
+        .from('mangas')
+        .select('id, titulo, stock')
+        .in('id', idsMangas)
+
+      if (!stockError && stockData) {
+        const sinStock = cart
+          .filter(item => item.mangas)
+          .map(item => {
+            const manga = stockData.find(m => m.id === (item.mangas!.id ?? item.manga_id))
+            if (!manga || manga.stock < item.cantidad) {
+              return `"${item.mangas!.titulo}" — disponible: ${manga?.stock ?? 0}, solicitado: ${item.cantidad}`
+            }
+            return null
+          })
+          .filter(Boolean) as string[]
+
+        if (sinStock.length > 0) {
+          alert(`Stock insuficiente:\n${sinStock.join('\n')}\n\nActualiza tu carrito e intenta de nuevo.`)
+          setLoading(false)
+          webpayLoading.current = false
+          return
+        }
+      }
+    }
+
     try {
       const buyOrder = `TM-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 

@@ -184,14 +184,12 @@ Checkout → POST /api/webpay/create → Transbank devuelve { token, url }
 - Es un componente cliente sin `useSearchParams` (usa `window.location.search` para evitar errores de prerendering en Vercel).
 - Si `response.status === 'AUTHORIZED'`:
   1. Lee el snapshot de `localStorage`
-  2. Inserta pedido en Supabase con `estado: 'procesando'`, `metodo_pago: 'webpay'`, `webpay_token`, `buy_order`
-  3. Inserta `detalle_pedidos`
-  4. Ejecuta `decrement_stock` para cada item
-  5. Marca carrito como `checked_out`
-  6. Limpia `localStorage`
-  7. Envía emails (confirmación + admin)
-  8. Redirige a `/perfil/pedidos/{id}`
-- Si falla (rechazada, timeout, etc.): muestra pantalla de error con botón "Volver al carrito".
+  2. Llama al RPC `crear_pedido_completo` (transacción atómica: valida stock, descuenta, crea pedido + detalle)
+  3. Marca carrito como `checked_out`
+  4. Limpia `localStorage`
+  5. Envía emails (confirmación + admin)
+  6. Redirige a `/perfil/pedidos/{id}`
+- Si falla (rechazada, timeout, stock insuficiente, etc.): muestra pantalla de error con botón "Volver al carrito".
 
 ### Tarjetas de prueba (ambiente integración)
 
@@ -222,11 +220,28 @@ Ambos campos son read-only (sin edición inline) e incluidos en el buscador glob
 
 - `transbank-sdk` — único paquete necesario. Las credenciales de integración vienen incluidas en el SDK.
 
+### RPC transaccional: `crear_pedido_completo`
+
+La función PostgreSQL `crear_pedido_completo` (creada en el SQL Editor de Supabase) ejecuta todo en una transacción atómica:
+
+1. Valida que la `direccion_id` pertenece al `usuario_id`
+2. Recalcula el total desde `mangas.precio` vs `p_total` para verificar consistencia
+3. Descuenta stock con `UPDATE ... WHERE stock >= cantidad` (barrera atómica contra race conditions)
+4. Si algún item no tiene stock suficiente → `RAISE EXCEPTION` → rollback total
+5. Inserta `pedidos` (con `p_total` pagado realmente, no el recalculado)
+6. Inserta `detalle_pedidos` con `precio_unitario` desde `mangas.precio` (no desde el cliente)
+
+**Parámetros**: `p_usuario_id UUID`, `p_direccion_id UUID`, `p_total NUMERIC`, `p_token TEXT`, `p_buy_order TEXT`, `p_items JSONB`
+
+**Seguridad**: `SECURITY DEFINER` — se ejecuta con permisos del owner de la función.
+
 ### Notas importantes
 
 - `buyOrder` debe ser único por transacción. Formato: `TM-{Date.now()}-{random}`.
 - El carrito viaja en `localStorage` (clave `webpay_pending_order`) porque el usuario sale del sitio.
 - No hay webhook — el commit es síncrono al volver de Transbank.
+- El RPC `crear_pedido_completo` reemplazó las 3 queries separadas (insert pedido + insert detalle + decrement_stock) que antes generaban pedidos huérfanos si `decrement_stock` fallaba.
+- **Stock check en checkout**: `src/app/checkout/page.tsx` valida stock antes de enviar al usuario a Transbank (pre-check de UX, la barrera real es el RPC).
 - Si el usuario nunca vuelve (cierra ventana), la transacción queda huérfana. En producción se programa un cron para liberar stock.
 - Para producción: registrar comercio en Transbank y setear `WEBPAY_COMMERCE_CODE` y `WEBPAY_API_KEY` en env vars. El código cambia automáticamente a producción si ambas están presentes.
 

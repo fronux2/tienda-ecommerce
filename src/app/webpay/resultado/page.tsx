@@ -71,42 +71,19 @@ export default function WebpayResultadoPage() {
           return
         }
 
-        const { data: order, error: orderError } = await supabase
-          .from('pedidos')
-          .insert([{
-            usuario_id: user.id,
-            direccion_id: snapshot.direccion_id,
-            total: snapshot.total,
-            metodo_pago: 'webpay',
-            estado: 'procesando',
-            webpay_token: token_ws,
-            buy_order: snapshot.buyOrder,
-          }])
-          .select('*')
+        const { data: pedidoId, error: rpcError } = await supabase.rpc('crear_pedido_completo', {
+          p_usuario_id: user.id,
+          p_direccion_id: snapshot.direccion_id,
+          p_total: snapshot.total,
+          p_token: token_ws,
+          p_buy_order: snapshot.buyOrder,
+          p_items: snapshot.items.map(i => ({
+            manga_id: i.manga_id,
+            cantidad: i.cantidad,
+          })),
+        })
 
-        if (orderError) throw orderError
-
-        const orderDetails = snapshot.items.map(item => ({
-          pedido_id: order[0].id,
-          manga_id: item.manga_id,
-          cantidad: item.cantidad,
-          precio_unitario: item.precio,
-        }))
-
-        const { error: detailsError } = await supabase
-          .from('detalle_pedidos')
-          .insert(orderDetails)
-
-        if (detailsError) throw detailsError
-
-        const stockUpdates = snapshot.items.map(item =>
-          supabase.rpc('decrement_stock', {
-            manga_id: item.manga_id,
-            decrement_by: item.cantidad,
-          })
-        )
-
-        await Promise.all(stockUpdates)
+        if (rpcError) throw rpcError
 
         await supabase
           .from('carrito')
@@ -129,7 +106,7 @@ export default function WebpayResultadoPage() {
             type: 'pedido-confirmado',
             to: snapshot.userEmail,
             data: {
-              pedidoId: order[0].id,
+              pedidoId,
               items: emailItems,
               total: snapshot.total,
               direccion: snapshot.direccionStr,
@@ -145,7 +122,7 @@ export default function WebpayResultadoPage() {
             type: 'pedido-recibido-admin',
             to: '',
             data: {
-              pedidoId: order[0].id,
+              pedidoId,
               clienteEmail: snapshot.userEmail,
               items: emailItems,
               total: snapshot.total,
@@ -157,7 +134,7 @@ export default function WebpayResultadoPage() {
 
         setStatus('success')
         setTimeout(() => {
-          router.push('/perfil/pedidos/' + order[0].id)
+          router.push('/perfil/pedidos/' + pedidoId)
         }, 1500)
 
       } catch (error) {
