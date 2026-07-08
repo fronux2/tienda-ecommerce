@@ -1,20 +1,17 @@
-// app/mangas/[id]/MangaDetailClient.tsx
 "use client"
 import Image from 'next/image'
 import React from 'react'
-import Link from 'next/link' // Importamos Link para el botón de volver
-import { useMangaStore } from '@/store/mangaStore'
+import Link from 'next/link'
 import { type Manga } from '@/types/supabase'
 import { AddCardButton2 } from '@/components/AddCardButton2'
 import useUser from '@/hooks/useUser'
 
 type Props = {
   id?: string
+  manga: Manga | null
 }
 
-const MangaDetailClient = ({ id }: Props) => {
-  const mangas: Manga[] = useMangaStore((state) => state.mangas)
-  const manga = mangas.find((m) => m.id === id)
+const MangaDetailClient = ({ id, manga }: Props) => {
   const { user } = useUser()
 
   // -- UI para ID no válido --

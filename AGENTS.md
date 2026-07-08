@@ -283,6 +283,13 @@ La función PostgreSQL `crear_pedido_completo` (creada en el SQL Editor de Supab
   NOTIFICATION_EMAILS=admin1@mail.com,admin2@mail.com
   ```
 
+## Manga detail page (`/mangas/[id]`)
+
+- **Server component** (`page.tsx`) fetches the manga via `getMangaById()` from `mangas.server.ts` and passes it as `manga: Manga | null` prop to the client component.
+- **Client component** (`MangaDetailsclient.tsx`) receives `manga` prop directly — does **not** depend on Zustand store for initial data.
+- This pattern ensures direct URL access, refresh, and sharing all work correctly (the store was only populated on the listing page, causing "Manga no encontrado" on refresh).
+- `getMangaById` returns an array (`.eq('id', id)` on PK): use `data?.[0] ?? null`.
+
 ## Env vars (required)
 
 ```
