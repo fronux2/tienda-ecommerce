@@ -137,6 +137,7 @@ export default function NavbarClient({ user, rolId }: Props) {
             <div className="hidden md:flex items-center space-x-6">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/mangas">Mangas</NavLink>
+              <NavLink href="/cart">Carrito</NavLink>
               
               {isHome && (
                 <>
@@ -247,6 +248,7 @@ export default function NavbarClient({ user, rolId }: Props) {
           <div className="flex flex-col h-full pt-16 px-6 space-y-6 overflow-y-auto">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/mangas">Mangas</NavLink>
+            <NavLink href="/cart">Carrito</NavLink>
             
             {isHome && (
               <>
