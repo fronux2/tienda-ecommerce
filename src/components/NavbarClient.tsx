@@ -10,7 +10,7 @@ import { useEffect, useState, useRef } from 'react'
 import Cart from '@/components/Cart'
 
 type Props = {
-  user: { id: string } | null
+  user: { id: string; email?: string } | null
   rolId: number | null
 }
 
@@ -155,7 +155,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                     className="flex items-center gap-2 text-[#FFF8F0] hover:text-red-500 transition-colors py-2 px-3 rounded-md font-medium text-lg"
                   >
                     <span className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-sm font-bold text-white">
-                      {user.id[0].toUpperCase()}
+                      {user.email?.[0]?.toUpperCase() || user.id[0].toUpperCase()}
                     </span>
                     <svg
                       className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
@@ -168,7 +168,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                   {dropdownOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
                       <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-semibold text-gray-800 truncate">{user.id.slice(0, 8)}…</p>
+                        <p className="text-sm font-semibold text-gray-800 truncate">{user.email || user.id}</p>
                       </div>
                       <Link
                         href="/perfil"
