@@ -36,7 +36,9 @@ export const useCartStore = create<CartState>((set,get) => ({
     const existingItem = state.cart.find(i => i.manga_id === item.manga_id && i.usuario_id === item.usuario_id)
     if (existingItem) {
       try {
-        const nuevaCantidad = existingItem.cantidad + item.cantidad
+        const maxStock = item.mangas?.stock ?? Infinity
+        const nuevaCantidad = Math.min(existingItem.cantidad + item.cantidad, maxStock)
+        if (nuevaCantidad === existingItem.cantidad) return
         if (item.usuario_id) {
           await updateCartQuantitySupabase(item.usuario_id, item.manga_id, nuevaCantidad)
         }
@@ -52,6 +54,10 @@ export const useCartStore = create<CartState>((set,get) => ({
       }
     } else {
       try {
+        if (item.mangas && item.cantidad > item.mangas.stock) {
+          alert(`Solo hay ${item.mangas.stock} unidades disponibles`)
+          return
+        }
         if (item.usuario_id) {
           await addToCartSupabase(item)
         }
@@ -88,10 +94,16 @@ export const useCartStore = create<CartState>((set,get) => ({
     set({ cart: [], totalItems: 0 })},
 
   updateQuantity: async (usuario_id, manga_id, cantidad) =>{
-    if (usuario_id) await updateCartQuantitySupabase(usuario_id, manga_id, cantidad)
-    set((state) => {
-      const newCart = state.cart.map((item) =>
-        item.manga_id === manga_id ? { ...item, cantidad } : item
+    const state = get()
+    const item = state.cart.find(i => i.manga_id === manga_id)
+    if (!item) return
+    const maxStock = item.mangas?.stock ?? Infinity
+    const cantidadFinal = Math.max(1, Math.min(cantidad, maxStock))
+    if (cantidadFinal === item.cantidad) return
+    if (usuario_id) await updateCartQuantitySupabase(usuario_id, manga_id, cantidadFinal)
+    set((s) => {
+      const newCart = s.cart.map((i) =>
+        i.manga_id === manga_id ? { ...i, cantidad: cantidadFinal } : i
       )
       if (!usuario_id) saveCartToLocalStorage(newCart)
       return { cart: newCart, totalItems: sumarItems(newCart) }

@@ -9,6 +9,8 @@ import LoadingButton from './LoadingButton';
 export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: string | null }) {
   const [manga, setManga] = useState<NuevoManga | null>(null)
   const [loading, setLoading] = useState(false)
+  const cart = useCartStore((state) => state.cart)
+
   useEffect(() => {
     const fetchManga = async () => {
       const data = await getMangaById(mangaId)
@@ -19,8 +21,12 @@ export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: s
 
   const addToCart = useCartStore((state) => state.addToCart)
 
+  const cartItem = cart.find(i => i.manga_id === mangaId)
+  const enCarrito = cartItem?.cantidad ?? 0
+  const stockAgotado = manga ? enCarrito >= manga.stock : false
+
   const handleClick = async () => {
-    if (!manga || loading) return
+    if (!manga || loading || stockAgotado) return
     setLoading(true)
     try {
       await addToCart({ manga_id: mangaId, cantidad: 1, usuario_id: userId, mangas: manga })
@@ -33,10 +39,11 @@ export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: s
     <LoadingButton
       onClick={handleClick}
       loading={loading}
+      disabled={stockAgotado || loading}
       type="button"
       className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg shadow transition-colors duration-300"
     >
-      Añadir al Carrito
+      {stockAgotado ? 'Stock agotado en carrito' : 'Añadir al Carrito'}
     </LoadingButton>
   )
 }
