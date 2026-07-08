@@ -18,6 +18,13 @@ export default function MangasTable({
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string | number>("");
   const [terminoBusqueda, setTerminoBusqueda] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroSerie, setFiltroSerie] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("");
+  const [filtroActivo, setFiltroActivo] = useState<string>("");
+  const [filtroPopular, setFiltroPopular] = useState<string>("");
+  const [sortPor, setSortPor] = useState("titulo");
+  const [sortDir, setSortDir] = useState("asc");
   const guardandoRef = useRef(false)
 
   useEffect(() => {
@@ -25,31 +32,65 @@ export default function MangasTable({
   }, [loadMangas]);
 
   const mangasFiltrados = useMemo(() => {
-    if (!terminoBusqueda) return mangas;
-    
-    const termino = terminoBusqueda.toLowerCase();
-    
-    return mangas.filter(manga => {
-      const categoriaNombre = categorias.find(c => c.id === manga.categoria_id)?.nombre.toLowerCase();
-      const serieNombre = series.find(s => s.id === manga.serie_id)?.nombre.toLowerCase();
-      
-      return (
-        manga.titulo?.toLowerCase().includes(termino) ||
-        manga.autor?.toLowerCase().includes(termino) ||
-        manga.editorial?.toLowerCase().includes(termino) ||
-        manga.isbn?.toLowerCase().includes(termino) ||
-        manga.idioma?.toLowerCase().includes(termino) ||
-        manga.estado?.toLowerCase().includes(termino) ||
-        manga.descripcion?.toLowerCase().includes(termino) ||
-        manga.volumen?.toString().includes(termino) ||
-        manga.precio?.toString().includes(termino) ||
-        manga.stock?.toString().includes(termino) ||
-        manga.numero_paginas?.toString().includes(termino) ||
-        categoriaNombre?.includes(termino) ||
-        serieNombre?.includes(termino)
-      );
+    let resultado = [...mangas];
+
+    if (terminoBusqueda) {
+      const termino = terminoBusqueda.toLowerCase();
+      resultado = resultado.filter(manga => {
+        const categoriaNombre = categorias.find(c => c.id === manga.categoria_id)?.nombre.toLowerCase();
+        const serieNombre = series.find(s => s.id === manga.serie_id)?.nombre.toLowerCase();
+        return (
+          manga.titulo?.toLowerCase().includes(termino) ||
+          manga.autor?.toLowerCase().includes(termino) ||
+          manga.editorial?.toLowerCase().includes(termino) ||
+          manga.isbn?.toLowerCase().includes(termino) ||
+          manga.idioma?.toLowerCase().includes(termino) ||
+          manga.estado?.toLowerCase().includes(termino) ||
+          manga.descripcion?.toLowerCase().includes(termino) ||
+          manga.volumen?.toString().includes(termino) ||
+          manga.precio?.toString().includes(termino) ||
+          manga.stock?.toString().includes(termino) ||
+          manga.numero_paginas?.toString().includes(termino) ||
+          categoriaNombre?.includes(termino) ||
+          serieNombre?.includes(termino)
+        );
+      });
+    }
+
+    if (filtroCategoria) {
+      resultado = resultado.filter(manga => manga.categoria_id === filtroCategoria);
+    }
+
+    if (filtroSerie) {
+      resultado = resultado.filter(manga => manga.serie_id === filtroSerie);
+    }
+
+    if (filtroEstado) {
+      resultado = resultado.filter(manga => manga.estado === filtroEstado);
+    }
+
+    if (filtroActivo !== "") {
+      resultado = resultado.filter(manga => manga.activo === (filtroActivo === "true"));
+    }
+
+    if (filtroPopular !== "") {
+      resultado = resultado.filter(manga => manga.es_popular === (filtroPopular === "true"));
+    }
+
+    resultado.sort((a, b) => {
+      let cmp = 0;
+      switch (sortPor) {
+        case "titulo": cmp = (a.titulo ?? "").localeCompare(b.titulo ?? ""); break;
+        case "precio": cmp = (a.precio ?? 0) - (b.precio ?? 0); break;
+        case "stock": cmp = (a.stock ?? 0) - (b.stock ?? 0); break;
+        case "volumen": cmp = Number(a.volumen ?? 0) - Number(b.volumen ?? 0); break;
+        case "fecha_publicacion": cmp = (a.fecha_publicacion ?? "").localeCompare(b.fecha_publicacion ?? ""); break;
+      }
+      return sortDir === "desc" ? -cmp : cmp;
     });
-  }, [terminoBusqueda, mangas, categorias, series]);
+
+    return resultado;
+  }, [mangas, terminoBusqueda, filtroCategoria, filtroSerie, filtroEstado, filtroActivo, filtroPopular, sortPor, sortDir, categorias, series]);
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | number | boolean | undefined) => {
     if (!id || valor === undefined) return;
@@ -112,27 +153,195 @@ export default function MangasTable({
             <h1 className="text-3xl font-bold text-gray-800">Panel de Mangas</h1>
             <p className="text-gray-600 mt-2">Administra y actualiza tu catálogo de mangas</p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
+          <div className="bg-purple-100 p-3 rounded-lg">
+            <p className="text-purple-800 font-medium">
+              Total de mangas: <span className="font-bold">{mangasFiltrados.length}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Filtros */}
+        <div className="bg-white p-5 rounded-lg shadow-md mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div className="md:col-span-2">
+              <label htmlFor="busqueda" className="block text-sm font-medium text-gray-700 mb-1">
+                Buscar en toda la tabla
+              </label>
               <input
                 type="text"
-                placeholder="Buscar mangas..."
-                className="pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64"
+                id="busqueda"
+                placeholder="Título, autor, editorial, ISBN, categoría, serie, estado..."
                 value={terminoBusqueda}
                 onChange={(e) => setTerminoBusqueda(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
-              <div className="absolute left-3 top-2.5 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
             </div>
-            <div className="bg-purple-100 p-3 rounded-lg">
-              <p className="text-purple-800 font-medium">
-                Total de mangas: <span className="font-bold">{mangasFiltrados.length}</span>
+            <div>
+              <label htmlFor="filtro-categoria" className="block text-sm font-medium text-gray-700 mb-1">
+                Categoría
+              </label>
+              <select
+                id="filtro-categoria"
+                value={filtroCategoria}
+                onChange={(e) => setFiltroCategoria(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Todas</option>
+                {categorias.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="filtro-serie" className="block text-sm font-medium text-gray-700 mb-1">
+                Serie
+              </label>
+              <select
+                id="filtro-serie"
+                value={filtroSerie}
+                onChange={(e) => setFiltroSerie(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Todas</option>
+                {series.map((ser) => (
+                  <option key={ser.id} value={ser.id}>{ser.nombre}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+            <div>
+              <label htmlFor="filtro-estado" className="block text-sm font-medium text-gray-700 mb-1">
+                Estado
+              </label>
+              <select
+                id="filtro-estado"
+                value={filtroEstado}
+                onChange={(e) => setFiltroEstado(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="disponible">Disponible</option>
+                <option value="agotado">Agotado</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="filtro-activo" className="block text-sm font-medium text-gray-700 mb-1">
+                Activo
+              </label>
+              <select
+                id="filtro-activo"
+                value={filtroActivo}
+                onChange={(e) => setFiltroActivo(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="true">Sí</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="filtro-popular" className="block text-sm font-medium text-gray-700 mb-1">
+                Popular
+              </label>
+              <select
+                id="filtro-popular"
+                value={filtroPopular}
+                onChange={(e) => setFiltroPopular(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="true">Sí</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="sort-por" className="block text-sm font-medium text-gray-700 mb-1">
+                Ordenar por
+              </label>
+              <select
+                id="sort-por"
+                value={sortPor}
+                onChange={(e) => setSortPor(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="titulo">Título</option>
+                <option value="precio">Precio</option>
+                <option value="stock">Stock</option>
+                <option value="volumen">Volumen</option>
+                <option value="fecha_publicacion">Fecha publicación</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="sort-dir" className="block text-sm font-medium text-gray-700 mb-1">
+                Dirección
+              </label>
+              <select
+                id="sort-dir"
+                value={sortDir}
+                onChange={(e) => setSortDir(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex gap-2 flex-wrap">
+              {terminoBusqueda && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                  Buscando: &quot;{terminoBusqueda}&quot;
+                  <button onClick={() => setTerminoBusqueda("")} className="ml-2 hover:text-blue-600">✕</button>
+                </span>
+              )}
+              {filtroCategoria && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800">
+                  {categorias.find(c => c.id === filtroCategoria)?.nombre || filtroCategoria}
+                  <button onClick={() => setFiltroCategoria("")} className="ml-2 hover:text-purple-600">✕</button>
+                </span>
+              )}
+              {filtroSerie && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-indigo-100 text-indigo-800">
+                  {series.find(s => s.id === filtroSerie)?.nombre || filtroSerie}
+                  <button onClick={() => setFiltroSerie("")} className="ml-2 hover:text-indigo-600">✕</button>
+                </span>
+              )}
+              {filtroEstado && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-100 text-orange-800">
+                  Estado: {filtroEstado}
+                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-orange-600">✕</button>
+                </span>
+              )}
+              {filtroActivo !== "" && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                  Activo: {filtroActivo === "true" ? "Sí" : "No"}
+                  <button onClick={() => setFiltroActivo("")} className="ml-2 hover:text-green-600">✕</button>
+                </span>
+              )}
+              {filtroPopular !== "" && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-pink-100 text-pink-800">
+                  Popular: {filtroPopular === "true" ? "Sí" : "No"}
+                  <button onClick={() => setFiltroPopular("")} className="ml-2 hover:text-pink-600">✕</button>
+                </span>
+              )}
+            </div>
+            
+            <div className="bg-green-50 px-4 py-2 rounded-lg whitespace-nowrap">
+              <p className="text-sm font-medium text-green-800">
+                Mostrando: <span className="font-bold">{mangasFiltrados.length}</span> de {mangas.length} mangas
               </p>
             </div>
           </div>
+          
+          {terminoBusqueda && mangasFiltrados.length === 0 && (
+            <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
+              <p className="text-yellow-700">
+                No se encontraron resultados para: <span className="font-mono font-bold">{terminoBusqueda}</span>
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -548,11 +757,9 @@ export default function MangasTable({
             </table>
           </div>
           
-          {mangasFiltrados.length === 0 && (
+          {mangasFiltrados.length === 0 && !terminoBusqueda && !filtroCategoria && !filtroSerie && !filtroEstado && !filtroActivo && !filtroPopular && (
             <div className="text-center py-10 bg-gray-50">
-              <p className="text-gray-500 text-lg">
-                {terminoBusqueda ? "No se encontraron mangas con ese criterio" : "No hay mangas disponibles"}
-              </p>
+              <p className="text-gray-500 text-lg">No hay mangas disponibles</p>
             </div>
           )}
         </div>

@@ -101,6 +101,19 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - Los filtros activos se muestran como badges con botón ✕ para limpiarlos individualmente.
 - El mensaje "no hay pedidos disponibles" solo se muestra si no hay filtros activos (cuando el array vacío es real, no por filtrado).
 
+## Admin mangas — Filtros y orden
+
+`src/components/MangasTable.tsx` incluye:
+- **Buscador global** — un `<input>` que filtra por todas las columnas (título, autor, editorial, ISBN, categoría, serie, estado, descripción, volumen, precio, stock, páginas, idioma). Usa `toLowerCase().includes()` sobre cada campo.
+- **Filtro por categoría** — `<select>` con todas las categorías (recibidas como prop del server component `MangaDataLoader`).
+- **Filtro por serie** — `<select>` con todas las series (recibidas como prop del server component `MangaDataLoader`).
+- **Filtro por estado** — `<select>` con valores: `""` (Todos), `disponible`, `agotado`.
+- **Filtro por activo** — `<select>` con valores: `""` (Todos), `true` (Sí), `false` (No).
+- **Filtro por popular** — `<select>` con valores: `""` (Todos), `true` (Sí), `false` (No).
+- **Ordenamiento** — dos `<select>`: campo (título, precio, stock, volumen, fecha_publicación) y dirección (ascendente / descendente).
+- Los filtros activos se muestran como badges con botón ✕ para limpiarlos individualmente.
+- El mensaje "no hay mangas disponibles" solo se muestra si no hay filtros activos.
+
 ## Middleware
 
 `middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`, `/registro`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
