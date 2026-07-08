@@ -37,6 +37,7 @@
 - **NavbarClient user display**: The avatar circle shows the first letter of the user's email (`user.email?.[0]`) with fallback to `user.id[0]`. The dropdown shows the full email. The `Props` type includes `email?: string`.
 - **Guest cart**: Non-registered users can add items to cart (stored in localStorage via `src/lib/cartLocalStorage.ts`). Login is required at checkout (`/checkout` is protected by middleware). When a guest logs in, the local cart is automatically merged into Supabase via `NavbarClient`.
 - **Cart store guest logic**: `src/store/cartStore.ts` — all operations (`addToCart`, `removeFromCart`, `clearCart`, `updateQuantity`) skip Supabase calls when `usuario_id` is falsy and persist to localStorage instead. The store types accept `string | null` for `usuario_id`.
+- **Cart store stock validation**: `cartStore.addToCart` caps `nuevaCantidad` to `item.mangas?.stock` (or `Infinity` if missing) in both existing and new item branches. `cartStore.updateQuantity` also caps with `Math.max(1, Math.min(cantidad, maxStock))`. If the new quantity equals the current, the operation is a no-op (`return` early).
 - **Cart page** (`src/app/cart/page.tsx`): full-page cart view at `/cart` (already public in middleware). Uses `useUser` hook for `userId` + `useCartStore` for state. Shows: item list with image, title (link to detail), price, quantity +/- with stock limit, subtotal, delete button; summary sidebar with total and checkout button; empty state with link to `/mangas`. Uses local `loading` flag for async guard (same pattern as formularios con submit async).
 - **Direcciones — `numero_casa` field**: The `direcciones` table has a required `numero_casa` (VARCHAR NOT NULL) field. The TypeScript type is `Direccion` in `src/types/supabase.ts:142` with `numero_casa: string`. Zod validation is in `src/schemas/direccionesSchema.ts` (`direccionSchema`) — both the profile direcciones page and checkout page validate with `safeParse` before inserting/updating. The `Pedido.direcciones` join also includes `numero_casa` — always use optional chaining when accessing it in queries.
 
@@ -46,6 +47,13 @@
 - **`cartStore.totalItems`**: derived property (`number`) en `CartState` que se recalcula automáticamente en cada operación (`addToCart`, `removeFromCart`, `clearCart`, `updateQuantity`, `setCart`). Suma `item.cantidad` de todos los items del carrito. Úsalo en vez de `cart.length` para mostrar el badge con la cuenta real de unidades.
 
 ## Button UX patterns
+
+### AddCardButton2 (`src/components/AddCardButton2.tsx`)
+Botón de "Añadir al Carrito" para páginas de detalle de manga. Incluye:
+- Fetch del manga via `getMangaById` en `useEffect` para obtener `stock` actualizado
+- Se deshabilita automáticamente si el carrito ya tiene la cantidad máxima del stock (`stockAgotado = enCarrito >= manga.stock`)
+- Cambia el texto a "Stock agotado en carrito" cuando está deshabilitado
+- Usa `LoadingButton` internamente con spinner
 
 ### LoadingButton (`src/components/LoadingButton.tsx`)
 Componente reutilizable para botones con operaciones async. Incluye:
