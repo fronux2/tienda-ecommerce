@@ -11,6 +11,7 @@ const ITEMS_POR_PAGINA = 12;
 export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId: string | null }) {
   const [series, setSeries] = useState<Serie[]>([])
   const [categoria, setCategoria] = useState<Categoria[]>([])
+  const [busqueda, setBusqueda] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todos");
   const [serieSeleccionada, setserieSeleccionada] = useState("Todas");
   const [mangasFiltrados, setMangasFiltrados] = useState<Manga[]>([]);
@@ -18,16 +19,24 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
   const addMangas = useMangaStore((state) => state.addMangas)
 
  
-  // Filtrado flexible por categoría y/o serieSeleccionada
+  // Filtrado flexible por búsqueda, categoría y/o serie
   const filterMangas = useMemo(() => {
-    return (categoriaSeleccionada: string, serieSeleccionada: string) => {
+    return (busqueda: string, categoriaSeleccionada: string, serieSeleccionada: string) => {
+      const termino = busqueda.toLowerCase().trim();
       return mangas.filter((manga) => {
+        const coincideBusqueda =
+          termino === "" ||
+          manga.titulo.toLowerCase().includes(termino) ||
+          manga.autor.toLowerCase().includes(termino) ||
+          manga.editorial.toLowerCase().includes(termino) ||
+          manga.isbn.toLowerCase().includes(termino);
+
         const coincideCategoriaSeleccionada =
           categoriaSeleccionada === "Todos" || manga.categorias?.nombre === categoriaSeleccionada;
 
         const coincideserieSeleccionada =
           serieSeleccionada === "Todas" || manga.series?.nombre === serieSeleccionada;
-        return coincideCategoriaSeleccionada && coincideserieSeleccionada;
+        return coincideBusqueda && coincideCategoriaSeleccionada && coincideserieSeleccionada;
       });
     };
   }, [mangas]);
@@ -51,9 +60,9 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
       setSeries(series);
     };
     fetchSeriesCat();
-    setMangasFiltrados(filterMangas(categoriaSeleccionada, serieSeleccionada));
+    setMangasFiltrados(filterMangas(busqueda, categoriaSeleccionada, serieSeleccionada));
     setPaginaActual(1);
-  }, [categoriaSeleccionada, serieSeleccionada, filterMangas, mangas, addMangas]);
+  }, [busqueda, categoriaSeleccionada, serieSeleccionada, filterMangas, mangas, addMangas]);
 
   return (
     <section className="space-y-8">
@@ -64,12 +73,35 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
           <span className="block h-1 w-16 bg-red-600 rounded-full mt-2"></span>
         </h2>
         
-        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Selector de categoría */}
+        <fieldset className="grid grid-cols-1 gap-6">
+          {/* Buscador */}
           <figure className="relative">
-            <label htmlFor="categoria" className="block text-black font-medium mb-2">
-              Filtrar por categoría
+            <label htmlFor="busqueda" className="block text-black font-medium mb-2">
+              Buscar
             </label>
+            <div className="relative">
+              <input
+                id="busqueda"
+                type="text"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar por título, autor, editorial..."
+                className="w-full p-3 pl-10 rounded-lg border-2 border-gray-300 bg-white text-black shadow-sm focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600"
+              />
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
+              </span>
+            </div>
+          </figure>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Selector de categoría */}
+            <figure className="relative">
+              <label htmlFor="categoria" className="block text-black font-medium mb-2">
+                Filtrar por categoría
+              </label>
             <div className="relative">
               <select
                 id="categoria"
@@ -118,6 +150,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
               </span>
             </div>
           </figure>
+          </div>
         </fieldset>
       </header>
 
