@@ -210,10 +210,9 @@ const CheckoutPage = () => {
       router.push('/perfil/pedidos/' + order[0].id)
 
     } catch (error) {
+      setLoading(false)
       console.error('Checkout error:', error)
       alert('Error al procesar el pedido')
-    } finally {
-      setLoading(false)
     }
   }
 
