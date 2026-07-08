@@ -77,18 +77,16 @@ const CheckoutPage = () => {
     }
     setSavingAddress(true)
 
-    const { error } = await supabase.from('direcciones').insert([
-      {
-        usuario_id: userId,
-        ...newAddress
-      }
-    ])
+    const { data, error } = await supabase
+      .from('direcciones')
+      .insert([{ usuario_id: userId, ...newAddress }])
+      .select('*')
 
     if (error) {
       console.error('Error al agregar dirección', error)
       alert('No se pudo agregar la dirección')
-    } else {
-      alert('Dirección agregada correctamente')
+    } else if (data?.[0]) {
+      setAddressId(data[0].id)
       setShowAddressForm(false)
       setNewAddress({
         nombre_direccion: '',
