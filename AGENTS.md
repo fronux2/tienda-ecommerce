@@ -91,6 +91,16 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
   - **Local state** (`CategoriaTable`): `setLista((prev) => prev.map(...))` replacing the matching item.
   - **Zustand state** (`MangasTable`): call `set({ mangas: await fetchAll() })` (full replace), never a merge function.
 
+## Admin pedidos — Filtros y orden
+
+`src/components/PedidosTable.tsx` incluye:
+- **Buscador global** — un `<input>` que filtra por todas las columnas (ID, email, dirección, total, estado, método de pago, notas, fechas). Usa `toLowerCase().includes()` sobre cada campo.
+- **Filtro por estado** — `<select>` con valores: `""` (Todos), `pendiente`, `procesando`, `enviado`, `entregado`, `cancelado`.
+- **Filtro por rango de fechas** — dos `<input type="date">` (desde / hasta). La fecha "hasta" incluye `T23:59:59` para abarcar todo el día.
+- **Orden: pendientes primero** — el `useMemo` `pedidosFiltrados` ordena con `ordenEstados: { pendiente: 0, procesando: 1, enviado: 2, entregado: 3, cancelado: 4 }`. A mismo estado, ordena por `fecha_pedido` descendente.
+- Los filtros activos se muestran como badges con botón ✕ para limpiarlos individualmente.
+- El mensaje "no hay pedidos disponibles" solo se muestra si no hay filtros activos (cuando el array vacío es real, no por filtrado).
+
 ## Middleware
 
 `middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`, `/registro`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
@@ -113,6 +123,10 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - En caso de error (email duplicado, etc.) redirige a `/error`.
 - El link "Crear cuenta nueva" en `/login` apunta a `/registro`.
 - La API route `/api/crear-usuario` (usada por el admin panel) **no se modificó** — coexiste con el nuevo flujo público.
+
+## Checkout
+
+- **Direcciones**: En `src/app/checkout/page.tsx`, al agregar una nueva dirección se usa `.select('*')` en el insert para capturar el ID y auto-seleccionarla (`setAddressId(data[0].id)`), sin que el usuario tenga que elegirla manualmente.
 
 ## Admin routes
 

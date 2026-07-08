@@ -2,7 +2,7 @@
 
 import getPedidos from "@/lib/supabase/services/pedidos.client";
 import { updatePedido } from "@/lib/supabase/services/pedidos.client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { type Pedido } from "@/types/supabase";
 import { formatPrice } from "@/lib/formatPrice";
 
@@ -10,14 +10,58 @@ export default function Page() {
   const [editando, setEditando] = useState<{id: string, campo: string} | null>(null);
   const [valorEditado, setValorEditado] = useState<string>("");
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
-  const [filtroUsuarioId, setFiltroUsuarioId] = useState<string>(""); // Estado para el filtro
+  const [busqueda, setBusqueda] = useState<string>("");
+  const [filtroEstado, setFiltroEstado] = useState<string>("");
+  const [filtroFechaDesde, setFiltroFechaDesde] = useState<string>("");
+  const [filtroFechaHasta, setFiltroFechaHasta] = useState<string>("");
   const guardandoRef = useRef(false)
 
-  // Filtrar pedidos por usuario_id
-  const pedidosFiltrados = filtroUsuarioId
-    ? pedidos.filter(pedido => 
-        pedido.usuario_id?.toLowerCase().includes(filtroUsuarioId.toLowerCase()))
-    : pedidos;
+  const pedidosFiltrados = useMemo(() => {
+    let resultado = [...pedidos];
+
+    if (busqueda) {
+      const t = busqueda.toLowerCase();
+      resultado = resultado.filter((pedido) =>
+        pedido.id?.toLowerCase().includes(t) ||
+        pedido.usuarios?.email?.toLowerCase().includes(t) ||
+        pedido.usuario_id?.toLowerCase().includes(t) ||
+        `${pedido.direcciones?.nombre_direccion ?? ""} ${pedido.direcciones?.direccion ?? ""} ${pedido.direcciones?.numero_casa ?? ""} ${pedido.direcciones?.ciudad ?? ""}`.toLowerCase().includes(t) ||
+        pedido.total?.toString().includes(t) ||
+        pedido.estado?.toLowerCase().includes(t) ||
+        pedido.metodo_pago?.toLowerCase().includes(t) ||
+        pedido.notas_pedido?.toLowerCase().includes(t) ||
+        pedido.fecha_pedido?.toLowerCase().includes(t) ||
+        pedido.fecha_actualizacion?.toLowerCase().includes(t)
+      );
+    }
+
+    if (filtroEstado) {
+      resultado = resultado.filter((pedido) => pedido.estado === filtroEstado);
+    }
+
+    if (filtroFechaDesde) {
+      const desde = new Date(filtroFechaDesde);
+      resultado = resultado.filter((pedido) => new Date(pedido.fecha_pedido) >= desde);
+    }
+
+    if (filtroFechaHasta) {
+      const hasta = new Date(filtroFechaHasta + "T23:59:59");
+      resultado = resultado.filter((pedido) => new Date(pedido.fecha_pedido) <= hasta);
+    }
+
+    const ordenEstados: Record<string, number> = {
+      pendiente: 0, procesando: 1, enviado: 2, entregado: 3, cancelado: 4,
+    };
+
+    resultado.sort((a, b) => {
+      const oa = ordenEstados[a.estado] ?? 99;
+      const ob = ordenEstados[b.estado] ?? 99;
+      if (oa !== ob) return oa - ob;
+      return new Date(b.fecha_pedido).getTime() - new Date(a.fecha_pedido).getTime();
+    });
+
+    return resultado;
+  }, [pedidos, busqueda, filtroEstado, filtroFechaDesde, filtroFechaHasta]);
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined | number) => {
     if (!id || valor === undefined) return;
@@ -96,44 +140,102 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Filtro por ID de Usuario */}
+        {/* Filtros */}
         <div className="bg-white p-5 rounded-lg shadow-md mb-6">
-          <div className="flex items-center justify-between">
-            <div className="w-full max-w-md">
-              <label htmlFor="filtro-usuario" className="block text-sm font-medium text-gray-700 mb-1">
-                Filtrar por ID de Usuario
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div className="md:col-span-2">
+              <label htmlFor="busqueda" className="block text-sm font-medium text-gray-700 mb-1">
+                Buscar en toda la tabla
               </label>
-              <div className="relative">
+              <input
+                type="text"
+                id="busqueda"
+                placeholder="ID, email, dirección, total, estado, método de pago, notas, fechas..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="filtro-estado" className="block text-sm font-medium text-gray-700 mb-1">
+                Estado
+              </label>
+              <select
+                id="filtro-estado"
+                value={filtroEstado}
+                onChange={(e) => setFiltroEstado(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Todos</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="procesando">Procesando</option>
+                <option value="enviado">Enviado</option>
+                <option value="entregado">Entregado</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Rango de fechas
+              </label>
+              <div className="flex gap-2">
                 <input
-                  type="text"
-                  id="filtro-usuario"
-                  placeholder="Ingresa el ID de usuario..."
-                  value={filtroUsuarioId}
-                  onChange={(e) => setFiltroUsuarioId(e.target.value)}
+                  type="date"
+                  value={filtroFechaDesde}
+                  onChange={(e) => setFiltroFechaDesde(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  title="Desde"
                 />
-                {filtroUsuarioId && (
-                  <button 
-                    onClick={() => setFiltroUsuarioId("")}
-                    className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
-                  >
-                    ✕
-                  </button>
-                )}
+                <input
+                  type="date"
+                  value={filtroFechaHasta}
+                  onChange={(e) => setFiltroFechaHasta(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  title="Hasta"
+                />
               </div>
             </div>
+          </div>
+          
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex gap-2 flex-wrap">
+              {busqueda && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                  Buscando: &quot;{busqueda}&quot;
+                  <button onClick={() => setBusqueda("")} className="ml-2 hover:text-blue-600">✕</button>
+                </span>
+              )}
+              {filtroEstado && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800">
+                  Estado: {filtroEstado}
+                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-purple-600">✕</button>
+                </span>
+              )}
+              {filtroFechaDesde && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                  Desde: {filtroFechaDesde}
+                  <button onClick={() => setFiltroFechaDesde("")} className="ml-2 hover:text-green-600">✕</button>
+                </span>
+              )}
+              {filtroFechaHasta && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                  Hasta: {filtroFechaHasta}
+                  <button onClick={() => setFiltroFechaHasta("")} className="ml-2 hover:text-green-600">✕</button>
+                </span>
+              )}
+            </div>
             
-            <div className="bg-green-50 px-4 py-2 rounded-lg">
+            <div className="bg-green-50 px-4 py-2 rounded-lg whitespace-nowrap">
               <p className="text-sm font-medium text-green-800">
                 Mostrando: <span className="font-bold">{pedidosFiltrados.length}</span> de {pedidos.length} pedidos
               </p>
             </div>
           </div>
           
-          {filtroUsuarioId && pedidosFiltrados.length === 0 && (
+          {busqueda && pedidosFiltrados.length === 0 && (
             <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
               <p className="text-yellow-700">
-                No se encontraron pedidos para el usuario con ID: <span className="font-mono font-bold">{filtroUsuarioId}</span>
+                No se encontraron resultados para: <span className="font-mono font-bold">{busqueda}</span>
               </p>
             </div>
           )}
@@ -270,7 +372,7 @@ export default function Page() {
             </table>
           </div>
           
-          {pedidosFiltrados.length === 0 && !filtroUsuarioId && (
+          {pedidosFiltrados.length === 0 && !busqueda && !filtroEstado && !filtroFechaDesde && !filtroFechaHasta && (
             <div className="text-center py-10 bg-gray-50">
               <p className="text-gray-500 text-lg">No hay pedidos disponibles</p>
             </div>
