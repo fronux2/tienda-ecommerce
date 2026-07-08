@@ -139,9 +139,89 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - El link "Crear cuenta nueva" en `/login` apunta a `/registro`.
 - La API route `/api/crear-usuario` (usada por el admin panel) **no se modificó** — coexiste con el nuevo flujo público.
 
+## Webpay Plus (Transbank)
+
+### Overview
+
+Webpay Plus es un flujo de **redirección**: el usuario sale del sitio, paga en la página segura de Transbank, y vuelve a `/webpay/resultado`. Todo es síncrono — no necesita webhook.
+
+```
+Checkout → POST /api/webpay/create → Transbank devuelve { token, url }
+  → Rediriges (form POST con token_ws) → Usuario paga en Transbank
+  → Transbank redirige a /webpay/resultado?token_ws=...
+  → /webpay/resultado hace commit + crea pedido en Supabase
+```
+
+### Archivos
+
+| Archivo | Propósito |
+|---------|-----------|
+| `src/lib/transbank.ts` | Inicializa SDK (integración por defecto, producción via `WEBPAY_COMMERCE_CODE` + `WEBPAY_API_KEY`) |
+| `src/app/api/webpay/create/route.ts` | `POST` — Crea transacción, retorna `{ token, url }` |
+| `src/app/api/webpay/commit/route.ts` | `POST` — Confirma transacción con `token_ws` |
+| `src/app/webpay/resultado/page.tsx` | Página de retorno — confirma pago y crea pedido |
+
+### Flujo en checkout (`src/app/checkout/page.tsx`)
+
+- **No hay selector de método de pago** — el pago es siempre Webpay Plus.
+- El botón "Pagar con Webpay" guarda un snapshot del carrito en `localStorage` bajo la clave `webpay_pending_order`, genera un `buyOrder` único (`TM-{timestamp}-{random}`), llama a `POST /api/webpay/create`, y redirige al usuario a Transbank via form POST con `token_ws`.
+- El pedido **no** se crea antes de la redirección. Se crea después del commit exitoso.
+
+### Flujo en `/webpay/resultado`
+
+- Es un componente cliente sin `useSearchParams` (usa `window.location.search` para evitar errores de prerendering en Vercel).
+- Si `response.status === 'AUTHORIZED'`:
+  1. Lee el snapshot de `localStorage`
+  2. Inserta pedido en Supabase con `estado: 'procesando'`, `metodo_pago: 'webpay'`, `webpay_token`, `buy_order`
+  3. Inserta `detalle_pedidos`
+  4. Ejecuta `decrement_stock` para cada item
+  5. Marca carrito como `checked_out`
+  6. Limpia `localStorage`
+  7. Envía emails (confirmación + admin)
+  8. Redirige a `/perfil/pedidos/{id}`
+- Si falla (rechazada, timeout, etc.): muestra pantalla de error con botón "Volver al carrito".
+
+### Tarjetas de prueba (ambiente integración)
+
+| Tarjeta | CVV | Expiración | Resultado |
+|---------|-----|-----------|-----------|
+| `4051 8856 0044 6623` | 123 | Cualquier fecha futura | ✅ Aprobada (VISA) |
+| `5186 0595 5959 0568` | 123 | Cualquier fecha futura | ❌ Rechazada (Mastercard) |
+
+Autenticación bancaria: RUT `11.111.111-1`, Clave `123`.
+
+### Columnas en Supabase
+
+`pedidos` tabla agregadas vía SQL:
+```sql
+ALTER TABLE pedidos ADD COLUMN webpay_token TEXT;
+ALTER TABLE pedidos ADD COLUMN buy_order TEXT;
+```
+
+### Admin pedidos
+
+`src/components/PedidosTable.tsx` muestra dos columnas adicionales:
+- **Webpay Token** — truncado con tooltip en hover
+- **Buy Order** — orden de compra única
+
+Ambos campos son read-only (sin edición inline) e incluidos en el buscador global.
+
+### Dependencia
+
+- `transbank-sdk` — único paquete necesario. Las credenciales de integración vienen incluidas en el SDK.
+
+### Notas importantes
+
+- `buyOrder` debe ser único por transacción. Formato: `TM-{Date.now()}-{random}`.
+- El carrito viaja en `localStorage` (clave `webpay_pending_order`) porque el usuario sale del sitio.
+- No hay webhook — el commit es síncrono al volver de Transbank.
+- Si el usuario nunca vuelve (cierra ventana), la transacción queda huérfana. En producción se programa un cron para liberar stock.
+- Para producción: registrar comercio en Transbank y setear `WEBPAY_COMMERCE_CODE` y `WEBPAY_API_KEY` en env vars. El código cambia automáticamente a producción si ambas están presentes.
+
 ## Checkout
 
 - **Direcciones**: En `src/app/checkout/page.tsx`, al agregar una nueva dirección se usa `.select('*')` en el insert para capturar el ID y auto-seleccionarla (`setAddressId(data[0].id)`), sin que el usuario tenga que elegirla manualmente.
+- **Pago**: Reemplazado por Webpay Plus (ver sección arriba). Ya no hay selector de método de pago ni creación directa del pedido en checkout.
 
 ## Admin routes
 
