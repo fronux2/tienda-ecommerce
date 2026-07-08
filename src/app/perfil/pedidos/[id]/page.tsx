@@ -40,6 +40,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
     tarjeta: 'Tarjeta de Crédito',
     paypal: 'PayPal',
     transferencia: 'Transferencia Bancaria',
+    webpay: 'Webpay Plus',
   }
 
   return (

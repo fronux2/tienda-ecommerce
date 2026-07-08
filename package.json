@@ -25,6 +25,7 @@
     "react-icons": "^5.5.0",
     "react-leaflet": "^5.0.0",
     "resend": "^6.17.1",
+    "transbank-sdk": "^6.1.1",
     "zod": "^3.25.51",
     "zustand": "^5.0.5"
   },

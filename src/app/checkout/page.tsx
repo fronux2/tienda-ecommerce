@@ -1,10 +1,11 @@
 "use client"
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice } from '@/lib/formatPrice'
 import { direccionSchema } from '@/schemas/direccionesSchema'
+
+const SNAPSHOT_KEY = 'webpay_pending_order'
 
 const CheckoutPage = () => {
   const supabase = useMemo(() => createClient(), [])
@@ -21,7 +22,6 @@ const CheckoutPage = () => {
 
   const [addressId, setAddressId] = useState('')
   const [addresses, setAddresses] = useState<Address[]>([])
-  const [paymentMethod, setPaymentMethod] = useState('tarjeta')
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
@@ -35,11 +35,8 @@ const CheckoutPage = () => {
     codigo_postal: ''
   })
 
-  const router = useRouter()
-
   const {
     cart,
-    clearCart,
   } = useCartStore()
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
@@ -100,117 +97,79 @@ const CheckoutPage = () => {
     setSavingAddress(false)
   }
 
-  const handleCheckout = async () => {
+  const webpayLoading = useRef(false)
+
+  const handleWebpayPayment = async () => {
+    if (!userId) return alert('Usuario no identificado')
+    if (!addressId) return alert('Selecciona una dirección de envío')
+    if (webpayLoading.current) return
+
+    webpayLoading.current = true
     setLoading(true)
 
     try {
-      const { data: order, error: orderError } = await supabase
-        .from('pedidos')
-        .insert([{
-          usuario_id: userId,
-          direccion_id: addressId,
-          total,
-          metodo_pago: paymentMethod,
-          estado: 'pendiente'
-        }])
-        .select('*')
+      const buyOrder = `TM-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-      if (orderError) throw orderError
-
-      const orderDetails = cart
-        .filter(item => item.mangas)
-        .map(item => ({
-          pedido_id: order[0].id,
-          manga_id: item.mangas?.id ?? '',
-          cantidad: item.cantidad,
-          precio_unitario: item.mangas?.precio ?? 0
-        }))
-
-      const { error: detailsError } = await supabase
-        .from('detalle_pedidos')
-        .insert(orderDetails)
-
-      if (detailsError) throw detailsError
-
-
-      // Filtrar items sin 'mangas' y usar aserción no-nula para acceder al id
-      const stockUpdates = cart
-        .filter(item => item.mangas)
-        .map(item =>
-          supabase.rpc('decrement_stock', {
-            manga_id: item.mangas!.id,
-            decrement_by: item.cantidad
-          })
-        )
-
-      await Promise.all(stockUpdates)
-
-      await supabase
-        .from('carrito')
-        .update({ checked_out: true, fecha_checkout: new Date() })
-        .eq('usuario_id', userId)
-        .eq('checked_out', false)
-
-      if (userId) clearCart(userId)
+      const returnUrl = `${window.location.origin}/webpay/resultado`
 
       const direccionSel = addresses.find(a => a.id === addressId)
       const direccionStr = direccionSel
         ? `${direccionSel.nombre_direccion} - ${direccionSel.direccion} #${direccionSel.numero_casa}, ${direccionSel.ciudad}`
         : ''
 
-      const emailItems = cart
-        .filter(item => item.mangas)
-        .map(item => ({
-          nombre: item.mangas!.titulo,
-          cantidad: item.cantidad,
-          precio: item.mangas!.precio,
-        }))
-
-      const enviarEmail = (body: object) =>
-        fetch('/api/enviar-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        }).then(async res => {
-          if (!res.ok) {
-            const err = await res.json()
-            console.error('Error en email API:', err)
-          }
-        }).catch(err => console.error('Error de red al enviar email:', err))
-
-      if (userEmail) {
-        enviarEmail({
-          type: 'pedido-confirmado',
-          to: userEmail,
-          data: {
-            pedidoId: order[0].id,
-            items: emailItems,
-            total,
-            direccion: direccionStr,
-            fecha: new Date().toLocaleDateString('es-CL'),
-          },
-        })
+      const snapshot = {
+        items: cart
+          .filter(item => item.mangas)
+          .map(item => ({
+            manga_id: item.mangas!.id ?? item.manga_id,
+            cantidad: item.cantidad,
+            precio: item.mangas!.precio,
+            titulo: item.mangas!.titulo,
+          })),
+        total,
+        direccion_id: addressId,
+        direccionStr,
+        userEmail: userEmail || '',
+        buyOrder,
       }
 
-      enviarEmail({
-        type: 'pedido-recibido-admin',
-        to: '',
-        data: {
-          pedidoId: order[0].id,
-          clienteEmail: userEmail || '',
-          items: emailItems,
-          total,
-          direccion: direccionStr,
-          fecha: new Date().toLocaleDateString('es-CL'),
-        },
+      localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot))
+
+      const res = await fetch('/api/webpay/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          buyOrder,
+          sessionId: userId,
+          amount: total,
+          returnUrl,
+        }),
       })
 
-      router.push('/perfil/pedidos/' + order[0].id)
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Error al crear la transacción')
+      }
+
+      const { token, url } = await res.json()
+
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = url
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = 'token_ws'
+      input.value = token
+      form.appendChild(input)
+      document.body.appendChild(form)
+      form.submit()
 
     } catch (error) {
+      localStorage.removeItem(SNAPSHOT_KEY)
       setLoading(false)
-      console.error('Checkout error:', error)
-      alert('Error al procesar el pedido')
+      webpayLoading.current = false
+      console.error('Webpay error:', error)
+      alert('Error al iniciar el pago')
     }
   }
 
@@ -317,23 +276,23 @@ const CheckoutPage = () => {
       {/* Método de pago */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Método de Pago</h2>
-        <select
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="tarjeta">Tarjeta de Crédito</option>
-          <option value="paypal">PayPal</option>
-          <option value="transferencia">Transferencia Bancaria</option>
-        </select>
+        <div className="border rounded-lg p-4 bg-gray-50">
+          <div className="flex items-center gap-3">
+            <div className="text-2xl">💳</div>
+            <div>
+              <p className="font-semibold">Webpay Plus</p>
+              <p className="text-sm text-gray-600">Tarjetas de crédito y débito</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button
-        onClick={handleCheckout}
+        onClick={handleWebpayPayment}
         disabled={loading || !addressId}
-        className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+        className="w-full px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-semibold"
       >
-        {loading ? 'Procesando...' : 'Confirmar Pedido'}
+        {loading ? 'Conectando con Webpay...' : `Pagar con Webpay — ${formatPrice(total)}`}
       </button>
     </div>
   )

@@ -121,6 +121,8 @@ export type Pedido = {
   estado: string
   metodo_pago: string
   notas_pedido: string
+  webpay_token?: string
+  buy_order?: string
   fecha_pedido: string
   fecha_actualizacion: string
   usuarios?: { email: string } | null
