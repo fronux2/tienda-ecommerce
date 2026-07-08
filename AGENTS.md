@@ -93,7 +93,7 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 
 ## Middleware
 
-`middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
+`middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`, `/registro`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
 
 ## Testing patterns
 
@@ -101,6 +101,18 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - `jest.setup.ts` imports `@testing-library/jest-dom` (globally available matchers)
 - Mock zustand stores with `jest.mock('@/store/cartStore', ...)` — see `src/__tests__/Cart.test.tsx` for the canonical pattern
 - `moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' }` in jest config
+
+## Registration (`/registro`)
+
+- **Página pública** en `src/app/registro/page.tsx` — formulario con email, password, confirmar password. Usa `react-hook-form` + `registroSchema` (Zod, incluye `refine` para verificar que las contraseñas coincidan).
+- **Server action** en `src/app/registro/actions.ts` — `registrarAction`:
+  1. Valida con `registroSchema`
+  2. Crea usuario via `supabaseAdmin.auth.admin.createUser({ email, password, email_confirm: true })`
+  3. Inicia sesión automática con `supabase.auth.signInWithPassword()`
+  4. Redirige a `/`
+- En caso de error (email duplicado, etc.) redirige a `/error`.
+- El link "Crear cuenta nueva" en `/login` apunta a `/registro`.
+- La API route `/api/crear-usuario` (usada por el admin panel) **no se modificó** — coexiste con el nuevo flujo público.
 
 ## Admin routes
 
@@ -121,7 +133,7 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
   - `src/emails/PedidoConfirmado.tsx` — order summary (items, total, address, date)
   - `src/emails/PedidoActualizado.tsx` — status change (previous → new, contextual message per status)
   - `src/emails/PedidoRecibidoAdmin.tsx` — new order notification for admins (items, total, address, client email)
-- **Checkout post-order**: `src/app/checkout/page.tsx:210` — after successful order creation, shows `alert('¡Pedido confirmado con éxito!')` and redirects to `/`.
+- **Checkout post-order**: `src/app/checkout/page.tsx:210` — after successful order creation, redirects to `/perfil/pedidos/{id}` (the order detail page).
 - **Triggers**:
   - **Checkout** (`src/app/checkout/page.tsx:183`): after successful order creation, sends confirmation to the user's email AND notification to admins (uses `fetch` to the API route, fails silently on error).
   - **PedidosTable** (`src/components/PedidosTable.tsx:37`): when admin changes `estado`, sends update email to the customer's email (only if the value actually changed).

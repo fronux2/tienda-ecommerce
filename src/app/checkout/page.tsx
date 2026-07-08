@@ -207,8 +207,7 @@ const CheckoutPage = () => {
         },
       })
 
-      alert('¡Pedido confirmado con éxito!')
-      router.push('/')
+      router.push('/perfil/pedidos/' + order[0].id)
 
     } catch (error) {
       console.error('Checkout error:', error)
