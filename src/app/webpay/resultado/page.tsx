@@ -1,6 +1,6 @@
 "use client"
-import { Suspense, useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
 
@@ -20,15 +20,15 @@ type WebpaySnapshot = {
   buyOrder: string
 }
 
-function WebpayResultadoContent() {
+export default function WebpayResultadoPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
   const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
     const procesar = async () => {
-      const token_ws = searchParams.get('token_ws')
+      const params = new URLSearchParams(window.location.search)
+      const token_ws = params.get('token_ws')
       if (!token_ws) {
         setStatus('error')
         setErrorMsg('No se recibió el token de pago')
@@ -168,7 +168,7 @@ function WebpayResultadoContent() {
     }
 
     procesar()
-  }, [searchParams, router])
+  }, [router])
 
   if (status === 'loading') {
     return (
@@ -201,18 +201,5 @@ function WebpayResultadoContent() {
         Volver al carrito
       </Link>
     </div>
-  )
-}
-
-export default function WebpayResultadoPage() {
-  return (
-    <Suspense fallback={
-      <div className="max-w-md mx-auto mt-20 text-center">
-        <div className="animate-spin h-10 w-10 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4" />
-        <p className="text-gray-600">Procesando tu pago...</p>
-      </div>
-    }>
-      <WebpayResultadoContent />
-    </Suspense>
   )
 }
