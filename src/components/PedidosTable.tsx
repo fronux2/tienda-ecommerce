@@ -29,6 +29,8 @@ export default function Page() {
         pedido.total?.toString().includes(t) ||
         pedido.estado?.toLowerCase().includes(t) ||
         pedido.metodo_pago?.toLowerCase().includes(t) ||
+        pedido.webpay_token?.toLowerCase().includes(t) ||
+        pedido.buy_order?.toLowerCase().includes(t) ||
         pedido.notas_pedido?.toLowerCase().includes(t) ||
         pedido.fecha_pedido?.toLowerCase().includes(t) ||
         pedido.fecha_actualizacion?.toLowerCase().includes(t)
@@ -253,6 +255,8 @@ export default function Page() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método de Pago</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Webpay Token</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buy Order</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notas</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actualización</th>
@@ -339,6 +343,14 @@ export default function Page() {
                           {pedido.metodo_pago}
                         </div>
                       )}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                      <div className="truncate max-w-[120px]" title={pedido.webpay_token || ''}>
+                        {pedido.webpay_token || '-'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {pedido.buy_order || '-'}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
                       {editando && editando.id === pedido.id && editando.campo === "notas_pedido" ? (
