@@ -17,6 +17,7 @@ export type CartItem = {
 
 export type CartState = {
   cart: CartItem[]
+  totalItems: number
   addToCart: (item: CartItem) => void
   removeFromCart: (manga_id: string, usuario_id: string | null) => void
   clearCart: (usuario_id: string | null) => void
@@ -24,8 +25,11 @@ export type CartState = {
   setCart: (items: CartItem[]) => void
 }
 
+const sumarItems = (items: CartItem[]) => items.reduce((acc, i) => acc + i.cantidad, 0)
+
 export const useCartStore = create<CartState>((set,get) => ({
   cart: [],
+  totalItems: 0,
 
   addToCart: async (item) => {
     const state = get()
@@ -41,7 +45,7 @@ export const useCartStore = create<CartState>((set,get) => ({
             ? { ...i, cantidad: nuevaCantidad }
             : i
         )
-        set({ cart: newCart })
+        set({ cart: newCart, totalItems: sumarItems(newCart) })
         if (!item.usuario_id) saveCartToLocalStorage(newCart)
       } catch (error) {
         console.error('Error al actualizar la cantidad del carrito:', error)
@@ -52,7 +56,7 @@ export const useCartStore = create<CartState>((set,get) => ({
           await addToCartSupabase(item)
         }
         const newCart = [...state.cart, item]
-        set({ cart: newCart })
+        set({ cart: newCart, totalItems: sumarItems(newCart) })
         if (!item.usuario_id) saveCartToLocalStorage(newCart)
       } catch (error: unknown) {
         const hasCode = (err: unknown): err is { code: string } =>
@@ -74,14 +78,14 @@ export const useCartStore = create<CartState>((set,get) => ({
     set((state) => {
       const newCart = state.cart.filter((item) => item.manga_id !== manga_id)
       if (!usuario_id) saveCartToLocalStorage(newCart)
-      return { cart: newCart }
+      return { cart: newCart, totalItems: sumarItems(newCart) }
     })
   },
 
   clearCart: async (usuario_id) => {
     if (usuario_id) await clearCartSupabase(usuario_id)
     clearCartFromLocalStorage()
-    set({ cart: [] })},
+    set({ cart: [], totalItems: 0 })},
 
   updateQuantity: async (usuario_id, manga_id, cantidad) =>{
     if (usuario_id) await updateCartQuantitySupabase(usuario_id, manga_id, cantidad)
@@ -90,11 +94,11 @@ export const useCartStore = create<CartState>((set,get) => ({
         item.manga_id === manga_id ? { ...item, cantidad } : item
       )
       if (!usuario_id) saveCartToLocalStorage(newCart)
-      return { cart: newCart }
+      return { cart: newCart, totalItems: sumarItems(newCart) }
     })
   },
 
   setCart: (items) => {
-    set({ cart: items })
+    set({ cart: items, totalItems: sumarItems(items) })
   },
 }))

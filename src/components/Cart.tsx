@@ -13,6 +13,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
   const {
     cart,
+    totalItems,
     updateQuantity,
     removeFromCart,
     clearCart,
@@ -32,9 +33,9 @@ const Cart = ({ userId }: { userId: string | null }) => {
           className="text-[#FFF8F0] group-hover:text-red-500 transition-colors" 
           size={20} 
         />
-        {cart.length > 0 && (
+        {totalItems > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-600 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center">
-            {cart.length}
+            {totalItems}
           </span>
         )}
       </button>

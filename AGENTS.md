@@ -43,6 +43,7 @@
 ## Zustand store patterns
 
 - Prefer full state replacement (`set({ key: data })`) over merge helpers that filter duplicates by id. The `mangaStore.addMangas` function filters out items whose `id` already exists — after updating a manga in Supabase, calling `loadMangas` (which used `addMangas`) would silently discard the updated record.
+- **`cartStore.totalItems`**: derived property (`number`) en `CartState` que se recalcula automáticamente en cada operación (`addToCart`, `removeFromCart`, `clearCart`, `updateQuantity`, `setCart`). Suma `item.cantidad` de todos los items del carrito. Úsalo en vez de `cart.length` para mostrar el badge con la cuenta real de unidades.
 
 ## Button UX patterns
 
