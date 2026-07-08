@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
@@ -20,7 +20,7 @@ type WebpaySnapshot = {
   buyOrder: string
 }
 
-export default function WebpayResultadoPage() {
+function WebpayResultadoContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
@@ -201,5 +201,18 @@ export default function WebpayResultadoPage() {
         Volver al carrito
       </Link>
     </div>
+  )
+}
+
+export default function WebpayResultadoPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-md mx-auto mt-20 text-center">
+        <div className="animate-spin h-10 w-10 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4" />
+        <p className="text-gray-600">Procesando tu pago...</p>
+      </div>
+    }>
+      <WebpayResultadoContent />
+    </Suspense>
   )
 }
