@@ -30,8 +30,8 @@
 - Files `src/lib/supabase/services/*.client.ts` and `*.server.ts` mirror the same logic for each entity. The `.client.ts` files incorrectly `await createClient()` even though `createBrowserClient` is sync — do not propagate this pattern.
 - Some `.client.ts` files (e.g. `mangas.client.ts`) import from `@/utils/supabase/client` but call `await createClient()` — this is harmless at runtime but incorrect. Use `createClient()` (no await) in new client code.
 - Service-role key (`SUPABASE_SERVICE_ROLE_KEY`) must never reach the browser. Use `supabaseAdmin` from `src/utils/supabase/admin.ts` in API routes / server actions only.
-- Role check: `rol_id === 2` grants admin access. Enforced in admin routes.
-- **Supabase joins with nullable FK**: `roles:rol_id(id,nombre)` returns `null` when `rol_id` is null. Always use optional chaining: `roles?.[0]?.nombre || fallback` — never `roles[0].nombre`.
+- Role check: `rol_id >= 2` grants admin/moderator access (rol_id: 1=cliente, 2=moderador, 3=admin). Enforced in admin server components and Navbar (`rolId! >= 2`).
+- **Role display in admin table**: `UsuariosTable` resolves role name via `getNombreRol(usuario.rol_id)` using the local `roles` array (fetched separately via `getRoles`), not via Supabase join. The store `updateUsuarioEnStore` sets `roles: [{ id: Number(valor), nombre }]` (array, not object).
 - **Cart service validation**: All functions in `carrito.cliente.ts` (`fetchCartFromSupabase`, `addToCartSupabase`, `removeFromCartSupabase`, `updateCartQuantitySupabase`, `clearCartSupabase`) throw if `usuario_id` is empty — never pass `""` as user ID.
 - **NavbarClient cart fetch**: `src/components/NavbarClient.tsx:26` guards with `if (!user?.id) return` before calling `fetchCartFromSupabase`, preventing queries with null/empty user ID on public pages.
 - **NavbarClient user display**: The avatar circle shows the first letter of the user's email (`user.email?.[0]`) with fallback to `user.id[0]`. The dropdown shows the full email. The `Props` type includes `email?: string`.
