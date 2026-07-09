@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 const supabase = createClient();
 
 export default async function getPedidos() {    
-  const { data, error } = await supabase.from("pedidos").select("*, usuarios (email), direcciones (nombre_direccion, direccion, numero_casa, ciudad)");
+  const { data, error } = await supabase.from("pedidos").select("*, usuarios (email), direcciones (nombre_direccion, calle, numero, comuna, ciudad)");
 
   if (error) {
     console.error("Error fetching pedidos:", error);

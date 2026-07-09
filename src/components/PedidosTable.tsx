@@ -25,7 +25,7 @@ export default function Page() {
         pedido.id?.toLowerCase().includes(t) ||
         pedido.usuarios?.email?.toLowerCase().includes(t) ||
         pedido.usuario_id?.toLowerCase().includes(t) ||
-        `${pedido.direcciones?.nombre_direccion ?? ""} ${pedido.direcciones?.direccion ?? ""} ${pedido.direcciones?.numero_casa ?? ""} ${pedido.direcciones?.ciudad ?? ""}`.toLowerCase().includes(t) ||
+        `${pedido.direcciones?.nombre_direccion ?? ""} ${pedido.direcciones?.calle ?? ""} ${pedido.direcciones?.numero ?? ""} ${pedido.direcciones?.comuna ?? ""} ${pedido.direcciones?.ciudad ?? ""}`.toLowerCase().includes(t) ||
         pedido.total?.toString().includes(t) ||
         pedido.estado?.toLowerCase().includes(t) ||
         pedido.metodo_pago?.toLowerCase().includes(t) ||
@@ -271,7 +271,7 @@ export default function Page() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {pedido.direcciones
-                        ? `${pedido.direcciones.nombre_direccion} - ${pedido.direcciones.direccion} #${pedido.direcciones.numero_casa}, ${pedido.direcciones.ciudad}`
+                        ? `${pedido.direcciones.nombre_direccion} - ${pedido.direcciones.calle} #${pedido.direcciones.numero}, ${pedido.direcciones.comuna}`
                         : pedido.direccion_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

@@ -14,10 +14,13 @@ const CheckoutPage = () => {
     id: string
     usuario_id?: string
     nombre_direccion: string
-    direccion: string
-    numero_casa: string
+    calle: string
+    numero: string
+    departamento?: string | null
+    comuna: string
     ciudad: string
-    codigo_postal?: string
+    region?: string | null
+    codigo_postal?: string | null
   }
 
   const [addressId, setAddressId] = useState('')
@@ -29,9 +32,12 @@ const CheckoutPage = () => {
   const [showAddressForm, setShowAddressForm] = useState(false)
   const [newAddress, setNewAddress] = useState({
     nombre_direccion: '',
-    direccion: '',
-    numero_casa: '',
+    calle: '',
+    numero: '',
+    departamento: '',
+    comuna: '',
     ciudad: '',
+    region: '',
     codigo_postal: ''
   })
 
@@ -76,7 +82,7 @@ const CheckoutPage = () => {
 
     const { data, error } = await supabase
       .from('direcciones')
-      .insert([{ usuario_id: userId, ...newAddress }])
+      .insert([{ usuario_id: userId, ...newAddress, pais: 'Chile' }])
       .select('*')
 
     if (error) {
@@ -87,9 +93,12 @@ const CheckoutPage = () => {
       setShowAddressForm(false)
       setNewAddress({
         nombre_direccion: '',
-        direccion: '',
-        numero_casa: '',
+        calle: '',
+        numero: '',
+        departamento: '',
+        comuna: '',
         ciudad: '',
+        region: '',
         codigo_postal: ''
       })
       fetchAddresses(userId)
@@ -142,7 +151,7 @@ const CheckoutPage = () => {
 
       const direccionSel = addresses.find(a => a.id === addressId)
       const direccionStr = direccionSel
-        ? `${direccionSel.nombre_direccion} - ${direccionSel.direccion} #${direccionSel.numero_casa}, ${direccionSel.ciudad}`
+        ? `${direccionSel.nombre_direccion} - ${direccionSel.calle} #${direccionSel.numero}${direccionSel.departamento ? `, ${direccionSel.departamento}` : ''}, ${direccionSel.comuna}, ${direccionSel.ciudad}${direccionSel.region ? `, ${direccionSel.region}` : ''}`
         : ''
 
       const snapshot = {
@@ -227,16 +236,30 @@ const CheckoutPage = () => {
             />
             <input
               type="text"
-              placeholder="Dirección"
-              value={newAddress.direccion}
-              onChange={(e) => setNewAddress({ ...newAddress, direccion: e.target.value })}
+              placeholder="Calle / Pasaje / Av."
+              value={newAddress.calle}
+              onChange={(e) => setNewAddress({ ...newAddress, calle: e.target.value })}
               className="w-full mb-2 p-2 border rounded"
             />
             <input
               type="text"
-              placeholder="N° Casa"
-              value={newAddress.numero_casa}
-              onChange={(e) => setNewAddress({ ...newAddress, numero_casa: e.target.value })}
+              placeholder="N° (ej: 1234)"
+              value={newAddress.numero}
+              onChange={(e) => setNewAddress({ ...newAddress, numero: e.target.value })}
+              className="w-full mb-2 p-2 border rounded"
+            />
+            <input
+              type="text"
+              placeholder="Depto / Oficina (opcional)"
+              value={newAddress.departamento}
+              onChange={(e) => setNewAddress({ ...newAddress, departamento: e.target.value })}
+              className="w-full mb-2 p-2 border rounded"
+            />
+            <input
+              type="text"
+              placeholder="Comuna"
+              value={newAddress.comuna}
+              onChange={(e) => setNewAddress({ ...newAddress, comuna: e.target.value })}
               className="w-full mb-2 p-2 border rounded"
             />
             <input
@@ -244,6 +267,13 @@ const CheckoutPage = () => {
               placeholder="Ciudad"
               value={newAddress.ciudad}
               onChange={(e) => setNewAddress({ ...newAddress, ciudad: e.target.value })}
+              className="w-full mb-2 p-2 border rounded"
+            />
+            <input
+              type="text"
+              placeholder="Región (opcional)"
+              value={newAddress.region}
+              onChange={(e) => setNewAddress({ ...newAddress, region: e.target.value })}
               className="w-full mb-2 p-2 border rounded"
             />
             <input
@@ -273,7 +303,7 @@ const CheckoutPage = () => {
             <option value="">Selecciona una dirección</option>
             {addresses.map(addr => (
               <option key={addr.id} value={addr.id}>
-                {addr.nombre_direccion} - {addr.direccion} #{addr.numero_casa}, {addr.ciudad}
+                {addr.nombre_direccion} - {addr.calle} #{addr.numero}, {addr.comuna}
               </option>
             ))}
           </select>

@@ -126,7 +126,7 @@ export type Pedido = {
   fecha_pedido: string
   fecha_actualizacion: string
   usuarios?: { email: string } | null
-  direcciones?: { nombre_direccion: string; direccion: string; numero_casa: string; ciudad: string } | null
+  direcciones?: { nombre_direccion: string; calle: string; numero: string; departamento?: string | null; comuna: string; ciudad: string; region?: string | null } | null
 }
 
 export type DetallePedido = {
@@ -142,10 +142,17 @@ export type Direccion = {
   id: string
   usuario_id?: string
   nombre_direccion: string
-  direccion: string
-  numero_casa: string
+  calle: string
+  numero: string
+  departamento?: string | null
+  comuna: string
   ciudad: string
-  codigo_postal?: string
+  region?: string | null
+  codigo_postal?: string | null
+  pais?: string | null
+  es_principal?: boolean
+  activa?: boolean
+  fecha_creacion?: string
 }
 
 export type CarritoItem = {
