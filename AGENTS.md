@@ -25,6 +25,8 @@
 
 - **`src/lib/formatPrice.ts`** — `formatPrice(price: number): string` formatea precios en CLP con separador de miles (`.`), sin decimales. Ej: `29960` → `$29.960`. Usa `Intl.NumberFormat('es-CL', { currency: 'CLP' })`. Importar con `import { formatPrice } from '@/lib/formatPrice'`.
 
+- **`src/lib/regionesChile.ts`** — `REGIONES_CHILE` (`as const` string array) y `RegionChile` (tipo). Contiene las 16 regiones de Chile. Se usa tanto en el schema Zod (`direccionSchema` valida campo `region` con `z.enum(['', ...REGIONES_CHILE]).optional()`) como en los `<select>` del formulario de direcciones (perfil y checkout). Importar con `import { REGIONES_CHILE } from '@/lib/regionesChile'`.
+
 ## Data layer quirks
 
 - Files `src/lib/supabase/services/*.client.ts` and `*.server.ts` mirror the same logic for each entity. The `.client.ts` files incorrectly `await createClient()` even though `createBrowserClient` is sync — do not propagate this pattern.

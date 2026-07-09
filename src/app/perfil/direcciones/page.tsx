@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import { getDirecciones, addDireccion, updateDireccion, deleteDireccion } from '@/lib/supabase/services/direcciones.client'
 import type { Direccion } from '@/types/supabase'
 import { direccionSchema } from '@/schemas/direccionesSchema'
+import { REGIONES_CHILE } from '@/lib/regionesChile'
 
 export default function MisDirecciones() {
   const supabase = createClient()
@@ -163,13 +164,16 @@ export default function MisDirecciones() {
               onChange={(e) => setForm({ ...form, ciudad: e.target.value })}
               className="w-full p-2 border rounded"
             />
-            <input
-              type="text"
-              placeholder="Región (opcional)"
+            <select
               value={form.region}
               onChange={(e) => setForm({ ...form, region: e.target.value })}
               className="w-full p-2 border rounded"
-            />
+            >
+              <option value="">Selecciona una región</option>
+              {REGIONES_CHILE.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
             <input
               type="text"
               placeholder="Código postal (opcional)"

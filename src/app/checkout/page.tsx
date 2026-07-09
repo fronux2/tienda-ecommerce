@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice } from '@/lib/formatPrice'
 import { direccionSchema } from '@/schemas/direccionesSchema'
+import { REGIONES_CHILE } from '@/lib/regionesChile'
 
 const SNAPSHOT_KEY = 'webpay_pending_order'
 
@@ -269,13 +270,16 @@ const CheckoutPage = () => {
               onChange={(e) => setNewAddress({ ...newAddress, ciudad: e.target.value })}
               className="w-full mb-2 p-2 border rounded"
             />
-            <input
-              type="text"
-              placeholder="Región (opcional)"
+            <select
               value={newAddress.region}
               onChange={(e) => setNewAddress({ ...newAddress, region: e.target.value })}
               className="w-full mb-2 p-2 border rounded"
-            />
+            >
+              <option value="">Selecciona una región</option>
+              {REGIONES_CHILE.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
             <input
               type="text"
               placeholder="Código postal"

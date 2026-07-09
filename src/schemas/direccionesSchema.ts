@@ -1,4 +1,5 @@
-import {z} from "zod";
+import { z } from 'zod'
+import { REGIONES_CHILE } from '@/lib/regionesChile'
 
 export const direccionSchema = z.object({
   nombre_direccion: z.string().min(1, 'El nombre es obligatorio'),
@@ -7,8 +8,8 @@ export const direccionSchema = z.object({
   departamento: z.string().optional(),
   comuna: z.string().min(1, 'La comuna es obligatoria'),
   ciudad: z.string().min(1, 'La ciudad es obligatoria'),
-  region: z.string().optional(),
+  region: z.enum(['', ...REGIONES_CHILE]).optional(),
   codigo_postal: z.string().optional(),
-});
+})
 
 export type DireccionSchema = z.infer<typeof direccionSchema>
