@@ -4,18 +4,30 @@ import { createClient } from "@/utils/supabase/client"
 export const updateUsuario = async (userId: string, data: Partial<Usuario>): Promise<void> => {
   const supabase = await createClient()
 
-  if (data.rol_id !== undefined && String(data.rol_id) === "3") {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) throw new Error("No autenticado")
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("No autenticado")
 
-    const { data: perfil } = await supabase
+  const { data: perfil } = await supabase
+    .from('usuarios')
+    .select('rol_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!perfil) throw new Error("Perfil no encontrado")
+
+  if (data.rol_id !== undefined && String(data.rol_id) === "3" && perfil.rol_id !== 3) {
+    throw new Error("Solo los administradores pueden asignar el rol de administrador")
+  }
+
+  if (perfil.rol_id === 2) {
+    const { data: target } = await supabase
       .from('usuarios')
       .select('rol_id')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
-    if (!perfil || perfil.rol_id !== 3) {
-      throw new Error("Solo los administradores pueden asignar el rol de administrador")
+    if (target && target.rol_id === 3) {
+      throw new Error("Los moderadores no pueden modificar el rol de un administrador")
     }
   }
 

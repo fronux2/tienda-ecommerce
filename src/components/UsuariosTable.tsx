@@ -17,6 +17,12 @@ export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }
     return roles.find(r => String(r.id) === String(rolId))?.nombre || 'Sin rol';
   }, [roles]);
 
+  const puedeEditarRol = (targetRolId: string | undefined) => {
+    if (usuarioRolId === 3) return true;
+    if (targetRolId === "3") return false;
+    return true;
+  };
+
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined) => {
     if (!id || valor === undefined) return;
     setEditando({ id, campo });
@@ -98,8 +104,8 @@ export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }
                   )}
                 </td>
                 <td 
-                  className="px-4 py-2 border"
-                  onDoubleClick={() => manejarDobleClick(usuario.id, "rol_id", usuario.rol_id)}>
+                  className={`px-4 py-2 border ${!puedeEditarRol(usuario.rol_id) ? 'text-gray-400' : 'cursor-pointer'}`}
+                  onDoubleClick={() => puedeEditarRol(usuario.rol_id) && manejarDobleClick(usuario.id, "rol_id", usuario.rol_id)}>
                     {
                       editando?.id === usuario.id && editando?.campo === "rol_id" ? (
                         <select
