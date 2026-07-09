@@ -192,7 +192,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                       >
                         Mis Direcciones
                       </Link>
-                      {rolId === 2 && (
+                      {rolId! >= 2 && (
                         <Link
                           href="/admin"
                           onClick={() => setDropdownOpen(false)}

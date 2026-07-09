@@ -1,11 +1,14 @@
 "use client"
-import { useState } from "react"
-import { } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { seriesSchema, SeriesSchema } from "@/schemas/seriesSchema";
 import agregarNuevaSerie from "@/lib/supabase/services/series.client";
+import { createClient } from '@/utils/supabase/client'
+import { useRouter } from 'next/navigation'
 export default function Page() {
+    const router = useRouter()
+    const [checking, setChecking] = useState(true)
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
@@ -18,6 +21,30 @@ export default function Page() {
         resolver: zodResolver(seriesSchema),
         mode: "onBlur",
     });
+
+    useEffect(() => {
+      const checkRole = async () => {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) { router.push('/login'); return }
+
+        const { data: perfil } = await supabase
+          .from('usuarios')
+          .select('rol_id')
+          .eq('id', user.id)
+          .single()
+
+        if (!perfil || perfil.rol_id! < 2) {
+          router.push('/login')
+        } else {
+          setChecking(false)
+        }
+      }
+      checkRole()
+    }, [router])
+
+    if (checking) return null
+
     const onSubmit = async (data: SeriesSchema) => {
         setLoading(true);
         setSuccess(false);

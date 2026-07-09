@@ -3,12 +3,41 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from "react-hook-form";
 import { nuevoUsuarioSchema, NuevoUsuarioSchema } from "@/schemas/usuarioShema";
 import { type NuevoUsuario } from '@/types/supabase';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client'
+import { useRouter } from 'next/navigation'
+
 export default function Page() {
+  const router = useRouter()
+  const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    const checkRole = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push('/login'); return }
+
+      const { data: perfil } = await supabase
+        .from('usuarios')
+        .select('rol_id')
+        .eq('id', user.id)
+        .single()
+
+      if (!perfil || perfil.rol_id! < 2) {
+        router.push('/login')
+      } else {
+        setChecking(false)
+      }
+    }
+    checkRole()
+  }, [router])
+
   const { register, reset, handleSubmit, formState: { errors } } = useForm<NuevoUsuarioSchema>({
     resolver: zodResolver(nuevoUsuarioSchema),
   });
   const [loading, setLoading] = useState(false)
+
+  if (checking) return null
 
   const onSubmit = async (data: NuevoUsuario) => {
     if (loading) return

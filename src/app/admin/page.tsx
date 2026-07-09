@@ -18,7 +18,7 @@ export default async function AdminLayout() {
     .eq('id', user.id)
     .single()
 
-  if (perfil?.rol_id !== 2) {
+  if (!perfil || perfil.rol_id! < 2) {
     redirect('/login')
     return
   }

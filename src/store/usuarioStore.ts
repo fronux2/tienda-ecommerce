@@ -25,11 +25,7 @@ export const useUsuarioStore = create<UsuarioState>((set) => ({
           return {
             ...u,
             rol_id: valor,
-            roles: {
-              ...u.roles,
-              id: valor,
-              nombre: rolesMap?.[valor] || u.roles?.[0]?.nombre || ''
-            }
+            roles: [{ id: Number(valor), nombre: rolesMap?.[valor] || '' }]
           }
         }
 

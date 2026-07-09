@@ -1,6 +1,6 @@
 "use client";
 import { useUsuarioStore } from "@/store/usuarioStore";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { updateUsuario } from "@/lib/supabase/services/usuarios.client";
 import { getRoles } from "@/lib/supabase/services/roles.client";
 import {type Roles} from "@/types/supabase";
@@ -11,6 +11,11 @@ export default function UsuariosTable() {
   const [valorEditado, setValorEditado] = useState<string>("");
   const [roles, setRoles] = useState<Roles[]>([]);
   const guardandoRef = useRef(false)
+
+  const getNombreRol = useCallback((rolId: string | undefined) => {
+    if (!rolId) return 'Sin rol';
+    return roles.find(r => String(r.id) === String(rolId))?.nombre || 'Sin rol';
+  }, [roles]);
 
   const manejarDobleClick = (id: string | undefined, campo: string, valor: string | undefined) => {
     if (!id || valor === undefined) return;
@@ -111,7 +116,7 @@ export default function UsuariosTable() {
                             </option>
                           ))}
                         </select>
-                      ) : (<p>{usuario.roles?.[0]?.nombre || 'Sin rol'}</p>)
+                      ) : (<p>{getNombreRol(usuario.rol_id)}</p>)
                     }
                 </td>
               </tr>
