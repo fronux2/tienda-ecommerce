@@ -27,7 +27,7 @@ export default async function Page() {
 
   return(
     <Suspense fallback={<Loading />}>
-      <UsuariosTable/>
+      <UsuariosTable usuarioRolId={perfil.rol_id} />
     </Suspense>
     
   )

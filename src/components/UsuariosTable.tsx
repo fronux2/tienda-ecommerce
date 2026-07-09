@@ -5,7 +5,7 @@ import { updateUsuario } from "@/lib/supabase/services/usuarios.client";
 import { getRoles } from "@/lib/supabase/services/roles.client";
 import {type Roles} from "@/types/supabase";
 
-export default function UsuariosTable() {
+export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }) {
   const { usuarios, getUsuarios, updateUsuarioEnStore } = useUsuarioStore();
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string>("");
@@ -110,7 +110,9 @@ export default function UsuariosTable() {
                           onKeyDown={manejarEnter}
                           autoFocus
                         >
-                          {roles.map((rol) => (
+                          {roles
+                            .filter((rol) => usuarioRolId === 3 || rol.id !== 3)
+                            .map((rol) => (
                             <option key={rol.id} value={rol.id}>
                               {rol.nombre}
                             </option>
