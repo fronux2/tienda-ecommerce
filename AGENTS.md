@@ -1,10 +1,14 @@
 # tienda-mangas — Agent guide
 
+## Idioma
+
+El desarrollador habla **español**. Todas las respuestas, explicaciones y comentarios deben escribirse en español.
+
 ## Commands
 
 - `npm run dev` — dev server with Turbopack
 - `npm run build` — production build
-- `npm run lint` — ESLint (next/core-web-vitals + next/typescript)
+- `npx eslint src/` — ESLint directo (Next.js 16.2 eliminó `next lint` de la CLI)
 - `npm test` — Jest (jsdom environment). Run single file: `npx jest src/__tests__/Foo.test.tsx`
 - `npm run test:watch` — Jest in watch mode
 

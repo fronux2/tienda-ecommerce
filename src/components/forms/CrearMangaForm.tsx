@@ -290,7 +290,9 @@ export default function CrearMangaForm() {
            <label htmlFor="es_popular" className="block font-semibold mb-1">Es popular (opcional):</label>
            <select
              id="es_popular"
-             {...register('es_popular')}
+              {...register('es_popular', {
+                setValueAs: (val) => val === '' ? undefined : val === 'true',
+              })}
              className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
            >
              <option value="">No especificar</option>
