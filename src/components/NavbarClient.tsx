@@ -1,4 +1,3 @@
-// app/components/NavbarClient.tsx
 'use client'
 
 import Link from 'next/link'
@@ -20,8 +19,7 @@ export default function NavbarClient({ user, rolId }: Props) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const setCart = useCartStore((state) => state.setCart)
-  //const cart = useCartStore((state) => state.cart)
-  
+
   const pathname = usePathname()
   const isHome = pathname === '/'
 
@@ -87,16 +85,6 @@ export default function NavbarClient({ user, rolId }: Props) {
       </Link>
     );
   };
-
-  const Button: React.FC<{ type?: "button" | "submit" | "reset"; disabled?: boolean; children: React.ReactNode }> = ({ type = 'button', disabled = false, children }) => (
-    <button 
-      type={type}
-      disabled={disabled}
-      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-red-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      {children}
-    </button>
-  );
 
   return (
     <>
@@ -264,7 +252,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                   <NavLink href="/perfil">Mi Perfil</NavLink>
                   <NavLink href="/perfil/pedidos">Mis Pedidos</NavLink>
                   <NavLink href="/perfil/direcciones">Mis Direcciones</NavLink>
-                  {rolId === 2 && <NavLink href="/admin">Panel Admin</NavLink>}
+                  {rolId! >= 2 && <NavLink href="/admin">Panel Admin</NavLink>}
                   <form action="/logout" method="post">
                     <Button type="submit">Cerrar sesión</Button>
                   </form>
@@ -280,5 +268,17 @@ export default function NavbarClient({ user, rolId }: Props) {
       {/* Espacio para el navbar fijo */}
       <div className="h-16"></div>
     </>
+  )
+}
+
+function Button({ type = 'button', disabled = false, children }: { type?: "button" | "submit" | "reset"; disabled?: boolean; children: React.ReactNode }) {
+  return (
+    <button 
+      type={type}
+      disabled={disabled}
+      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-red-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {children}
+    </button>
   )
 }
