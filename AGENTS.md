@@ -146,10 +146,94 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 
 ## Testing patterns
 
-- Jest + `@testing-library/react` with jsdom
+- Jest 30 + `@testing-library/react` with jsdom + `@testing-library/user-event`
 - `jest.setup.ts` imports `@testing-library/jest-dom` (globally available matchers)
-- Mock zustand stores with `jest.mock('@/store/cartStore', ...)` — see `src/__tests__/Cart.test.tsx` for the canonical pattern
 - `moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' }` in jest config
+- Run single file: `npx jest src/__tests__/Foo.test.tsx`
+- All test content is in **Spanish** (describe/it names, assertions, mock data)
+
+### Test files (19 suites, 185 tests)
+
+| Archivo | Cubre |
+|---------|-------|
+| `cartStore.test.ts` | addToCart, removeFromCart, clearCart, updateQuantity, setCart — auth/guest/stock-clamp/error |
+| `mangaStore.test.ts` | setMangas, addMangas, loadMangas, loadMangasPopulares — dedup, merge |
+| `usuarioStore.test.ts` | getUsuarios, updateUsuarioEnStore — generic fields, rol_id+roles |
+| `formatPrice.test.ts` | CLP formatting via Intl.NumberFormat |
+| `CategoriaTable.test.tsx` | Render, inline edit, Enter/blur save, error handling, empty state |
+| `SeriesTable.test.tsx` | Render, search filter, clear, inline edit, empty state |
+| `MangasTable.test.tsx` | 13-field text search, dropdown filters, sorting, inline edit |
+| `PedidosTable.test.tsx` | Data fetch on mount, date/status/search filters, status sort, inline edit |
+| `UsuariosTable.test.tsx` | Render users, inline edit email/rol, role permissions, empty state |
+| `CartPage.test.tsx` | Empty state, items render, +/- buttons, remove, clear, totals |
+| `Cart.test.tsx` | Toggle panel, products, clearCart, userId=null renders button |
+| `CrearMangaForm.test.tsx` | Render, validation errors, submit with UUID IDs, upload error, fetch error |
+| `CrearCategoriaForm.test.tsx` | Form render and submit |
+| `EditarCategoriaForm.test.tsx` | Form render and submit |
+| `schemas/registroSchema.test.ts` | Email, password, confirm-password, refine |
+| `schemas/loginSchema.test.ts` | Email, password |
+| `schemas/direccionSchema.test.ts` | All fields including numero_casa, regionesChile |
+| `schemas/nuevoMangaSchema.test.ts` | All manga fields, UUID validation, es_popular preprocess |
+| `schemas/seriesSchema.test.ts` | Nombre, manga_ids |
+
+### Mocking patterns
+
+**Zustand stores** — mock the entire module, return a plain object (no `get`/`set`):
+```ts
+jest.mock('@/store/cartStore', () => ({
+  useCartStore: jest.fn((selector) => {
+    const state = { cart: [], removeFromCart: jest.fn(), ... }
+    return selector ? selector(state) : state
+  }),
+}))
+```
+
+**Supabase services** — mock each exported function:
+```ts
+jest.mock('@/lib/supabase/services/mangas.client', () => ({
+  getMangas: jest.fn().mockResolvedValue([...]),
+  crearManga: jest.fn().mockResolvedValue({ error: null }),
+}))
+```
+
+**Next.js navigation** — required when component uses `useRouter()`:
+```ts
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({ push: jest.fn() })),
+}))
+```
+
+**Next.js Image/Link** — required in jsdom:
+```ts
+jest.mock('next/image', () => (props) => <img alt={props.alt} />)
+jest.mock('next/link', () => (props) => <a href={props.href}>{props.children}</a>)
+```
+
+**`global.fetch`** (PedidosTable) — must use `global.fetch`, not `jest.spyOn(window, 'fetch')`:
+```ts
+global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => [...] })
+```
+
+**User event** — prefer `@testing-library/user-event` over `fireEvent`:
+```ts
+const user = userEvent.setup()
+await user.click(button)
+await user.type(input, 'text')
+await user.dblClick(element)  // for inline editing
+await user.selectOptions(select, 'value')
+await user.upload(fileInput, file)
+```
+
+### Query patterns
+
+- **Ambiguous labels** (MangasTable): filter `<select>` options share text with table data → query `<tbody>` children specifically
+- **Multiple matches**: use `getAllByText` / `getAllByRole` when text appears more than once (e.g. unit price + subtotal)
+- **Empty state assertions**: use `getAllByRole('row')` to count rows (not `toHaveCount` which doesn't exist in jest-dom)
+- **Role permissions**: check CSS classes on `<td>` elements (e.g. `text-gray-400` for disabled)
+
+### Schema bug fix
+
+`src/schemas/mangasSchema.ts` — `es_popular` field: the `<select>` sends string values (`"true"`, `"false"`, `""`) but the schema originally had `z.boolean()`. Fixed with `z.preprocess()` to coerce strings to booleans. Without this, the form could never submit with `es_popular` selected.
 
 ## Registration (`/registro`)
 

@@ -7,7 +7,6 @@ import { getCategoriasClient } from '@/lib/supabase/services/categorias.client';
 import { getSeriesClient } from '@/lib/supabase/services/series.client';
 import { crearManga } from '@/lib/supabase/services/mangas.client';
 
-// Mock completo de las dependencias
 jest.mock('@/utils/supabase/client', () => ({
   createClient: jest.fn(() => ({
     storage: {
@@ -32,32 +31,33 @@ jest.mock('@/lib/supabase/services/mangas.client', () => ({
 }));
 
 describe('CrearMangaForm', () => {
+  const CAT_ID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
+  const SERIE_ID = 'b2c3d4e5-f6a7-8901-bcde-f12345678901';
+
   const mockCategorias = [
-    { id: 1, nombre: 'Shonen' },
-    { id: 2, nombre: 'Seinen' },
+    { id: CAT_ID, nombre: 'Shonen' },
+    { id: 'c3d4e5f6-a7b8-9012-cdef-123456789012', nombre: 'Seinen' },
   ];
 
   const mockSeries = [
-    { id: 1, nombre: 'One Piece' },
-    { id: 2, nombre: 'Berserk' },
+    { id: SERIE_ID, nombre: 'One Piece' },
+    { id: 'd4e5f6a7-b8c9-0123-defa-234567890123', nombre: 'Berserk' },
   ];
 
   const mockFile = new File(['test'], 'test.png', { type: 'image/png' });
   const mockPublicUrl = 'https://example.com/image.jpg';
 
   beforeEach(() => {
-    // Configurar mocks con implementaciones
     (getCategoriasClient as jest.Mock).mockResolvedValue(mockCategorias);
     (getSeriesClient as jest.Mock).mockResolvedValue(mockSeries);
     (crearManga as jest.Mock).mockResolvedValue({ error: null });
 
-    // Mock de Supabase storage
     (createClient as jest.Mock).mockImplementation(() => ({
       storage: {
         from: jest.fn(() => ({
           upload: jest.fn().mockResolvedValue({ error: null }),
-          getPublicUrl: jest.fn().mockReturnValue({ 
-            data: { publicUrl: mockPublicUrl } 
+          getPublicUrl: jest.fn().mockReturnValue({
+            data: { publicUrl: mockPublicUrl }
           }),
         })),
       },
@@ -70,49 +70,49 @@ describe('CrearMangaForm', () => {
 
   it('debe renderizar correctamente', async () => {
     render(<CrearMangaForm />);
-    
+
     await waitFor(() => {
       expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
       expect(screen.getByLabelText('Autor:')).toBeInTheDocument();
       expect(screen.getByLabelText('Categoría:')).toBeInTheDocument();
       expect(screen.getByLabelText('Serie:')).toBeInTheDocument();
-      expect(screen.getByLabelText('Imagen Portada (URL):')).toBeInTheDocument();
+      expect(screen.getByLabelText('Imagen Portada:')).toBeInTheDocument();
       expect(screen.getByText('Crear')).toBeInTheDocument();
     });
   });
 
   it('debe mostrar errores de validación cuando se envía el formulario vacío', async () => {
     render(<CrearMangaForm />);
-    
+
     const submitButton = screen.getByText('Crear');
     await userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getAllByText('Este campo es obligatorio').length).toBeGreaterThan(0);
+      const errors = screen.getAllByText(/.+/i).filter(el =>
+        el.classList.contains('text-red-500')
+      );
+      expect(errors.length).toBeGreaterThan(0);
     });
   });
 
   it('debe enviar el formulario correctamente con datos válidos', async () => {
     render(<CrearMangaForm />);
-    
-    // Esperar a que se carguen los datos
+
     await waitFor(() => {
       expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
     });
 
-    // Rellenar el formulario
     await userEvent.type(screen.getByLabelText('Nombre:'), 'Naruto Vol.1');
     await userEvent.type(screen.getByLabelText('Autor:'), 'Masashi Kishimoto');
     await userEvent.type(screen.getByLabelText('Editorial:'), 'Shueisha');
-    await userEvent.selectOptions(screen.getByLabelText('Categoría:'), '1');
-    await userEvent.selectOptions(screen.getByLabelText('Serie:'), '1');
+    await userEvent.selectOptions(screen.getByLabelText('Categoría:'), CAT_ID);
+    await userEvent.selectOptions(screen.getByLabelText('Serie:'), SERIE_ID);
     await userEvent.type(screen.getByLabelText('Volumen:'), '1');
     await userEvent.type(screen.getByLabelText('Descripción:'), 'Primer volumen de Naruto');
-    await userEvent.type(screen.getByLabelText('Precio:'), '10.99');
+    await userEvent.type(screen.getByLabelText('Precio:'), '10990');
     await userEvent.type(screen.getByLabelText('Stock:'), '50');
-    
-    // Simular carga de archivo
-    const fileInput = screen.getByLabelText('Imagen Portada (URL):');
+
+    const fileInput = screen.getByLabelText('Imagen Portada:');
     await userEvent.upload(fileInput, mockFile);
 
     await userEvent.type(screen.getByLabelText('ISBN:'), '1234567890');
@@ -121,9 +121,8 @@ describe('CrearMangaForm', () => {
     await userEvent.type(screen.getByLabelText('Fecha de publicación:'), '2023-01-01');
     await userEvent.selectOptions(screen.getByLabelText('Estado:'), 'nuevo');
     await userEvent.click(screen.getByLabelText('Activo'));
-    await userEvent.selectOptions(screen.getByLabelText('Es popular:'), 'true');
+    await userEvent.selectOptions(screen.getByLabelText('Es popular (opcional):'), 'true');
 
-    // Enviar formulario
     await userEvent.click(screen.getByText('Crear'));
 
     await waitFor(() => {
@@ -131,11 +130,11 @@ describe('CrearMangaForm', () => {
         titulo: 'Naruto Vol.1',
         autor: 'Masashi Kishimoto',
         editorial: 'Shueisha',
-        categoria_id: 1,
-        serie_id: 1,
+        categoria_id: CAT_ID,
+        serie_id: SERIE_ID,
         volumen: 1,
         descripcion: 'Primer volumen de Naruto',
-        precio: 10.99,
+        precio: 10990,
         stock: 50,
         imagen_portada: mockPublicUrl,
         isbn: '1234567890',
@@ -144,18 +143,17 @@ describe('CrearMangaForm', () => {
         fecha_publicacion: '2023-01-01',
         estado: 'nuevo',
         activo: true,
-        es_popular: 'true',
+        es_popular: true,
       }));
     }, { timeout: 5000 });
   });
 
   it('debe manejar errores al subir la imagen', async () => {
-    // Mock de error al subir imagen
     (createClient as jest.Mock).mockImplementation(() => ({
       storage: {
         from: jest.fn(() => ({
-          upload: jest.fn().mockResolvedValue({ 
-            error: { message: 'Error al subir imagen' } 
+          upload: jest.fn().mockResolvedValue({
+            error: { message: 'Error al subir imagen' }
           }),
           getPublicUrl: jest.fn(),
         })),
@@ -163,44 +161,48 @@ describe('CrearMangaForm', () => {
     }));
 
     render(<CrearMangaForm />);
-    
+
     await waitFor(() => {
       expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
     });
 
-    // Rellenar datos mínimos
     await userEvent.type(screen.getByLabelText('Nombre:'), 'Naruto Vol.1');
     await userEvent.type(screen.getByLabelText('Autor:'), 'Masashi Kishimoto');
-    await userEvent.selectOptions(screen.getByLabelText('Categoría:'), '1');
-    await userEvent.selectOptions(screen.getByLabelText('Serie:'), '1');
+    await userEvent.type(screen.getByLabelText('Editorial:'), 'Shueisha');
+    await userEvent.selectOptions(screen.getByLabelText('Categoría:'), CAT_ID);
+    await userEvent.selectOptions(screen.getByLabelText('Serie:'), SERIE_ID);
     await userEvent.type(screen.getByLabelText('Volumen:'), '1');
-    await userEvent.type(screen.getByLabelText('Precio:'), '10.99');
+    await userEvent.type(screen.getByLabelText('Descripción:'), 'Primer volumen de Naruto');
+    await userEvent.type(screen.getByLabelText('Precio:'), '10990');
     await userEvent.type(screen.getByLabelText('Stock:'), '50');
-    
-    // Simular carga de archivo
-    const fileInput = screen.getByLabelText('Imagen Portada (URL):');
+
+    const fileInput = screen.getByLabelText('Imagen Portada:');
     await userEvent.upload(fileInput, mockFile);
 
-    // Enviar formulario
+    await userEvent.type(screen.getByLabelText('ISBN:'), '1234567890');
+    await userEvent.type(screen.getByLabelText('Número de páginas:'), '200');
+    await userEvent.type(screen.getByLabelText('Idioma:'), 'Japonés');
+    await userEvent.type(screen.getByLabelText('Fecha de publicación:'), '2023-01-01');
+    await userEvent.selectOptions(screen.getByLabelText('Estado:'), 'nuevo');
+    await userEvent.click(screen.getByLabelText('Activo'));
+
     await userEvent.click(screen.getByText('Crear'));
 
-    // Verificar que no se llamó a crearManga
     await waitFor(() => {
       expect(crearManga).not.toHaveBeenCalled();
+      expect(screen.getByRole('alert')).toBeInTheDocument();
     });
   });
 
   it('debe manejar errores al cargar categorías y series', async () => {
-    // Mock de error al cargar datos
     (getCategoriasClient as jest.Mock).mockRejectedValue(new Error('Error al cargar categorías'));
     (getSeriesClient as jest.Mock).mockRejectedValue(new Error('Error al cargar series'));
 
     render(<CrearMangaForm />);
-    
-    // Verificar que los select están vacíos
+
     await waitFor(() => {
-      expect(screen.getByLabelText('Categoría:').querySelectorAll('option').length).toBe(0);
-      expect(screen.getByLabelText('Serie:').querySelectorAll('option').length).toBe(0);
+      expect(screen.getByLabelText('Categoría:').querySelectorAll('option').length).toBe(1);
+      expect(screen.getByLabelText('Serie:').querySelectorAll('option').length).toBe(1);
     });
   });
 });

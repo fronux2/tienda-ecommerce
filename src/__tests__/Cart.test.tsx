@@ -2,7 +2,15 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import Cart from '../components/Cart'
 import { useCartStore } from '@/store/cartStore'
 
-// 🔧 Mock del store para evitar errores
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({ push: jest.fn() })),
+}))
+
+jest.mock('next/image', () => (props: Record<string, unknown>) => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img alt={props.alt as string} />
+))
+
 jest.mock('@/store/cartStore', () => ({
   useCartStore: jest.fn(),
 }))
@@ -27,9 +35,10 @@ describe('Cart component', () => {
     expect(cartButton).toBeInTheDocument()
   })
 
-  it('no renderiza nada si no hay userId', () => {
-    const { container } = render(<Cart userId={null} />)
-    expect(container.firstChild).toBeNull()
+  it('renderiza el botón del carrito aunque userId sea null', () => {
+    render(<Cart userId={null} />)
+    const cartButton = screen.getByRole('button', { name: /abrir carrito/i })
+    expect(cartButton).toBeInTheDocument()
   })
 
   it('muestra mensaje de carrito vacío cuando no hay productos', () => {
@@ -63,7 +72,7 @@ describe('Cart component', () => {
     render(<Cart userId="123" />)
 
     expect(screen.getByText('Naruto')).toBeInTheDocument()
-    expect(screen.getByText((content) => content.includes('9900'))).toBeTruthy()
+    expect(screen.getByText('$9.900')).toBeInTheDocument()
   })
 
   it('abre y cierra el panel del carrito', () => {
