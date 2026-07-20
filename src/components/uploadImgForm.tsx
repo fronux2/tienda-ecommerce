@@ -8,6 +8,7 @@ export default function UploadImgForm() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const supabase = createClient();
 
@@ -15,7 +16,9 @@ export default function UploadImgForm() {
     if (!file) return;
 
     setLoading(true);
-    const filePath = `${file.name}`;
+    setErrorMsg('');
+    const ext = file.name.split('.').pop();
+    const filePath = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const { error } = await supabase.storage
       .from('mangas')
@@ -25,7 +28,7 @@ export default function UploadImgForm() {
       });
 
     if (error) {
-      console.error('Error al subir:', error.message);
+      setErrorMsg(error.message);
     } else {
       const { data: publicUrlData } = supabase.storage
         .from('mangas')
@@ -51,10 +54,11 @@ export default function UploadImgForm() {
       >
         {loading ? 'Subiendo...' : 'Subir imagen'}
       </button>
+      {errorMsg && <p className="mt-2 text-red-600 text-sm">{errorMsg}</p>}
       {url && (
         <div className="mt-4">
           <p>Imagen subida:</p>
-          <Image src={url} alt="Preview" className="w-32 mt-2" />
+          <Image src={url} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded" />
           <code className="text-sm break-all">{url}</code>
         </div>
       )}
