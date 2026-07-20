@@ -24,6 +24,7 @@ El desarrollador habla **español**. Todas las respuestas, explicaciones y comen
 - **React Hook Form + Zod** schemas in `src/schemas/`, types in `src/types/supabase.ts`
 - **Leaflet + react-leaflet** for maps
 - Content is in **Spanish (es_ES)** — UI text, schemas, tests, comments
+- **Component naming**: PascalCase para archivos de componentes React (`MangaCard.tsx`, `AddToCartButton.tsx`, `UploadImgForm.tsx`). No usar `camelCase` ni sufijos numéricos.
 
 ## Utilities
 
@@ -36,11 +37,11 @@ El desarrollador habla **español**. Todas las respuestas, explicaciones y comen
 - Files `src/lib/supabase/services/*.client.ts` and `*.server.ts` mirror the same logic for each entity. The `.client.ts` files incorrectly `await createClient()` even though `createBrowserClient` is sync — do not propagate this pattern.
 - Some `.client.ts` files (e.g. `mangas.client.ts`) import from `@/utils/supabase/client` but call `await createClient()` — this is harmless at runtime but incorrect. Use `createClient()` (no await) in new client code.
 - Service-role key (`SUPABASE_SERVICE_ROLE_KEY`) must never reach the browser. Use `supabaseAdmin` from `src/utils/supabase/admin.ts` in API routes / server actions only.
-- Role check: `rol_id >= 2` grants admin/moderator access (rol_id: 1=cliente, 2=moderador, 3=admin). Enforced in admin server components and Navbar (`rolId! >= 2`).
+- Role check: `rol_id >= 2` grants admin/moderator access (rol_id: 1=cliente, 2=moderador, 3=admin). Enforced in admin server components and Navbar. Both desktop dropdown and mobile menu use `rolId! >= 2` consistently.
 - **Role display in admin table**: `UsuariosTable` resolves role name via `getNombreRol(usuario.rol_id)` using the local `roles` array (fetched separately via `getRoles`), not via Supabase join. The store `updateUsuarioEnStore` sets `roles: [{ id: Number(valor), nombre }]` (array, not object).
 - **Admin role assignment restriction**: Only users with `rol_id === 3` (admin) can assign the admin role. `UsuariosTable` receives `usuarioRolId` as a prop from the server component and filters the role `<select>` to exclude `rol.id === 3` for non-admins. Additionally, moderators (`rol_id === 2`) cannot edit the role of users who are currently admins — the role cell is visually disabled and `updateUsuario` validates server-side that moderators cannot modify admin roles.
 - **Cart service validation**: All functions in `carrito.cliente.ts` (`fetchCartFromSupabase`, `addToCartSupabase`, `removeFromCartSupabase`, `updateCartQuantitySupabase`, `clearCartSupabase`) throw if `usuario_id` is empty — never pass `""` as user ID.
-- **NavbarClient cart fetch**: `src/components/NavbarClient.tsx:26` guards with `if (!user?.id) return` before calling `fetchCartFromSupabase`, preventing queries with null/empty user ID on public pages.
+- **NavbarClient cart fetch**: `src/components/NavbarClient.tsx:28` guards with `if (!user?.id) return` before calling `fetchCartFromSupabase`, preventing queries with null/empty user ID on public pages.
 - **NavbarClient user display**: The avatar circle shows the first letter of the user's email (`user.email?.[0]`) with fallback to `user.id[0]`. The dropdown shows the full email. The `Props` type includes `email?: string`.
 - **Guest cart**: Non-registered users can add items to cart (stored in localStorage via `src/lib/cartLocalStorage.ts`). Login is required at checkout (`/checkout` is protected by middleware). When a guest logs in, the local cart is automatically merged into Supabase via `NavbarClient`.
 - **Cart store guest logic**: `src/store/cartStore.ts` — all operations (`addToCart`, `removeFromCart`, `clearCart`, `updateQuantity`) skip Supabase calls when `usuario_id` is falsy and persist to localStorage instead. The store types accept `string | null` for `usuario_id`.
