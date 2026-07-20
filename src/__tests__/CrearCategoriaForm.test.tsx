@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import CrearCategoriaForm from '../components/forms/crearCategoriaFrorm'
+import CrearCategoriaForm from '../components/forms/CrearCategoriaForm'
 import { crearCategoria } from '../components/actions/categorias'
 
 jest.mock('../components/actions/categorias', () => ({

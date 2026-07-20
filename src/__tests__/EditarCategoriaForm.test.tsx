@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import EditarCategoriaForm from '../components/forms/editarCategoriaForm'
+import EditarCategoriaForm from '../components/forms/EditarCategoriaForm'
 
 // Creamos mocks para cada función encadenada
 const mockEq = jest.fn().mockResolvedValue({ error: null })
