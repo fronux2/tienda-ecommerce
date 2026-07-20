@@ -1,4 +1,3 @@
-// Card1.tsx
 "use client"
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +14,7 @@ type CardProps = {
   userId: string | null;
 };
 
-export default function Card1({ id, imagen, titulo, autor, editorial, precio, userId }: CardProps) {
+export default function MangaCard({ id, imagen, titulo, autor, editorial, precio, userId }: CardProps) {
   return (
     <div className="bg-[#FFF8F0] rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-red-600 transition-all duration-300 w-64">
       <Link href={`/mangas/${id}`} className="block">

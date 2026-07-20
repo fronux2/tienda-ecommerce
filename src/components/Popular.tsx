@@ -1,6 +1,5 @@
-// Popular.tsx
 "use client"
-import Card1 from "@/components/Card1.client";
+import MangaCard from "@/components/MangaCard";
 import { useMangaStore } from "@/store/mangaStore";
 import { useEffect } from "react";
 
@@ -22,7 +21,7 @@ export default function Popular({id}:{id:string}) {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center">
                     {popularMangas.map(manga => (
-                        <Card1
+                        <MangaCard
                             key={manga.id}
                             id={manga.id}
                             imagen={manga.imagen_portada}

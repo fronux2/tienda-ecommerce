@@ -1,5 +1,5 @@
 "use client";
-import Card1 from "@/components/Card1.client";
+import MangaCard from "@/components/MangaCard";
 import { getSeriesClient } from "@/lib/supabase/services/series.client";
 import { getCategoriasClient } from "@/lib/supabase/services/categorias.client";
 import { Categoria, Serie, type Manga } from "@/types/supabase";
@@ -161,7 +161,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
             <ul className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {mangasPaginados.map((manga) => (
                 <li key={manga.id} className="w-full max-w-xs">
-                  <Card1
+                  <MangaCard
                     id={manga.id}
                     imagen={manga.imagen_portada}
                     titulo={manga.titulo}
