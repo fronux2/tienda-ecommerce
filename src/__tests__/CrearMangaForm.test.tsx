@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CrearMangaForm from '@/components/forms/CrearMangaForm';
 import { createClient } from '@/utils/supabase/client';
@@ -47,7 +47,10 @@ describe('CrearMangaForm', () => {
   const mockFile = new File(['test'], 'test.png', { type: 'image/png' });
   const mockPublicUrl = 'https://example.com/image.jpg';
 
+  let user: ReturnType<typeof userEvent.setup>;
+
   beforeEach(() => {
+    user = userEvent.setup();
     (getCategoriasClient as jest.Mock).mockResolvedValue(mockCategorias);
     (getSeriesClient as jest.Mock).mockResolvedValue(mockSeries);
     (crearManga as jest.Mock).mockResolvedValue({ error: null });
@@ -85,12 +88,10 @@ describe('CrearMangaForm', () => {
     render(<CrearMangaForm />);
 
     const submitButton = screen.getByText('Crear');
-    await userEvent.click(submitButton);
+    await user.click(submitButton);
 
     await waitFor(() => {
-      const errors = screen.getAllByText(/.+/i).filter(el =>
-        el.classList.contains('text-red-500')
-      );
+      const errors = document.querySelectorAll('span.text-red-500');
       expect(errors.length).toBeGreaterThan(0);
     });
   });
@@ -99,31 +100,31 @@ describe('CrearMangaForm', () => {
     render(<CrearMangaForm />);
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
+      expect(screen.getByLabelText('Categoría:').querySelectorAll('option').length).toBeGreaterThan(1);
     });
 
-    await userEvent.type(screen.getByLabelText('Nombre:'), 'Naruto Vol.1');
-    await userEvent.type(screen.getByLabelText('Autor:'), 'Masashi Kishimoto');
-    await userEvent.type(screen.getByLabelText('Editorial:'), 'Shueisha');
-    await userEvent.selectOptions(screen.getByLabelText('Categoría:'), CAT_ID);
-    await userEvent.selectOptions(screen.getByLabelText('Serie:'), SERIE_ID);
-    await userEvent.type(screen.getByLabelText('Volumen:'), '1');
-    await userEvent.type(screen.getByLabelText('Descripción:'), 'Primer volumen de Naruto');
-    await userEvent.type(screen.getByLabelText('Precio:'), '10990');
-    await userEvent.type(screen.getByLabelText('Stock:'), '50');
+    fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Naruto Vol.1' } });
+    fireEvent.change(screen.getByLabelText('Autor:'), { target: { value: 'Masashi Kishimoto' } });
+    fireEvent.change(screen.getByLabelText('Editorial:'), { target: { value: 'Shueisha' } });
+    await user.selectOptions(screen.getByLabelText('Categoría:'), CAT_ID);
+    await user.selectOptions(screen.getByLabelText('Serie:'), SERIE_ID);
+    fireEvent.change(screen.getByLabelText('Volumen:'), { target: { value: '1' } });
+    fireEvent.change(screen.getByLabelText('Descripción:'), { target: { value: 'Primer volumen de Naruto' } });
+    fireEvent.change(screen.getByLabelText('Precio:'), { target: { value: '10990' } });
+    fireEvent.change(screen.getByLabelText('Stock:'), { target: { value: '50' } });
 
     const fileInput = screen.getByLabelText('Imagen Portada:');
-    await userEvent.upload(fileInput, mockFile);
+    await user.upload(fileInput, mockFile);
 
-    await userEvent.type(screen.getByLabelText('ISBN:'), '1234567890');
-    await userEvent.type(screen.getByLabelText('Número de páginas:'), '200');
-    await userEvent.type(screen.getByLabelText('Idioma:'), 'Japonés');
-    await userEvent.type(screen.getByLabelText('Fecha de publicación:'), '2023-01-01');
-    await userEvent.selectOptions(screen.getByLabelText('Estado:'), 'nuevo');
-    await userEvent.click(screen.getByLabelText('Activo'));
-    await userEvent.selectOptions(screen.getByLabelText('Es popular (opcional):'), 'true');
+    fireEvent.change(screen.getByLabelText('ISBN:'), { target: { value: '1234567890' } });
+    fireEvent.change(screen.getByLabelText('Número de páginas:'), { target: { value: '200' } });
+    fireEvent.change(screen.getByLabelText('Idioma:'), { target: { value: 'Japonés' } });
+    fireEvent.change(screen.getByLabelText('Fecha de publicación:'), { target: { value: '2023-01-01' } });
+    await user.selectOptions(screen.getByLabelText('Estado:'), 'nuevo');
+    await user.click(screen.getByLabelText('Activo'));
+    await user.selectOptions(screen.getByLabelText('Es popular (opcional):'), 'true');
 
-    await userEvent.click(screen.getByText('Crear'));
+    await user.click(screen.getByText('Crear'));
 
     await waitFor(() => {
       expect(crearManga).toHaveBeenCalledWith(expect.objectContaining({
@@ -145,7 +146,7 @@ describe('CrearMangaForm', () => {
         activo: true,
         es_popular: true,
       }));
-    }, { timeout: 5000 });
+    });
   });
 
   it('debe manejar errores al subir la imagen', async () => {
@@ -163,30 +164,29 @@ describe('CrearMangaForm', () => {
     render(<CrearMangaForm />);
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Nombre:')).toBeInTheDocument();
+      expect(screen.getByLabelText('Categoría:').querySelectorAll('option').length).toBeGreaterThan(1);
     });
 
-    await userEvent.type(screen.getByLabelText('Nombre:'), 'Naruto Vol.1');
-    await userEvent.type(screen.getByLabelText('Autor:'), 'Masashi Kishimoto');
-    await userEvent.type(screen.getByLabelText('Editorial:'), 'Shueisha');
-    await userEvent.selectOptions(screen.getByLabelText('Categoría:'), CAT_ID);
-    await userEvent.selectOptions(screen.getByLabelText('Serie:'), SERIE_ID);
-    await userEvent.type(screen.getByLabelText('Volumen:'), '1');
-    await userEvent.type(screen.getByLabelText('Descripción:'), 'Primer volumen de Naruto');
-    await userEvent.type(screen.getByLabelText('Precio:'), '10990');
-    await userEvent.type(screen.getByLabelText('Stock:'), '50');
+    fireEvent.change(screen.getByLabelText('Nombre:'), { target: { value: 'Naruto Vol.1' } });
+    fireEvent.change(screen.getByLabelText('Autor:'), { target: { value: 'Masashi Kishimoto' } });
+    fireEvent.change(screen.getByLabelText('Editorial:'), { target: { value: 'Shueisha' } });
+    await user.selectOptions(screen.getByLabelText('Categoría:'), CAT_ID);
+    await user.selectOptions(screen.getByLabelText('Serie:'), SERIE_ID);
+    fireEvent.change(screen.getByLabelText('Volumen:'), { target: { value: '1' } });
+    fireEvent.change(screen.getByLabelText('Descripción:'), { target: { value: 'Primer volumen de Naruto' } });
+    fireEvent.change(screen.getByLabelText('Precio:'), { target: { value: '10990' } });
+    fireEvent.change(screen.getByLabelText('Stock:'), { target: { value: '50' } });
 
     const fileInput = screen.getByLabelText('Imagen Portada:');
-    await userEvent.upload(fileInput, mockFile);
+    await user.upload(fileInput, mockFile);
 
-    await userEvent.type(screen.getByLabelText('ISBN:'), '1234567890');
-    await userEvent.type(screen.getByLabelText('Número de páginas:'), '200');
-    await userEvent.type(screen.getByLabelText('Idioma:'), 'Japonés');
-    await userEvent.type(screen.getByLabelText('Fecha de publicación:'), '2023-01-01');
-    await userEvent.selectOptions(screen.getByLabelText('Estado:'), 'nuevo');
-    await userEvent.click(screen.getByLabelText('Activo'));
-
-    await userEvent.click(screen.getByText('Crear'));
+    fireEvent.change(screen.getByLabelText('ISBN:'), { target: { value: '1234567890' } });
+    fireEvent.change(screen.getByLabelText('Número de páginas:'), { target: { value: '200' } });
+    fireEvent.change(screen.getByLabelText('Idioma:'), { target: { value: 'Japonés' } });
+    fireEvent.change(screen.getByLabelText('Fecha de publicación:'), { target: { value: '2023-01-01' } });
+    await user.selectOptions(screen.getByLabelText('Estado:'), 'nuevo');
+    await user.click(screen.getByLabelText('Activo'));
+    await user.click(screen.getByText('Crear'));
 
     await waitFor(() => {
       expect(crearManga).not.toHaveBeenCalled();
