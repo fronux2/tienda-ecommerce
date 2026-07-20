@@ -53,10 +53,14 @@ jest.mock('@/hooks/useUser', () => ({
   })),
 }))
 
-jest.mock('next/image', () => (props: Record<string, unknown>) => (
-  // eslint-disable-next-line @next/next/no-img-element
-  <img alt={props.alt as string} />
-))
+jest.mock('next/image', () => {
+  const MockImage = (props: Record<string, unknown>) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img alt={props.alt as string} />
+  )
+  MockImage.displayName = 'NextImageMock'
+  return MockImage
+})
 
 jest.mock('next/link', () => (props: Record<string, unknown>) => (
   <a href={props.href as string}>{props.children}</a>
