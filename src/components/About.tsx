@@ -1,4 +1,3 @@
-// About.tsx
 import Image from "next/image";
 
 export default function About() {
@@ -40,13 +39,14 @@ export default function About() {
                                 width={96}
                                 height={96}
                                 className="object-cover w-full h-full"
+                                loading="lazy"
                             />
                         </div>
                         <span className="font-bold text-black text-lg">Marcos Muñoz</span>
                         <span className="text-red-600 font-medium">Fundador</span>
                     </div>
                     
-                    <div className="mt-8 flex space-x-4">
+                    <div className="mt-8 flex gap-4">
                         {[
                             { value: "13+", label: "Años de experiencia" },
                             { value: "5K+", label: "Clientes satisfechos" },
