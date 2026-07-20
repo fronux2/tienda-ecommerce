@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {AddCardButton2 } from "@/components/AddCardButton2";
+import { AddToCartButton } from "@/components/AddToCartButton";
 import { formatPrice } from "@/lib/formatPrice";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
@@ -32,7 +32,7 @@ export default async function Card1({ id, imagen, titulo, autor, editorial, prec
         <p className="text-sm text-gray-700 mb-1">Autor: <span className="font-semibold">{autor}</span></p>
         <p className="text-sm text-gray-700 mb-2">Editorial: <span className="font-semibold">{editorial}</span></p>
         <p className="text-xl font-bold text-red-500">{formatPrice(precio)}</p>
-        <AddCardButton2 mangaId={id} userId={user.id}/>
+        <AddToCartButton mangaId={id} userId={user.id}/>
         </section>
         
     </main>

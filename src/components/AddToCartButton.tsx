@@ -6,20 +6,25 @@ import { getMangaById } from '@/lib/supabase/services/mangas.client';
 import { NuevoManga } from '@/types/supabase';
 import LoadingButton from './LoadingButton';
 
-export function AddCardButton2({ mangaId, userId }: { mangaId: string, userId: string | null }) {
+export function AddToCartButton({ mangaId, userId }: { mangaId: string, userId: string | null }) {
   const [manga, setManga] = useState<NuevoManga | null>(null)
   const [loading, setLoading] = useState(false)
-  const cart = useCartStore((state) => state.cart)
+  const { cart, addToCart } = useCartStore((state) => ({
+    cart: state.cart,
+    addToCart: state.addToCart,
+  }))
 
   useEffect(() => {
     const fetchManga = async () => {
-      const data = await getMangaById(mangaId)
-      setManga(data[0])
+      try {
+        const data = await getMangaById(mangaId)
+        setManga(data[0])
+      } catch {
+        setManga(null)
+      }
     }
     fetchManga()
-  }, [ mangaId ])
-
-  const addToCart = useCartStore((state) => state.addToCart)
+  }, [mangaId])
 
   const cartItem = cart.find(i => i.manga_id === mangaId)
   const enCarrito = cartItem?.cantidad ?? 0

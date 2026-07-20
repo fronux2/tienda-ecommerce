@@ -55,9 +55,10 @@ El desarrollador habla **español**. Todas las respuestas, explicaciones y comen
 
 ## Button UX patterns
 
-### AddCardButton2 (`src/components/AddCardButton2.tsx`)
+### AddToCartButton (`src/components/AddToCartButton.tsx`)
 Botón de "Añadir al Carrito" para páginas de detalle de manga. Incluye:
-- Fetch del manga via `getMangaById` en `useEffect` para obtener `stock` actualizado
+- Fetch del manga via `getMangaById` en `useEffect` para obtener `stock` actualizado (con `try/catch`)
+- Una sola suscripción al store Zustand (`cart` + `addToCart` en un solo selector)
 - Se deshabilita automáticamente si el carrito ya tiene la cantidad máxima del stock (`stockAgotado = enCarrito >= manga.stock`)
 - Cambia el texto a "Stock agotado en carrito" cuando está deshabilitado
 - Usa `LoadingButton` internamente con spinner

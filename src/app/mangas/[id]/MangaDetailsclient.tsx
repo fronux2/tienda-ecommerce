@@ -3,7 +3,7 @@ import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
 import { type Manga } from '@/types/supabase'
-import { AddCardButton2 } from '@/components/AddCardButton2'
+import { AddToCartButton } from '@/components/AddToCartButton'
 import useUser from '@/hooks/useUser'
 
 type Props = {
@@ -127,7 +127,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
                 </div>
                 {/* Botón para agregar al carrito */}
                 {isAvailable ? (
-                  <AddCardButton2 mangaId={manga.id} userId={user?.id ?? null} />
+                  <AddToCartButton mangaId={manga.id} userId={user?.id ?? null} />
                 ) : (
                   <button 
                     disabled
