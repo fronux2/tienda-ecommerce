@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import UsuariosTable from '@/components/UsuariosTable'
 
@@ -42,12 +42,16 @@ beforeEach(() => {
 describe('UsuariosTable', () => {
   describe('render', () => {
     it('muestra el titulo', async () => {
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
       expect(await screen.findByText('Panel de Usuarios')).toBeInTheDocument()
     })
 
     it('muestra todos los usuarios', async () => {
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
       await waitFor(() => {
         expect(screen.getByText('admin@test.com')).toBeInTheDocument()
         expect(screen.getByText('user@test.com')).toBeInTheDocument()
@@ -55,7 +59,9 @@ describe('UsuariosTable', () => {
     })
 
     it('muestra los roles por defecto', async () => {
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
       await waitFor(() => {
         expect(screen.getByText('admin')).toBeInTheDocument()
         expect(screen.getByText('cliente')).toBeInTheDocument()
@@ -66,7 +72,9 @@ describe('UsuariosTable', () => {
   describe('edicion inline', () => {
     it('doble clic en email abre input', async () => {
       const user = userEvent.setup()
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('admin@test.com')).toBeInTheDocument()
@@ -79,7 +87,9 @@ describe('UsuariosTable', () => {
 
     it('modificar email y presionar Enter guarda', async () => {
       const user = userEvent.setup()
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('admin@test.com')).toBeInTheDocument()
@@ -96,7 +106,9 @@ describe('UsuariosTable', () => {
 
     it('doble clic en rol abre select', async () => {
       const user = userEvent.setup()
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('admin')).toBeInTheDocument()
@@ -109,7 +121,9 @@ describe('UsuariosTable', () => {
 
   describe('permisos de rol', () => {
     it('admin puede editar cualquier rol', async () => {
-      render(<UsuariosTable usuarioRolId={3} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={3} />)
+      })
       await waitFor(() => {
         expect(screen.getByText('admin')).toBeInTheDocument()
       })
@@ -120,7 +134,9 @@ describe('UsuariosTable', () => {
     })
 
     it('no-admin no puede editar rol de admin', async () => {
-      render(<UsuariosTable usuarioRolId={2} />)
+      await act(async () => {
+        render(<UsuariosTable usuarioRolId={2} />)
+      })
       await waitFor(() => {
         expect(screen.getByText('admin')).toBeInTheDocument()
       })

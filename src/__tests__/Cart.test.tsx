@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Cart from '../components/Cart'
 import { useCartStore } from '@/store/cartStore'
 
@@ -89,7 +90,8 @@ describe('Cart component', () => {
     // Podrías hacer algo como esto si aplicas aria-hidden o clases visibles
   })
   
-  it('llama a clearCart cuando se hace clic en "Vaciar"', () => {
+  it('llama a clearCart cuando se hace clic en "Vaciar"', async () => {
+    const user = userEvent.setup()
     const mockClearCart = jest.fn()
 
     const item = {
@@ -111,7 +113,7 @@ describe('Cart component', () => {
 
     render(<Cart userId="123" />)
 
-    fireEvent.click(screen.getByRole('button', { name: /vaciar/i }))
+    await user.click(screen.getByRole('button', { name: /vaciar/i }))
 
     expect(mockClearCart).toHaveBeenCalledWith('123')
   })
