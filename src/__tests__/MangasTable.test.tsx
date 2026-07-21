@@ -85,11 +85,14 @@ const series = [
   { id: 'ser-3', nombre: 'One Piece' },
 ]
 
-beforeEach(() => {
-  ;(useMangaStore as jest.Mock).mockReturnValue({
-    mangas,
-    loadMangas: mockLoadMangas,
+const setupStoreMock = (data: { mangas: typeof mangas; loadMangas: jest.Mock }) => {
+  ;(useMangaStore as jest.Mock).mockImplementation((selector) => {
+    return selector ? selector(data) : data
   })
+}
+
+beforeEach(() => {
+  setupStoreMock({ mangas, loadMangas: mockLoadMangas })
   jest.clearAllMocks()
 })
 
@@ -192,10 +195,7 @@ describe('MangasTable', () => {
   })
 
   it('muestra "no hay mangas disponibles" cuando no hay datos', () => {
-    ;(useMangaStore as jest.Mock).mockReturnValue({
-      mangas: [],
-      loadMangas: mockLoadMangas,
-    })
+    setupStoreMock({ mangas: [], loadMangas: mockLoadMangas })
     render(<MangasTable series={series} categorias={categorias} />)
     expect(screen.getByText('No hay mangas disponibles')).toBeInTheDocument()
   })

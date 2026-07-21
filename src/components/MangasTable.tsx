@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { updateManga } from "@/lib/supabase/services/mangas.client";
 import { useMangaStore } from "@/store/mangaStore";
 import { formatPrice } from "@/lib/formatPrice";
+import EditableCell from "@/components/EditableCell";
 
 type Serie = { id: string; nombre: string };
 type Categoria = { id: string; nombre: string };
@@ -378,379 +379,227 @@ export default function MangasTable({
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {editando?.id === manga.id && editando.campo === "titulo" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "titulo", manga.titulo)}
-                        >
-                          {manga.titulo}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="titulo" valor={manga.titulo}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "titulo", manga.titulo)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        {manga.titulo}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "autor" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "autor", manga.autor)}
-                        >
-                          {manga.autor}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="autor" valor={manga.autor}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "autor", manga.autor)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        {manga.autor}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "editorial" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "editorial", manga.editorial)}
-                        >
-                          {manga.editorial}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="editorial" valor={manga.editorial}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "editorial", manga.editorial)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        {manga.editorial}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "categoria_id" ? (
-                        <select
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        >
-                          {categorias.map((cat) => (
-                            <option key={cat.id} value={cat.id}>
-                              {cat.nombre}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "categoria_id", manga.categoria_id)}
-                        >
-                          {categorias.find((cat) => cat.id === manga.categoria_id)?.nombre || manga.categoria_id}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="categoria_id" valor={manga.categoria_id}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "categoria_id", manga.categoria_id)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="select"
+                        opciones={categorias.map((cat) => ({ value: cat.id, label: cat.nombre }))}
+                      >
+                        {categorias.find((cat) => cat.id === manga.categoria_id)?.nombre || manga.categoria_id}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "serie_id" ? (
-                        <select
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        >
-                          {series.map((ser) => (
-                            <option key={ser.id} value={ser.id}>
-                              {ser.nombre}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "serie_id", manga.serie_id)}
-                        >
-                          {series.find((ser) => ser.id === manga.serie_id)?.nombre || manga.serie_id}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="serie_id" valor={manga.serie_id}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "serie_id", manga.serie_id)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="select"
+                        opciones={series.map((ser) => ({ value: ser.id, label: ser.nombre }))}
+                      >
+                        {series.find((ser) => ser.id === manga.serie_id)?.nombre || manga.serie_id}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-medium">
-                      {editando?.id === manga.id && editando.campo === "volumen" ? (
-                        <input
-                          type="number"
-                          className="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mx-auto"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "volumen", manga.volumen)}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="volumen" valor={manga.volumen}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "volumen", manga.volumen)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <div className="cursor-pointer bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mx-auto">
                           {manga.volumen}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
-                      {editando?.id === manga.id && editando.campo === "descripcion" ? (
-                        <textarea
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          rows={2}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer truncate"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "descripcion", manga.descripcion)}
-                          title={manga.descripcion || ''}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="descripcion" valor={manga.descripcion}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "descripcion", manga.descripcion)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="textarea"
+                      >
+                        <div className="cursor-pointer truncate" title={manga.descripcion || ''}>
                           {manga.descripcion}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-700">
-                      {editando?.id === manga.id && editando.campo === "precio" ? (
-                        <input
-                          type="number"
-                          className="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "precio", manga.precio)}
-                        >
-                          {formatPrice(manga.precio)}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="precio" valor={manga.precio}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "precio", manga.precio)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        {formatPrice(manga.precio)}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                      {editando?.id === manga.id && editando.campo === "stock" ? (
-                        <input
-                          type="number"
-                          className="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className={`cursor-pointer px-2 py-1 rounded-full font-medium ${
-                            manga.stock > 10 ? 'bg-green-100 text-green-800' : 
-                            manga.stock > 0 ? 'bg-yellow-100 text-yellow-800' : 
-                            'bg-red-100 text-red-800'
-                          }`}
-                          onDoubleClick={() => manejarDobleClick(manga.id, "stock", manga.stock)}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="stock" valor={manga.stock}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "stock", manga.stock)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <div className={`cursor-pointer px-2 py-1 rounded-full font-medium ${
+                          manga.stock > 10 ? 'bg-green-100 text-green-800' : 
+                          manga.stock > 0 ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-red-100 text-red-800'
+                        }`}>
                           {manga.stock}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs">
-                      {editando?.id === manga.id && editando.campo === "imagen_portada" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer truncate text-blue-600 underline"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "imagen_portada", manga.imagen_portada)}
-                          title={manga.imagen_portada || ''}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="imagen_portada" valor={manga.imagen_portada}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "imagen_portada", manga.imagen_portada)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        <div className="cursor-pointer truncate text-blue-600 underline" title={manga.imagen_portada || ''}>
                           {manga.imagen_portada?.substring(0, 20)}...
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "isbn" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "isbn", manga.isbn)}
-                        >
-                          {manga.isbn}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="isbn" valor={manga.isbn}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "isbn", manga.isbn)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        {manga.isbn}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                      {editando?.id === manga.id && editando.campo === "numero_paginas" ? (
-                        <input
-                          type="number"
-                          className="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "numero_paginas", manga.numero_paginas)}
-                        >
-                          {manga.numero_paginas}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="numero_paginas" valor={manga.numero_paginas}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "numero_paginas", manga.numero_paginas)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        {manga.numero_paginas}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "idioma" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "idioma", manga.idioma)}
-                        >
-                          {manga.idioma}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="idioma" valor={manga.idioma}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "idioma", manga.idioma)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        {manga.idioma}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando?.id === manga.id && editando.campo === "fecha_publicacion" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(manga.id, "fecha_publicacion", manga.fecha_publicacion)}
-                        >
-                          {manga.fecha_publicacion}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={manga.id} campo="fecha_publicacion" valor={manga.fecha_publicacion}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "fecha_publicacion", manga.fecha_publicacion)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        {manga.fecha_publicacion}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {editando?.id === manga.id && editando.campo === "estado" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
-                            manga.estado === 'disponible' ? 'bg-green-100 text-green-800' :
-                            manga.estado === 'agotado' ? 'bg-red-100 text-red-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}
-                          onDoubleClick={() => manejarDobleClick(manga.id, "estado", manga.estado)}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="estado" valor={manga.estado}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "estado", manga.estado)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                      >
+                        <div className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
+                          manga.estado === 'disponible' ? 'bg-green-100 text-green-800' :
+                          manga.estado === 'agotado' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
                           {manga.estado}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {editando?.id === manga.id && editando.campo === "activo" ? (
-                        <select
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        >
-                          <option value="true">Sí</option>
-                          <option value="false">No</option>
-                        </select>
-                      ) : (
-                        <div 
-                          className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
-                            manga.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}
-                          onDoubleClick={() => manejarDobleClick(manga.id, "activo", manga.activo)}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="activo" valor={manga.activo}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "activo", manga.activo)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="select" opciones={[{ value: "true", label: "Sí" }, { value: "false", label: "No" }]}
+                      >
+                        <div className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
+                          manga.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
                           {manga.activo ? "Sí" : "No"}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {editando?.id === manga.id && editando.campo === "es_popular" ? (
-                        <select
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        >
-                          <option value="true">Sí</option>
-                          <option value="false">No</option>
-                        </select>
-                      ) : (
-                        <div 
-                          className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
-                            manga.es_popular ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
-                          }`}
-                          onDoubleClick={() => manejarDobleClick(manga.id, "es_popular", manga.es_popular)}
-                        >
+                      <EditableCell
+                        id={manga.id} campo="es_popular" valor={manga.es_popular}
+                        editando={editando} valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(manga.id, "es_popular", manga.es_popular)}
+                        onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
+                        tipo="select" opciones={[{ value: "true", label: "Sí" }, { value: "false", label: "No" }]}
+                      >
+                        <div className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
+                          manga.es_popular ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
                           {manga.es_popular ? "Sí" : "No"}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                   </tr>
                 ))}
