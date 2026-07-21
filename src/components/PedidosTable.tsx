@@ -6,7 +6,7 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { type Pedido } from "@/types/supabase";
 import { formatPrice } from "@/lib/formatPrice";
 
-export default function Page() {
+export default function PedidosTable() {
   const [editando, setEditando] = useState<{id: string, campo: string} | null>(null);
   const [valorEditado, setValorEditado] = useState<string>("");
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
