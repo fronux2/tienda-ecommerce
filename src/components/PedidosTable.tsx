@@ -5,6 +5,7 @@ import { updatePedido } from "@/lib/supabase/services/pedidos.client";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { type Pedido } from "@/types/supabase";
 import { formatPrice } from "@/lib/formatPrice";
+import EditableCell from "@/components/EditableCell";
 
 export default function PedidosTable() {
   const [editando, setEditando] = useState<{id: string, campo: string} | null>(null);
@@ -275,74 +276,67 @@ export default function PedidosTable() {
                         : pedido.direccion_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {editando && editando.id === pedido.id && editando.campo === "total" ? (
-                        <input
-                          type="number"
-                          className="w-24 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(pedido.id, "total", pedido.total)}
-                        >
-                          {formatPrice(pedido.total)}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={pedido.id}
+                        campo="total"
+                        valor={pedido.total}
+                        editando={editando}
+                        valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(pedido.id, "total", pedido.total)}
+                        onChange={manejarCambio}
+                        onSave={manejarGuardar}
+                        onEnter={manejarEnter}
+                        tipo="number"
+                        inputClassName="w-24 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        {formatPrice(pedido.total)}
+                      </EditableCell>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {editando && editando.id === pedido.id && editando.campo === "estado" ? (
-                        <select
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        >
-                          <option value="pendiente">Pendiente</option>
-                          <option value="procesando">Procesando</option>
-                          <option value="enviado">Enviado</option>
-                          <option value="entregado">Entregado</option>
-                          <option value="cancelado">Cancelado</option>
-                        </select>
-                      ) : (
-                        <div 
-                          className={`text-sm font-medium px-2 py-1 rounded-full inline-block cursor-pointer ${
-                            pedido.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
-                            pedido.estado === 'procesando' ? 'bg-blue-100 text-blue-800' :
-                            pedido.estado === 'enviado' ? 'bg-indigo-100 text-indigo-800' :
-                            pedido.estado === 'entregado' ? 'bg-green-100 text-green-800' :
-                            'bg-red-100 text-red-800'
-                          }`}
-                          onDoubleClick={() => manejarDobleClick(pedido.id, "estado", pedido.estado)}
-                        >
+                      <EditableCell
+                        id={pedido.id}
+                        campo="estado"
+                        valor={pedido.estado}
+                        editando={editando}
+                        valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(pedido.id, "estado", pedido.estado)}
+                        onChange={manejarCambio}
+                        onSave={manejarGuardar}
+                        onEnter={manejarEnter}
+                        tipo="select"
+                        opciones={[
+                          { value: "pendiente", label: "Pendiente" },
+                          { value: "procesando", label: "Procesando" },
+                          { value: "enviado", label: "Enviado" },
+                          { value: "entregado", label: "Entregado" },
+                          { value: "cancelado", label: "Cancelado" },
+                        ]}
+                      >
+                        <div className={`text-sm font-medium px-2 py-1 rounded-full inline-block cursor-pointer ${
+                          pedido.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                          pedido.estado === 'procesando' ? 'bg-blue-100 text-blue-800' :
+                          pedido.estado === 'enviado' ? 'bg-indigo-100 text-indigo-800' :
+                          pedido.estado === 'entregado' ? 'bg-green-100 text-green-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
                           {pedido.estado}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando && editando.id === pedido.id && editando.campo === "metodo_pago" ? (
-                        <input
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer"
-                          onDoubleClick={() => manejarDobleClick(pedido.id, "metodo_pago", pedido.metodo_pago)}
-                        >
-                          {pedido.metodo_pago}
-                        </div>
-                      )}
+                      <EditableCell
+                        id={pedido.id}
+                        campo="metodo_pago"
+                        valor={pedido.metodo_pago}
+                        editando={editando}
+                        valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(pedido.id, "metodo_pago", pedido.metodo_pago)}
+                        onChange={manejarCambio}
+                        onSave={manejarGuardar}
+                        onEnter={manejarEnter}
+                      >
+                        {pedido.metodo_pago}
+                      </EditableCell>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
                       <div className="truncate max-w-[120px]" title={pedido.webpay_token || ''}>
@@ -353,24 +347,22 @@ export default function PedidosTable() {
                       {pedido.buy_order || '-'}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
-                      {editando && editando.id === pedido.id && editando.campo === "notas_pedido" ? (
-                        <textarea
-                          className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          rows={2}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer truncate"
-                          onDoubleClick={() => manejarDobleClick(pedido.id, "notas_pedido", pedido.notas_pedido)}
-                          title={pedido.notas_pedido || ''}
-                        >
+                      <EditableCell
+                        id={pedido.id}
+                        campo="notas_pedido"
+                        valor={pedido.notas_pedido}
+                        editando={editando}
+                        valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(pedido.id, "notas_pedido", pedido.notas_pedido)}
+                        onChange={manejarCambio}
+                        onSave={manejarGuardar}
+                        onEnter={manejarEnter}
+                        tipo="textarea"
+                      >
+                        <div className="cursor-pointer truncate" title={pedido.notas_pedido || ''}>
                           {pedido.notas_pedido}
                         </div>
-                      )}
+                      </EditableCell>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {pedido.fecha_pedido}

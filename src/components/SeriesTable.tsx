@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react';
 import { Serie } from '@/types/supabase';
 import { updateSerie } from '@/lib/supabase/services/series.client';
+import EditableCell from '@/components/EditableCell';
 
 export default function SeriesTable({ series }: { series: Serie[] }) {
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
@@ -16,7 +17,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
     setValorEditado(valor);
   };
 
-  const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const manejarCambio = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setValorEditado(e.target.value);
   };
 
@@ -38,7 +39,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
     }
   };
 
-  const manejarEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const manejarEnter = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       manejarGuardar();
     }
@@ -110,33 +111,29 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
                       <p className="truncate max-w-xs">{serie.id}</p>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {editando && editando.id === serie.id && editando.campo === 'nombre' ? (
-                        <input
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                          value={valorEditado}
-                          onChange={manejarCambio}
-                          onBlur={manejarGuardar}
-                          onKeyDown={manejarEnter}
-                          autoFocus
-                        />
-                      ) : (
-                        <div 
-                          className="cursor-pointer group flex items-center"
-                          onDoubleClick={() => manejarDobleClick(serie.id, 'nombre', serie.nombre)}
+                      <EditableCell
+                        id={serie.id}
+                        campo="nombre"
+                        valor={serie.nombre}
+                        editando={editando}
+                        valorEditado={valorEditado}
+                        onDoubleClick={() => manejarDobleClick(serie.id, 'nombre', serie.nombre)}
+                        onChange={manejarCambio}
+                        onSave={manejarGuardar}
+                        onEnter={manejarEnter}
+                      >
+                        <span className="group-hover:text-indigo-600 transition-colors">
+                          {serie.nombre}
+                        </span>
+                        <svg 
+                          className="ml-2 h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
                         >
-                          <span className="group-hover:text-indigo-600 transition-colors">
-                            {serie.nombre}
-                          </span>
-                          <svg 
-                            className="ml-2 h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            stroke="currentColor"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </div>
-                      )}
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </EditableCell>
                     </td>
                   </tr>
                 ))}
