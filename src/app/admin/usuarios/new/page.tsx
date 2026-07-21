@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { nuevoUsuarioSchema, NuevoUsuarioSchema } from "@/schemas/usuarioSchema";
 import { type NuevoUsuario } from '@/types/supabase';
 import { useState, useEffect } from 'react';
+import LoadingButton from '@/components/LoadingButton';
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -84,13 +85,13 @@ export default function Page() {
       </div>
          
 
-      <button 
+      <LoadingButton 
         type="submit" 
-        disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        loading={loading}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        {loading ? 'Creando...' : 'Crear'}
-      </button>
+        Crear
+      </LoadingButton>
     </form>
   </main>
   

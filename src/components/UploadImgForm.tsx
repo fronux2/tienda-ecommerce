@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import LoadingButton from '@/components/LoadingButton';
 
 export default function UploadImgForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -47,13 +48,14 @@ export default function UploadImgForm() {
         accept="image/*"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
       />
-      <button
+      <LoadingButton
         onClick={handleUpload}
-        disabled={!file || loading}
-        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        disabled={!file}
+        loading={loading}
+        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
       >
-        {loading ? 'Subiendo...' : 'Subir imagen'}
-      </button>
+        Subir imagen
+      </LoadingButton>
       {errorMsg && <p className="mt-2 text-red-600 text-sm">{errorMsg}</p>}
       {url && (
         <div className="mt-4">

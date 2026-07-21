@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { getCategoriasClient } from "@/lib/supabase/services/categorias.client";
 import { getSeriesClient } from "@/lib/supabase/services/series.client";
 import { useEffect, useState } from "react";
+import LoadingButton from '@/components/LoadingButton';
 import { type Categoria, type Serie } from "@/types/supabase";
 import { crearManga } from "@/lib/supabase/services/mangas.client";
 import { createClient } from "@/utils/supabase/client";
@@ -289,13 +290,13 @@ export default function CrearMangaForm() {
            </select>
            {errors.es_popular && <span className="text-red-500 text-sm">{errors.es_popular.message}</span>}
        </div> 
-      <button
+      <LoadingButton
         type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition disabled:bg-gray-400"
+        loading={isSubmitting}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        {isSubmitting ? 'Creando...' : 'Crear'} 
-      </button>
+        Crear
+      </LoadingButton>
     </form>
   );
 }

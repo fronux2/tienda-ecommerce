@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import LoadingButton from '@/components/LoadingButton'
 import { createClient } from '@/utils/supabase/client'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice } from '@/lib/formatPrice'
@@ -287,13 +288,13 @@ const CheckoutPage = () => {
               onChange={(e) => setNewAddress({ ...newAddress, codigo_postal: e.target.value })}
               className="w-full mb-4 p-2 border rounded"
             />
-            <button
+            <LoadingButton
               onClick={handleAddAddress}
-              disabled={savingAddress}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all"
+              loading={savingAddress}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
             >
-              {savingAddress ? 'Guardando...' : 'Guardar dirección'}
-            </button>
+              Guardar dirección
+            </LoadingButton>
           </div>
         )}
 
@@ -349,13 +350,14 @@ const CheckoutPage = () => {
         </div>
       </div>
 
-      <button
+      <LoadingButton
         onClick={handleWebpayPayment}
-        disabled={loading || !addressId}
-        className="w-full px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-semibold"
+        loading={loading}
+        disabled={!addressId}
+        className="w-full px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 text-lg font-semibold"
       >
-        {loading ? 'Conectando con Webpay...' : `Pagar con Webpay — ${formatPrice(total)}`}
-      </button>
+        {`Pagar con Webpay — ${formatPrice(total)}`}
+      </LoadingButton>
     </div>
   )
 }
