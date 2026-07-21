@@ -1,4 +1,3 @@
-// components/Cart.tsx
 'use client'
 import { useState } from 'react'
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaTimes } from 'react-icons/fa'
@@ -162,7 +161,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                 className="bg-black hover:bg-gray-800 text-white py-2 px-4 rounded transition active:scale-95"
                 onClick={() => {
                   setIsOpen(false)
-                  /*window.location.href = '/checkout'*/ router.push('/checkout')
+                  router.push('/checkout')
                 }}
               >
                 Comprar
