@@ -1,6 +1,6 @@
 // src/app/mangas/[id]/page.tsx
 import { getMangaById } from '@/lib/supabase/services/mangas.server'
-import MangaDetailClient from "./MangaDetailsclient"
+import MangaDetailClient from "./MangaDetailClient"
 
 type ParamsShape = { id: string }
 
