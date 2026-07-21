@@ -11,13 +11,11 @@ const Cart = ({ userId }: { userId: string | null }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [cartLoading, setCartLoading] = useState(false)
 
-  const {
-    cart,
-    totalItems,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
-  } = useCartStore()
+  const cart = useCartStore((s) => s.cart)
+  const totalItems = useCartStore((s) => s.totalItems)
+  const updateQuantity = useCartStore((s) => s.updateQuantity)
+  const removeFromCart = useCartStore((s) => s.removeFromCart)
+  const clearCart = useCartStore((s) => s.clearCart)
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
   const router = useRouter()

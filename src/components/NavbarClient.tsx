@@ -40,7 +40,7 @@ export default function NavbarClient({ user, rolId }: Props) {
       }
     }
     initCart()
-  }, [user, setCart])
+  }, [user?.id, setCart])
 
   useEffect(() => {
     const handleScroll = () => {

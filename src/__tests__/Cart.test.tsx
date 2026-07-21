@@ -19,13 +19,17 @@ jest.mock('@/store/cartStore', () => ({
 describe('Cart component', () => {
   const mockCartStore = {
     cart: [],
+    totalItems: 0,
     updateQuantity: jest.fn(),
     removeFromCart: jest.fn(),
     clearCart: jest.fn(),
   }
 
   beforeEach(() => {
-    (useCartStore as jest.Mock).mockReturnValue(mockCartStore)
+    (useCartStore as jest.Mock).mockImplementation((selector) => {
+      if (typeof selector === 'function') return selector(mockCartStore)
+      return mockCartStore
+    })
   })
 
   it('renderiza el botón del carrito si hay un userId', () => {
@@ -43,9 +47,10 @@ describe('Cart component', () => {
   })
 
   it('muestra mensaje de carrito vacío cuando no hay productos', () => {
-    (useCartStore as jest.Mock).mockReturnValue({
-      ...mockCartStore,
-      cart: [],
+    (useCartStore as jest.Mock).mockImplementation((selector) => {
+      const state = { ...mockCartStore, cart: [] }
+      if (typeof selector === 'function') return selector(state)
+      return state
     })
 
     render(<Cart userId="123" />)
@@ -65,9 +70,10 @@ describe('Cart component', () => {
       },
     }
 
-    ;(useCartStore as jest.Mock).mockReturnValue({
-      ...mockCartStore,
-      cart: [item],
+    ;(useCartStore as jest.Mock).mockImplementation((selector) => {
+      const state = { ...mockCartStore, cart: [item] }
+      if (typeof selector === 'function') return selector(state)
+      return state
     })
 
     render(<Cart userId="123" />)
@@ -105,10 +111,10 @@ describe('Cart component', () => {
       },
     };
 
-    (useCartStore as jest.Mock).mockReturnValue({
-      ...mockCartStore,
-      cart: [item],
-      clearCart: mockClearCart,
+    (useCartStore as jest.Mock).mockImplementation((selector) => {
+      const state = { ...mockCartStore, cart: [item], clearCart: mockClearCart }
+      if (typeof selector === 'function') return selector(state)
+      return state
     })
 
     render(<Cart userId="123" />)
