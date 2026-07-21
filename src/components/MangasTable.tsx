@@ -14,7 +14,8 @@ export default function MangasTable({
   series: Serie[];
   categorias: Categoria[];
 }) {
-  const { mangas, loadMangas } = useMangaStore();
+  const mangas = useMangaStore((s) => s.mangas);
+  const loadMangas = useMangaStore((s) => s.loadMangas);
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string | number>("");
   const [terminoBusqueda, setTerminoBusqueda] = useState("");

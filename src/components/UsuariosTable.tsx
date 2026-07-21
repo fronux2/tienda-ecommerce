@@ -6,7 +6,9 @@ import { getRoles } from "@/lib/supabase/services/roles.client";
 import {type Roles} from "@/types/supabase";
 
 export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }) {
-  const { usuarios, getUsuarios, updateUsuarioEnStore } = useUsuarioStore();
+  const usuarios = useUsuarioStore((s) => s.usuarios);
+  const getUsuarios = useUsuarioStore((s) => s.getUsuarios);
+  const updateUsuarioEnStore = useUsuarioStore((s) => s.updateUsuarioEnStore);
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
   const [valorEditado, setValorEditado] = useState<string>("");
   const [roles, setRoles] = useState<Roles[]>([]);
