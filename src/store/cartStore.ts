@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { addToCartSupabase, clearCartSupabase, removeFromCartSupabase, updateCartQuantitySupabase } from '@/lib/supabase/services/carrito.cliente'
+import { addToCartSupabase, clearCartSupabase, removeFromCartSupabase, updateCartQuantitySupabase } from '@/lib/supabase/services/carrito.client'
 import { saveCartToLocalStorage, clearCartFromLocalStorage } from '@/lib/cartLocalStorage'
 export type CartItem = { 
   id?: string

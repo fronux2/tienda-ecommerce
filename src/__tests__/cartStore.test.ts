@@ -1,6 +1,6 @@
 import { useCartStore, CartItem } from '@/store/cartStore'
 
-jest.mock('@/lib/supabase/services/carrito.cliente', () => ({
+jest.mock('@/lib/supabase/services/carrito.client', () => ({
   addToCartSupabase: jest.fn().mockResolvedValue(undefined),
   removeFromCartSupabase: jest.fn().mockResolvedValue(undefined),
   updateCartQuantitySupabase: jest.fn().mockResolvedValue(undefined),
@@ -18,7 +18,7 @@ const {
   removeFromCartSupabase,
   updateCartQuantitySupabase,
   clearCartSupabase,
-} = jest.requireMock('@/lib/supabase/services/carrito.cliente')
+} = jest.requireMock('@/lib/supabase/services/carrito.client')
 
 const { saveCartToLocalStorage, clearCartFromLocalStorage } =
   jest.requireMock('@/lib/cartLocalStorage')

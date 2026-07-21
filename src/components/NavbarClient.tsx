@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
-import { fetchCartFromSupabase, addToCartSupabase } from '@/lib/supabase/services/carrito.cliente'
+import { fetchCartFromSupabase, addToCartSupabase } from '@/lib/supabase/services/carrito.client'
 import { loadCartFromLocalStorage, clearCartFromLocalStorage } from '@/lib/cartLocalStorage'
 import { useEffect, useState, useRef } from 'react'
 import Cart from '@/components/Cart'
