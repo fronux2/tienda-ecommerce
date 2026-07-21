@@ -4,9 +4,7 @@ import { updateManga } from "@/lib/supabase/services/mangas.client";
 import { useMangaStore } from "@/store/mangaStore";
 import { formatPrice } from "@/lib/formatPrice";
 import EditableCell from "@/components/EditableCell";
-
-type Serie = { id: string; nombre: string };
-type Categoria = { id: string; nombre: string };
+import { type Serie, type Categoria } from "@/types/supabase";
 
 export default function MangasTable({
   series,
