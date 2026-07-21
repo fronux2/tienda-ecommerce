@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from "react-hook-form";
-import { nuevoUsuarioSchema, NuevoUsuarioSchema } from "@/schemas/usuarioShema";
+import { nuevoUsuarioSchema, NuevoUsuarioSchema } from "@/schemas/usuarioSchema";
 import { type NuevoUsuario } from '@/types/supabase';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client'
