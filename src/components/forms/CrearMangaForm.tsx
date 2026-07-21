@@ -16,12 +16,8 @@ export default function CrearMangaForm() {
   const [series, setSeries] = useState<Serie[]>([]);
   const [file, setFile] = useState<File | null>(null);
 
-  // --- MEJORA: Añadir estados de carga y error para una mejor UX ---
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-
-  // --- CORRECCIÓN: Se elimina el estado 'url' ya que no se utilizaba ---
-  // const [url, setUrl] = useState("");
 
   const { register, reset, handleSubmit, formState: { errors } } = useForm<NuevoManga>({
     resolver: zodResolver(nuevoMangaSchema),
@@ -30,7 +26,6 @@ export default function CrearMangaForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // No es necesario forzar el tipo con 'as' si las funciones devuelven el tipo correcto
         const categoriasData = await getCategoriasClient();
         const seriesData = await getSeriesClient();
         if (categoriasData) setCategorias(categoriasData);
@@ -49,22 +44,20 @@ export default function CrearMangaForm() {
       return;
     }
     
-    // --- MEJORA: Iniciar estado de carga y limpiar errores previos ---
     setIsSubmitting(true);
     setFormError(null);
 
     try {
-      const filePath = `${Date.now()}-${file.name}`; // Añadir timestamp para evitar sobreescrituras
+      const filePath = `${Date.now()}-${file.name}`;
 
       const { error: uploadError } = await supabase.storage
         .from("mangas")
         .upload(filePath, file, {
           cacheControl: "3600",
-          upsert: false, // Usar false para evitar sobreescribir archivos con el mismo nombre
+          upsert: false,
         });
 
       if (uploadError) {
-        // Lanzar el error para que sea capturado por el bloque catch
         throw new Error(`Error al subir la imagen: ${uploadError.message}`);
       }
 
@@ -72,16 +65,14 @@ export default function CrearMangaForm() {
         .from("mangas")
         .getPublicUrl(filePath);
       
-      // La URL se usa directamente, no es necesario guardarla en un estado
       const imageUrl = publicUrlData.publicUrl;
 
       const nuevoManga = { ...data, imagen_portada: imageUrl };
       await crearManga(nuevoManga);
       
-      alert("¡Manga creado con éxito!"); // O usar un componente de notificación (toast)
+      alert("¡Manga creado con éxito!");
       reset();
       setFile(null);
-      // Limpiar el input de archivo visualmente
       const fileInput = document.getElementById('imagen_portada') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
 
@@ -95,14 +86,12 @@ export default function CrearMangaForm() {
           : "Ocurrió un error inesperado al crear el manga.";
       setFormError(message);
     } finally {
-      // --- MEJORA: Detener el estado de carga siempre, incluso si hay un error ---
       setIsSubmitting(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="shadow-lg rounded-lg p-8 w-full max-w-md space-y-6 bg-white">
-      {/* --- MEJORA: Mostrar error general del formulario --- */}
       {formError && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Error: </strong>
@@ -110,7 +99,6 @@ export default function CrearMangaForm() {
         </div>
       )}
 
-      {/* ... (el resto de tus inputs no cambia) ... */}
        <div>
          <label htmlFor="titulo" className="block font-semibold mb-1">Nombre:</label>
          <input 
@@ -303,7 +291,7 @@ export default function CrearMangaForm() {
        </div> 
       <button
         type="submit"
-        disabled={isSubmitting} // --- MEJORA: Deshabilitar botón mientras se envía
+        disabled={isSubmitting}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition disabled:bg-gray-400"
       >
         {isSubmitting ? 'Creando...' : 'Crear'} 
