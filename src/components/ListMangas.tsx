@@ -169,6 +169,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                     editorial={manga.editorial}
                     precio={manga.precio}
                     userId={userId}
+                    es_popular={manga.es_popular}
                   />
                 </li>
               ))}

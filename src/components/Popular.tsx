@@ -30,6 +30,7 @@ export default function Popular({id}:{id:string}) {
                             editorial={manga.editorial}
                             precio={manga.precio}
                             userId={id}
+                            es_popular={manga.es_popular}
                         />
                     ))}
                 </div>

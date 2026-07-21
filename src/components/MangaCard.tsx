@@ -12,9 +12,10 @@ type CardProps = {
   editorial: string;
   precio: number;
   userId: string | null;
+  es_popular?: boolean;
 };
 
-export default function MangaCard({ id, imagen, titulo, autor, editorial, precio, userId }: CardProps) {
+export default function MangaCard({ id, imagen, titulo, autor, editorial, precio, userId, es_popular }: CardProps) {
   return (
     <div className="bg-[#FFF8F0] rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-red-600 transition-all duration-300 w-64">
       <Link href={`/mangas/${id}`} className="block">
@@ -26,9 +27,11 @@ export default function MangaCard({ id, imagen, titulo, autor, editorial, precio
             height={560}
             className="w-40 h-56 object-contain transition-transform duration-500 hover:scale-105"
           />
-          <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">
-            POPULAR
-          </div>
+          {es_popular && (
+            <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">
+              POPULAR
+            </div>
+          )}
         </div>
       </Link>
 
