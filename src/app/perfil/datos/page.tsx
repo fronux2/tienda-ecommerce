@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
+import LoadingButton from '@/components/LoadingButton'
 
 export default function MisDatos() {
   const supabase = createClient()
@@ -68,13 +69,13 @@ export default function MisDatos() {
           <p className="text-sm text-gray-600 mb-4">
             Recibirás un correo con instrucciones para restablecer tu contraseña
           </p>
-          <button
+          <LoadingButton
             onClick={handleChangePassword}
-            disabled={cambiandoPass}
+            loading={cambiandoPass}
             className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
           >
-            {cambiandoPass ? 'Enviando...' : 'Cambiar contraseña'}
-          </button>
+            Cambiar contraseña
+          </LoadingButton>
         </div>
 
         <div className="border-t pt-6">

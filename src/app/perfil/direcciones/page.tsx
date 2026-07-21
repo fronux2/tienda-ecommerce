@@ -6,6 +6,7 @@ import { getDirecciones, addDireccion, updateDireccion, deleteDireccion } from '
 import type { Direccion } from '@/types/supabase'
 import { direccionSchema } from '@/schemas/direccionesSchema'
 import { REGIONES_CHILE } from '@/lib/regionesChile'
+import LoadingButton from '@/components/LoadingButton'
 
 export default function MisDirecciones() {
   const supabase = createClient()
@@ -181,13 +182,14 @@ export default function MisDirecciones() {
               onChange={(e) => setForm({ ...form, codigo_postal: e.target.value })}
               className="w-full p-2 border rounded"
             />
-            <button
+            <LoadingButton
               onClick={handleSubmit}
-              disabled={saving || !form.nombre_direccion || !form.calle || !form.numero || !form.comuna || !form.ciudad}
+              loading={saving}
+              disabled={!form.nombre_direccion || !form.calle || !form.numero || !form.comuna || !form.ciudad}
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
             >
-              {saving ? 'Guardando...' : editandoId ? 'Actualizar' : 'Guardar'}
-            </button>
+              {editandoId ? 'Actualizar' : 'Guardar'}
+            </LoadingButton>
           </div>
         </div>
       )}
