@@ -15,7 +15,7 @@ export async function loginAction(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-   redirect('/error')
+    return { error: 'Credenciales incorrectas. Verifica tu email y contraseña.' }
   }
 
   revalidatePath('/', 'layout')
