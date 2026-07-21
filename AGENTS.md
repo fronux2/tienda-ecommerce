@@ -53,13 +53,27 @@ El desarrollador habla **español**. Todas las respuestas, explicaciones y comen
 
 - Prefer full state replacement (`set({ key: data })`) over merge helpers that filter duplicates by id. The `mangaStore.addMangas` function filters out items whose `id` already exists — after updating a manga in Supabase, calling `loadMangas` (which used `addMangas`) would silently discard the updated record.
 - **`cartStore.totalItems`**: derived property (`number`) en `CartState` que se recalcula automáticamente en cada operación (`addToCart`, `removeFromCart`, `clearCart`, `updateQuantity`, `setCart`). Suma `item.cantidad` de todos los items del carrito. Úsalo en vez de `cart.length` para mostrar el badge con la cuenta real de unidades.
+- **⚠️ Anti-patrón: selectores con objeto nuevo** — NUNCA hacer:
+  ```tsx
+  // ❌ Crea objeto nuevo cada render → loop infinito (React error #185)
+  const { cart, addToCart } = useCartStore((state) => ({
+    cart: state.cart,
+    addToCart: state.addToCart,
+  }))
+  ```
+  Usar selectores individuales:
+  ```tsx
+  // ✅ Cada selector retorna referencia estable
+  const cart = useCartStore((s) => s.cart)
+  const addToCart = useCartStore((s) => s.addToCart)
+  ```
 
 ## Button UX patterns
 
 ### AddToCartButton (`src/components/AddToCartButton.tsx`)
 Botón de "Añadir al Carrito" para páginas de detalle de manga. Incluye:
 - Fetch del manga via `getMangaById` en `useEffect` para obtener `stock` actualizado (con `try/catch`)
-- Una sola suscripción al store Zustand (`cart` + `addToCart` en un solo selector)
+- Usa selectores individuales de Zustand (`useCartStore((s) => s.cart)` y `useCartStore((s) => s.addToCart)`) — nunca destructurar objeto en selector
 - Se deshabilita automáticamente si el carrito ya tiene la cantidad máxima del stock (`stockAgotado = enCarrito >= manga.stock`)
 - Cambia el texto a "Stock agotado en carrito" cuando está deshabilitado
 - Usa `LoadingButton` internamente con spinner
