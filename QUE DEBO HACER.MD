@@ -15,6 +15,13 @@
 13. Directorio /upImg — Renombrado a /subir-imagen (kebab-case).
 14. Import alias inconsistente — UploadForm→UploadImgForm en subir-imagen/page.tsx.
 15. AGENTS.md actualizado — Referencia a MangaDetailClient.tsx corregida.
+16. LoginForm.tsx — Eliminado (dead code, login usa formulario inline).
+17. CrearSerieForm.tsx — Eliminado (dead code, archivo vacío).
+18. CrearCategoriaForm.tsx + test — Eliminados (dead code, admin usa edición inline).
+19. EditarCategoriaForm.tsx + test — Eliminados (dead code, admin usa edición inline).
+20. cart/actions/cart.ts — Eliminado (dead code, carrito usa Zustand).
+21. actions/categorias.ts — Eliminado (dead code, solo lo usaba CrearCategoriaForm).
+22. MangaDetailClient.tsx — Movido de src/app/ a src/components/.
 
 🟡 Importante
 
@@ -28,13 +35,3 @@
 5. Sistema de notificaciones (toast) — Se mezcla alert() con console.error(). No hay un sistema unificado.
 6. Perfil de usuario mínimo — Solo email y cambio de contraseña. Sin nombre, teléfono, avatar.
 7. Lista de deseos / valoraciones — No existe wishlist ni sistema de reseñas.
-
-🔴 Pendiente refactorización (componentes)
-
-12. LoginForm.tsx — No se importa en ningún lado (login usa formulario inline). Eliminar.
-13. CrearSerieForm.tsx — No se importa, archivo vacío. Eliminar.
-14. CrearCategoriaForm.tsx — Solo importado en su test (admin usa edición inline). Eliminar componente + test.
-15. EditarCategoriaForm.tsx — Solo importado en su test (admin usa edición inline). Eliminar componente + test.
-16. cart/actions/cart.ts — addToCartAction() nunca se usa (carrito usa Zustand). Eliminar.
-17. actions/categorias.ts — Solo lo importaba CrearCategoriaForm (muerto). Eliminar.
-18. MangaDetailClient.tsx — Componente vivo en src/app/ en vez de src/components/. Mover a src/components/.
