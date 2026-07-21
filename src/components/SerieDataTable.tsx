@@ -1,8 +1,8 @@
 import SeriesTable from "@/components/SeriesTable";
-import { getSeriesClient } from "@/lib/supabase/services/series.client";
+import { getSeries } from "@/lib/supabase/services/series.server";
 
 export default async function SerieDataTable() {
-  const series = await getSeriesClient();
+  const series = await getSeries();
     return (
       <div className="p-4">
         <SeriesTable series={series} />

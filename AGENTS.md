@@ -4,6 +4,17 @@
 
 El desarrollador habla **español**. Todas las respuestas, explicaciones y comentarios deben escribirse en español.
 
+## Flujo de trabajo incremental (correcciones)
+
+Cuando el desarrollador pida corregir múltiples problemas encontrados en una auditoría:
+
+1. **Corregir UN solo problema a la vez**
+2. **Detenerse y preguntar** al desarrollador si quiere probar en producción antes de continuar
+3. **Esperar confirmación** para avanzar al siguiente problema
+4. Nunca hacer más de una corrección sin preguntar primero
+
+Esto evita introducir regresiones silenciosas que son difíciles de rastrear.
+
 ## Commands
 
 - `npm run dev` — dev server with Turbopack
