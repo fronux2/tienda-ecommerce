@@ -9,10 +9,8 @@ import LoadingButton from './LoadingButton';
 export function AddToCartButton({ mangaId, userId }: { mangaId: string, userId: string | null }) {
   const [manga, setManga] = useState<NuevoManga | null>(null)
   const [loading, setLoading] = useState(false)
-  const { cart, addToCart } = useCartStore((state) => ({
-    cart: state.cart,
-    addToCart: state.addToCart,
-  }))
+  const cart = useCartStore((s) => s.cart)
+  const addToCart = useCartStore((s) => s.addToCart)
 
   useEffect(() => {
     const fetchManga = async () => {
