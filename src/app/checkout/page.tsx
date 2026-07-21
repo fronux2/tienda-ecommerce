@@ -43,9 +43,7 @@ const CheckoutPage = () => {
     codigo_postal: ''
   })
 
-  const {
-    cart,
-  } = useCartStore()
+  const cart = useCartStore((s) => s.cart)
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
 
