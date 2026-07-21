@@ -1,4 +1,4 @@
-// app/loading-global.tsx
+// app/loading.tsx
 "use client";
 
 import { useEffect, useState } from 'react';
