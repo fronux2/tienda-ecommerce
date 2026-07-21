@@ -16,7 +16,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
   const [serieSeleccionada, setserieSeleccionada] = useState("Todas");
   const [mangasFiltrados, setMangasFiltrados] = useState<Manga[]>([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const addMangas = useMangaStore((state) => state.addMangas)
+  const setMangas = useMangaStore((state) => state.setMangas)
 
  
   // Filtrado flexible por búsqueda, categoría y/o serie
@@ -52,7 +52,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
   );
 
   useEffect(() => {
-    addMangas(mangas)
+    setMangas(mangas)
     const fetchSeriesCat = async () => {
       const categoria = await getCategoriasClient();
       setCategoria(categoria);
@@ -62,7 +62,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
     fetchSeriesCat();
     setMangasFiltrados(filterMangas(busqueda, categoriaSeleccionada, serieSeleccionada));
     setPaginaActual(1);
-  }, [busqueda, categoriaSeleccionada, serieSeleccionada, filterMangas, mangas, addMangas]);
+  }, [busqueda, categoriaSeleccionada, serieSeleccionada, filterMangas, mangas, setMangas]);
 
   return (
     <section className="space-y-8">
