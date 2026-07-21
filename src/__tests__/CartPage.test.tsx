@@ -33,15 +33,25 @@ const mockRemoveFromCart = jest.fn().mockResolvedValue(undefined)
 const mockUpdateQuantity = jest.fn().mockResolvedValue(undefined)
 const mockClearCart = jest.fn().mockResolvedValue(undefined)
 
+const mockState = {
+  cart: mockCart,
+  totalItems: 3,
+  removeFromCart: mockRemoveFromCart,
+  updateQuantity: mockUpdateQuantity,
+  clearCart: mockClearCart,
+}
+
+const emptyState = {
+  cart: [],
+  totalItems: 0,
+  removeFromCart: mockRemoveFromCart,
+  updateQuantity: mockUpdateQuantity,
+  clearCart: mockClearCart,
+}
+
 jest.mock('@/store/cartStore', () => ({
   useCartStore: jest.fn((selector?: (state: Record<string, unknown>) => unknown) => {
-    const state = {
-      cart: mockCart,
-      removeFromCart: mockRemoveFromCart,
-      updateQuantity: mockUpdateQuantity,
-      clearCart: mockClearCart,
-    }
-    return selector ? selector(state) : state
+    return selector ? selector(mockState) : mockState
   }),
 }))
 
@@ -192,11 +202,8 @@ describe('CartPage', () => {
 
   describe('carrito vacio', () => {
     it('muestra estado vacio cuando no hay items', () => {
-      useCartStore.mockReturnValue({
-        cart: [],
-        removeFromCart: mockRemoveFromCart,
-        updateQuantity: mockUpdateQuantity,
-        clearCart: mockClearCart,
+      useCartStore.mockImplementation((selector) => {
+        return selector ? selector(emptyState) : emptyState
       })
 
       render(<CartPage />)
@@ -206,11 +213,8 @@ describe('CartPage', () => {
     })
 
     it('muestra link "Explorar mangas" en estado vacio', () => {
-      useCartStore.mockReturnValue({
-        cart: [],
-        removeFromCart: mockRemoveFromCart,
-        updateQuantity: mockUpdateQuantity,
-        clearCart: mockClearCart,
+      useCartStore.mockImplementation((selector) => {
+        return selector ? selector(emptyState) : emptyState
       })
 
       render(<CartPage />)

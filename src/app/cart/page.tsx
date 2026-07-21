@@ -8,16 +8,20 @@ import { FaTrash, FaPlus, FaMinus, FaShoppingCart } from 'react-icons/fa'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice } from '@/lib/formatPrice'
 import useUser from '@/hooks/useUser'
+import LoadingButton from '@/components/LoadingButton'
 
 const CartPage = () => {
   const { user } = useUser()
   const userId = user?.id ?? null
   const router = useRouter()
-  const { cart, updateQuantity, removeFromCart, clearCart } = useCartStore()
+  const cart = useCartStore((s) => s.cart)
+  const totalItems = useCartStore((s) => s.totalItems)
+  const updateQuantity = useCartStore((s) => s.updateQuantity)
+  const removeFromCart = useCartStore((s) => s.removeFromCart)
+  const clearCart = useCartStore((s) => s.clearCart)
   const [loading, setLoading] = useState(false)
 
   const total = cart.reduce((acc, item) => acc + item.cantidad * (item.mangas?.precio ?? 0), 0)
-  const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0)
 
   const handleRemove = async (mangaId: string) => {
     if (loading) return
@@ -171,22 +175,23 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button
+              <LoadingButton
                 onClick={() => router.push('/checkout')}
+                loading={false}
                 disabled={loading}
-                className="w-full mt-6 bg-black hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-6 bg-black hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg"
               >
                 Ir a pagar
-              </button>
+              </LoadingButton>
 
-              <button
+              <LoadingButton
                 onClick={handleClear}
-                disabled={loading}
-                className="w-full mt-3 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                loading={loading}
+                className="w-full mt-3 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2"
               >
                 <FaTrash size={14} />
                 Vaciar carrito
-              </button>
+              </LoadingButton>
             </div>
           </div>
         </div>
