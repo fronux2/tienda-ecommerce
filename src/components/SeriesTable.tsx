@@ -53,7 +53,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
     : listaSeries;
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen min-w-screen md:mid-w-auto">
+    <div className="p-4 bg-gray-50 min-h-screen min-w-screen ">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between md:items-center mb-6 flex-col md:flex-row">
           <div>

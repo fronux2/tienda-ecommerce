@@ -148,7 +148,7 @@ export default function MangasTable({
   };
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen min-w-screen md:mid-w-auto">
+    <div className="p-4 bg-gray-50 min-h-screen min-w-screen ">
       <div className="max-w-7xl mx-auto">
         <div className="flex md:justify-between flex-col md:flex-row items-center mb-6">
           <div>
