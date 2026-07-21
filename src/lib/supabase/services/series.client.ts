@@ -3,7 +3,7 @@ import { NuevaSerie } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
 
 export async function getSeriesClient() {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('series')
     .select('*')
@@ -13,7 +13,7 @@ export async function getSeriesClient() {
 }
 
 export default async function agregarNuevaSerie(data: NuevaSerie) {
-  const supabase = await createClient();
+  const supabase = createClient();
   // Insertar la nueva serie en la tabla 'series'
   try {
       await supabase.from('series').insert(data)
@@ -24,7 +24,7 @@ export default async function agregarNuevaSerie(data: NuevaSerie) {
 }
 
 export async function updateSerie(id: string, data: Partial<NuevaSerie>) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data: updatedData, error } = await supabase
     .from('series')
     .update(data)

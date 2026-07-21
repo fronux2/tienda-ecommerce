@@ -2,7 +2,7 @@
 import { createClient } from '@/utils/supabase/client';
 
 export async function getCategoriasClient() {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('categorias')
     .select('*')
@@ -12,7 +12,7 @@ export async function getCategoriasClient() {
 }
 
 export default async function agregarNuevaCategoria(data: { name: string }) {
-  const supabase = await createClient();
+  const supabase = createClient();
   // Insertar la nueva categoría en la tabla 'categorias'
   try {
       await supabase.from('categorias').insert({
@@ -26,7 +26,7 @@ export default async function agregarNuevaCategoria(data: { name: string }) {
 
 
 export async function updateCategoria(id: string, updates: Partial<{ nombre: string }>) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('categorias')
     .update(updates)

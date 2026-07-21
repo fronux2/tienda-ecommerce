@@ -20,7 +20,7 @@ export type UpdatePedido = Record<string, unknown>;
 //update
 
 export async function updatePedido(id: string, pedidoData: UpdatePedido) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("pedidos")
     .update(pedidoData)

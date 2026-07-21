@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/client';
 import { type NuevoManga, type UpdateManga } from '@/types/supabase';
 
 export async function crearManga(manga: NuevoManga) {
-  const supabase = await createClient(); // <-- usa el server client
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('mangas')
     .insert(manga)
@@ -13,7 +13,7 @@ export async function crearManga(manga: NuevoManga) {
 }
 
 export async function updateManga(id: string, mangaData:UpdateManga) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('mangas')
     .update(mangaData)
@@ -24,7 +24,7 @@ export async function updateManga(id: string, mangaData:UpdateManga) {
 
 //manga por id
 export async function getMangaById(id: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('mangas')
     .select('*')
@@ -35,7 +35,7 @@ export async function getMangaById(id: string) {
 
 //getmanga
 export async function getMangas() {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('mangas')
     .select('*, categorias(*), series(*)')
@@ -44,7 +44,7 @@ export async function getMangas() {
 }
 
 export async function getMangasPopulares() {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('mangas')
     .select('*, categorias(*), series(*)')

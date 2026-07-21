@@ -2,7 +2,7 @@ import { type Usuario, Roles } from "@/types/supabase"
 import { createClient } from "@/utils/supabase/client"
 //update user
 export const updateUsuario = async (userId: string, data: Partial<Usuario>): Promise<void> => {
-  const supabase = await createClient()
+  const supabase = createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("No autenticado")
@@ -43,7 +43,7 @@ export const updateUsuario = async (userId: string, data: Partial<Usuario>): Pro
 
 // get user
 export const getUsuarios = async (): Promise<Usuario[]> => {
-  const supabase = await createClient()
+  const supabase = createClient()
 
   const { data: usuarios, error } = await supabase
     .from('usuarios')
@@ -59,7 +59,7 @@ export const getUsuarios = async (): Promise<Usuario[]> => {
 
 // get roles
 export const getRoles = async (): Promise<Roles[]> => {
-  const supabase = await createClient()
+  const supabase = createClient()
 
   const { data, error } = await supabase
     .from('roles')
