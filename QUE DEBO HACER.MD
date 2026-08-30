@@ -130,7 +130,7 @@ Se aplicó la misma escala de radios + colores/tokens + hover/focus/disabled que
 
 ## Fase 5 — Modo oscuro/claro (2026-08-30, mismo día)
 
-Toggle manual con `localStorage`, respetando `prefers-color-scheme` del sistema la primera visita. **Alcance: toda la tienda, Admin queda anclado al claro a propósito** (decisión del usuario — Admin todavía no tiene su propio diseño oscuro).
+Toggle manual con `localStorage`, respetando `prefers-color-scheme` del sistema la primera visita. **Alcance: toda la tienda y Admin** (Admin arrancó anclado al claro por decisión inicial del usuario, pero se extendió el mismo día — ver más abajo).
 
 **Arquitectura** (`src/app/globals.css`):
 - Los tokens de superficie/texto ya existentes (`cream`, `ink`, `surface`, `surface-alt`, `text*`, `border`, semánticos) ahora son **adaptativos**: se redefinen dentro de una clase `.dark` en el `<html>`, y como todos los componentes ya usaban estos tokens (gracias a Fases 0-4), heredan el modo oscuro automáticamente sin tocar cada archivo.
@@ -157,6 +157,21 @@ Verificado visualmente en ambos temas: home completo (Hero/Populares/Invitation/
 
 ---
 
+### Admin: modo oscuro real (2026-08-30, mismo día, con `/interface-design`)
+
+El usuario pidió que Admin también soportara modo oscuro de verdad en vez de quedar anclado al claro — usó explícitamente la skill `/interface-design` para esto.
+
+**Hallazgo clave:** la arquitectura ya estaba lista. Las tablas (`MangasTable`, `PedidosTable`, `SeriesTable`, `CategoriaTable`, `UsuariosTable`) y formularios (`CrearMangaForm`, `series/new`, `usuarios/new`) ya consumían los tokens adaptativos (`text-text`/`text-text-secondary`/`text-text-muted`/`bg-surface`/`bg-surface-alt`/`border-border`) desde las Fases 3-4 — lo único que bloqueaba el modo oscuro era la clase `.admin-scope`, que los anclaba al valor claro a propósito. Un grep de `gray-|blue-|purple-|...` sobre todos los archivos de Admin no encontró ningún literal suelto, confirmando que la Fase 3-4 había sido exhaustiva.
+
+**Cambios:**
+- Se eliminó `.admin-scope` de `globals.css` y de `admin/layout.tsx` — sin ese anclaje, Admin hereda `.dark` igual que el resto del sitio.
+- El contenedor raíz de Admin y la barra de toggle del sidebar (antes `bg-ink`/`text-cream`, fondo negro fijo) pasaron a `bg-chrome`/`text-chrome-foreground` — el mismo tratamiento que ya usa el navbar de la tienda: la "barra de marca" de Admin se mantiene negra en ambos temas, mientras que el sidebar y la card principal (`bg-surface`) sí se oscurecen con el resto.
+- El toggle de tema (`ThemeToggle`) no necesitó agregarse a Admin — ya está visible ahí porque el navbar de la tienda se renderiza arriba de todas las páginas, incluido `/admin/*`.
+
+**Verificado visualmente en ambos temas** en `/admin/mangas` (tabla + badges de stock/estado con buen contraste), `/admin/pedidos` (`EstadoBadge` "Procesando" legible), `/admin` (dashboard, los 3 CTA), `/admin/mangas/new` (formulario completo) y la sidebar/toggle. `npx tsc --noEmit` sin errores nuevos.
+
+---
+
 ## Progreso
 
 | Fase | Estado |
@@ -166,7 +181,7 @@ Verificado visualmente en ambos temas: home completo (Hero/Populares/Invitation/
 | 2 — Componentes compartidos | ✅ Hecha (2026-08-30, sin commitear) |
 | 3 — Admin | ✅ Hecha (2026-08-30, sin commitear) |
 | 4 — Pulido | ✅ Hecha en Admin **y en la tienda** (2026-08-30) |
-| 5 — Modo oscuro/claro | ✅ Hecha en la tienda (2026-08-30) — Admin queda en claro fijo |
+| 5 — Modo oscuro/claro | ✅ Hecha — tienda y Admin (2026-08-30) |
 
 **Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2, Fase 3 y Fase 4 completas — Admin y tienda. El plan de unificación de diseño está terminado en su totalidad. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
 

@@ -58,28 +58,13 @@
 }
 
 /*
- * Admin todavía no tiene modo oscuro propio (fuera de alcance por ahora).
- * Ancla sus tokens al valor claro aunque el resto del sitio esté en .dark,
- * para que el panel no cambie si el staff navega ahí con el tema oscuro activo.
+ * Admin ahora sigue el mismo modo oscuro/claro que el resto del sitio: las
+ * tablas y formularios ya consumían los tokens adaptativos (text-text,
+ * bg-surface, border-border, etc.) desde las Fases 3-4, así que heredan
+ * .dark sin más cambios. El fondo exterior del panel (admin/layout.tsx) usa
+ * los tokens chrome/chrome-foreground — la "barra de marca" del panel se
+ * mantiene negra en ambos temas, igual que el navbar de la tienda.
  */
-.admin-scope {
-  /* <body> tiene color adaptativo (para las superficies de la tienda en dark mode);
-     sin esto, cualquier texto de Admin sin clase text-* explícita heredaría ese
-     color claro/oscuro del body en vez del valor fijo de Admin. */
-  color: #111827;
-  --color-cream: #fff8f0;
-  --color-ink: #000000;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f9fafb;
-  --color-text: #111827;
-  --color-text-secondary: #4b5563;
-  --color-text-muted: #9ca3af;
-  --color-border: #d1d5db;
-  --color-success: #16a34a;
-  --color-warning: #d97706;
-  --color-danger: #dc2626;
-  --color-info: #2563eb;
-}
 
 @keyframes spin {
   to { transform: rotate(360deg); }
