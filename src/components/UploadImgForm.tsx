@@ -42,7 +42,7 @@ export default function UploadImgForm() {
   };
 
   return (
-    <div className="p-4 border rounded max-w-md mx-auto">
+    <div className="p-4 border border-border rounded-lg max-w-md mx-auto">
       <input
         type="file"
         accept="image/*"
@@ -61,7 +61,7 @@ export default function UploadImgForm() {
       {url && (
         <div className="mt-4">
           <p>Imagen subida:</p>
-          <Image src={url} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded" />
+          <Image src={url} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded-md" />
           <code className="text-sm break-all">{url}</code>
         </div>
       )}

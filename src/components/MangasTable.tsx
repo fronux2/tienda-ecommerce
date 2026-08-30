@@ -294,37 +294,37 @@ export default function MangasTable({
               {terminoBusqueda && (
                 <Badge variant="neutral">
                   Buscando: &quot;{terminoBusqueda}&quot;
-                  <button onClick={() => setTerminoBusqueda("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setTerminoBusqueda("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroCategoria && (
                 <Badge variant="neutral">
                   {categorias.find(c => c.id === filtroCategoria)?.nombre || filtroCategoria}
-                  <button onClick={() => setFiltroCategoria("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroCategoria("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroSerie && (
                 <Badge variant="neutral">
                   {series.find(s => s.id === filtroSerie)?.nombre || filtroSerie}
-                  <button onClick={() => setFiltroSerie("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroSerie("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroEstado && (
                 <Badge variant="neutral">
                   Estado: {filtroEstado}
-                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroActivo !== "" && (
                 <Badge variant="neutral">
                   Activo: {filtroActivo === "true" ? "Sí" : "No"}
-                  <button onClick={() => setFiltroActivo("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroActivo("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroPopular !== "" && (
                 <Badge variant="neutral">
                   Popular: {filtroPopular === "true" ? "Sí" : "No"}
-                  <button onClick={() => setFiltroPopular("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroPopular("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
             </div>
@@ -442,7 +442,7 @@ export default function MangasTable({
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "volumen", manga.volumen)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
+                        tipo="number" inputClassName="w-16 px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       >
                         <div className="cursor-pointer inline-flex bg-text-muted/10 text-text-secondary rounded-full w-8 h-8 items-center justify-center mx-auto font-semibold text-sm">
                           {manga.volumen}
@@ -470,7 +470,7 @@ export default function MangasTable({
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "precio", manga.precio)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
+                        tipo="number" inputClassName="w-20 px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       >
                         {formatPrice(manga.precio)}
                       </EditableCell>
@@ -482,7 +482,7 @@ export default function MangasTable({
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "stock", manga.stock)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
+                        tipo="number" inputClassName="w-20 px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       >
                         <Badge
                           variant={manga.stock > 10 ? 'success' : manga.stock > 0 ? 'warning' : 'danger'}
@@ -523,7 +523,7 @@ export default function MangasTable({
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "numero_paginas", manga.numero_paginas)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
+                        tipo="number" inputClassName="w-16 px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       >
                         {manga.numero_paginas}
                       </EditableCell>

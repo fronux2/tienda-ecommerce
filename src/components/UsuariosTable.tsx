@@ -98,7 +98,7 @@ export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }
                       onChange={manejarCambio}
                       onBlur={manejarGuardar}
                       onKeyDown={manejarEnter}
-                      className="w-full px-2 py-1 border rounded"
+                      className="w-full px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       autoFocus
                     />
                   ) : (
@@ -111,7 +111,7 @@ export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }
                     {
                       editando?.id === usuario.id && editando?.campo === "rol_id" ? (
                         <select
-                          className="w-full px-2 py-1 border rounded"
+                          className="w-full px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                           value={valorEditado}
                           onChange={manejarCambio}
                           onBlur={manejarGuardar}

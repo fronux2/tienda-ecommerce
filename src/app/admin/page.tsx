@@ -31,7 +31,7 @@ export default async function AdminLayout() {
         {/* Botón para Mangas */}
         <Link
           href="/admin/mangas/new"
-          className="bg-primary hover:bg-primary-hover text-white font-medium py-4 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center"
+          className="bg-primary hover:bg-primary-hover text-white font-medium py-4 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
           <span>Crear Nuevo Manga</span>
         </Link>
@@ -39,7 +39,7 @@ export default async function AdminLayout() {
         {/* Botón para Series */}
         <Link
           href="/admin/series/new"
-          className="bg-primary hover:bg-primary-hover text-white font-medium py-4 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center"
+          className="bg-primary hover:bg-primary-hover text-white font-medium py-4 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
           <span>Crear Nueva Serie</span>
         </Link>
@@ -47,7 +47,7 @@ export default async function AdminLayout() {
         {/* Botón para Usuarios */}
         <Link
           href="/admin/usuarios/new"
-          className="bg-primary hover:bg-primary-hover text-white font-medium py-4 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center"
+          className="bg-primary hover:bg-primary-hover text-white font-medium py-4 px-6 rounded-lg shadow-md transition duration-300 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
           <span>Crear Nuevo Usuario</span>
         </Link>

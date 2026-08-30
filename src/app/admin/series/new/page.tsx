@@ -69,7 +69,7 @@ export default function Page() {
                             type="text"
                             id="nombre"
                             {...register('nombre')}
-                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                         {errors.nombre && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
@@ -78,7 +78,7 @@ export default function Page() {
                         <textarea
                             id="descripcion"
                             {...register('descripcion')}
-                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                         {errors.descripcion && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
@@ -88,7 +88,7 @@ export default function Page() {
                             type="text"
                             id="autor"
                             {...register('autor')}
-                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                         {errors.autor && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
@@ -97,7 +97,7 @@ export default function Page() {
                         <select
                             id="estado"
                             {...register('estado')}
-                            className="w-full border border-border rounded px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full border border-border rounded-md px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                             <option value="en_curso">En curso</option>
                             <option value="pausado">Pausado</option>
@@ -111,7 +111,7 @@ export default function Page() {
                             type="text"
                             id="imagen_url"
                             {...register('imagen_serie')}
-                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                         {errors.imagen_serie && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>

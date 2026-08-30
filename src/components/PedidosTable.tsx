@@ -207,25 +207,25 @@ export default function PedidosTable() {
               {busqueda && (
                 <Badge variant="neutral">
                   Buscando: &quot;{busqueda}&quot;
-                  <button onClick={() => setBusqueda("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setBusqueda("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroEstado && (
                 <Badge variant="neutral">
                   Estado: {filtroEstado}
-                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroFechaDesde && (
                 <Badge variant="neutral">
                   Desde: {filtroFechaDesde}
-                  <button onClick={() => setFiltroFechaDesde("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroFechaDesde("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
               {filtroFechaHasta && (
                 <Badge variant="neutral">
                   Hasta: {filtroFechaHasta}
-                  <button onClick={() => setFiltroFechaHasta("")} className="ml-2 hover:text-text">✕</button>
+                  <button onClick={() => setFiltroFechaHasta("")} className="ml-2 hover:text-text rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">✕</button>
                 </Badge>
               )}
             </div>
@@ -289,7 +289,7 @@ export default function PedidosTable() {
                         onSave={manejarGuardar}
                         onEnter={manejarEnter}
                         tipo="number"
-                        inputClassName="w-24 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
+                        inputClassName="w-24 px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       >
                         {formatPrice(pedido.total)}
                       </EditableCell>

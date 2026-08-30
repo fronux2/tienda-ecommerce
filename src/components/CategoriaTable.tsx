@@ -66,7 +66,7 @@ export default function CategoriaTable({ categorias }: { categorias: Categoria[]
                 >
                   {editando && editando.id === categoria.id && editando.campo === "nombre" ? (
                     <input
-                      className="w-full px-2 py-1 border rounded"
+                      className="w-full px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                       value={valorEditado}
                       onChange={manejarCambio}
                       onBlur={manejarGuardar}

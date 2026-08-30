@@ -82,7 +82,7 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
               {busqueda && (
                 <button
                   onClick={() => setBusqueda("")}
-                  className="absolute right-3 top-2 text-text-muted hover:text-text-secondary"
+                  className="absolute right-3 top-2 text-text-muted hover:text-text-secondary rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                 >
                   ✕
                 </button>

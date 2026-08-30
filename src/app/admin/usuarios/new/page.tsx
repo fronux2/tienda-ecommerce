@@ -69,7 +69,7 @@ export default function Page() {
           type="text" 
           id="email" 
           {...register('email')} 
-          className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         />
         {errors.email && <span className="text-danger text-sm">Este campo es obligatorio</span>}
       </div>
@@ -79,7 +79,7 @@ export default function Page() {
           type="password" 
           id="password" 
           {...register('password')} 
-          className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         />
         {errors.password && <span className="text-danger text-sm">Este campo es obligatorio</span>}
       </div>

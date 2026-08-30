@@ -29,7 +29,7 @@ export default function EditableCell({
   onEnter,
   tipo = "text",
   opciones,
-  inputClassName = "w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500",
+  inputClassName = "w-full px-2 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
   children,
 }: EditableCellProps) {
   const estaEditando = editando?.id === id && editando.campo === campo;
