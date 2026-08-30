@@ -48,14 +48,14 @@ const CartPage = () => {
       {/* Encabezado */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Tu Carrito</h1>
+          <h1 className="text-3xl font-bold text-text">Tu Carrito</h1>
           {totalItems > 0 && (
-            <p className="text-gray-500 mt-1">{totalItems} {totalItems === 1 ? 'producto' : 'productos'}</p>
+            <p className="text-text-muted mt-1">{totalItems} {totalItems === 1 ? 'producto' : 'productos'}</p>
           )}
         </div>
         <Link
           href="/mangas"
-          className="text-red-600 hover:text-red-700 font-medium transition-colors active:scale-95"
+          className="text-primary hover:text-primary-hover font-medium transition-colors active:scale-95"
         >
           Seguir comprando
         </Link>
@@ -64,14 +64,14 @@ const CartPage = () => {
       {cart.length === 0 ? (
         /* Estado vacío */
         <div className="text-center py-16">
-          <div className="mx-auto bg-[#FFF8F0] w-20 h-20 rounded-full flex items-center justify-center mb-6">
-            <FaShoppingCart className="text-red-600" size={32} />
+          <div className="mx-auto bg-cream w-20 h-20 rounded-full flex items-center justify-center mb-6">
+            <FaShoppingCart className="text-primary" size={32} />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Tu carrito está vacío</h2>
-          <p className="text-gray-500 mb-8">Agrega algunos mangas para empezar</p>
+          <h2 className="text-2xl font-semibold text-text mb-2">Tu carrito está vacío</h2>
+          <p className="text-text-muted mb-8">Agrega algunos mangas para empezar</p>
           <Link
             href="/mangas"
-            className="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-8 rounded-lg transition-colors active:scale-95"
+            className="inline-block bg-primary hover:bg-primary-hover text-white font-medium py-3 px-8 rounded-lg transition-colors active:scale-95"
           >
             Explorar mangas
           </Link>
@@ -86,7 +86,7 @@ const CartPage = () => {
               return (
                 <div
                   key={item.manga_id}
-                  className="flex gap-4 p-4 bg-white border border-gray-200 rounded-lg"
+                  className="flex gap-4 p-4 bg-surface border border-border rounded-lg"
                 >
                   <div className="shrink-0">
                     <Image
@@ -94,25 +94,25 @@ const CartPage = () => {
                       alt={item.mangas.titulo}
                       width={80}
                       height={120}
-                      className="rounded-md object-cover border border-gray-200"
+                      className="rounded-md object-cover border border-border"
                     />
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/mangas/${item.mangas.id}`}
-                      className="font-semibold text-gray-900 hover:text-red-600 transition-colors line-clamp-1"
+                      className="font-semibold text-text hover:text-primary transition-colors line-clamp-1"
                     >
                       {item.mangas.titulo}
                     </Link>
-                    <p className="text-sm text-gray-600 mt-1">{formatPrice(item.mangas.precio)}</p>
+                    <p className="text-sm text-text-secondary mt-1">{formatPrice(item.mangas.precio)}</p>
 
                     <div className="flex items-center mt-3 gap-3">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(userId, item.manga_id, item.cantidad - 1)}
                           disabled={item.cantidad <= 1 || loading}
-                          className="w-8 h-8 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-8 h-8 flex items-center justify-center bg-cream border border-border rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                           aria-label="Reducir cantidad"
                         >
                           <FaMinus size={10} />
@@ -123,7 +123,7 @@ const CartPage = () => {
                         <button
                           onClick={() => updateQuantity(userId, item.manga_id, item.cantidad + 1)}
                           disabled={item.cantidad >= (item.mangas.stock || 99) || loading}
-                          className="w-8 h-8 flex items-center justify-center bg-[#FFF8F0] border border-gray-300 rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-8 h-8 flex items-center justify-center bg-cream border border-border rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                           aria-label="Aumentar cantidad"
                         >
                           <FaPlus size={10} />
@@ -131,7 +131,7 @@ const CartPage = () => {
                       </div>
 
                       {item.mangas.stock <= 5 && item.mangas.stock > 0 && (
-                        <span className="text-xs text-amber-600 font-medium">
+                        <span className="text-xs text-warning font-medium">
                           ¡Solo {item.mangas.stock} restantes!
                         </span>
                       )}
@@ -142,12 +142,12 @@ const CartPage = () => {
                     <button
                       onClick={() => handleRemove(item.manga_id)}
                       disabled={loading}
-                      className="text-gray-400 hover:text-red-600 active:scale-90 transition-all disabled:opacity-50"
+                      className="text-text-muted hover:text-primary active:scale-90 transition-all disabled:opacity-50"
                       aria-label="Eliminar del carrito"
                     >
                       <FaTrash size={16} />
                     </button>
-                    <p className="font-semibold text-red-600 whitespace-nowrap">
+                    <p className="font-semibold text-primary whitespace-nowrap">
                       {formatPrice(subtotal)}
                     </p>
                   </div>
@@ -158,20 +158,20 @@ const CartPage = () => {
 
           {/* Resumen */}
           <div className="lg:col-span-1">
-            <div className="bg-[#FFF8F0] border border-gray-200 rounded-lg p-6 sticky top-24">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Resumen</h2>
+            <div className="bg-cream border border-border rounded-lg p-6 sticky top-24">
+              <h2 className="text-lg font-bold text-text mb-4">Resumen</h2>
 
-              <div className="space-y-2 text-sm text-gray-700">
+              <div className="space-y-2 text-sm text-text-secondary">
                 <div className="flex justify-between">
                   <span>Productos ({totalItems})</span>
                   <span>{formatPrice(total)}</span>
                 </div>
               </div>
 
-              <div className="border-t border-gray-300 mt-4 pt-4">
+              <div className="border-t border-border mt-4 pt-4">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-gray-900">Total</span>
-                  <span className="text-xl font-bold text-red-600">{formatPrice(total)}</span>
+                  <span className="font-bold text-text">Total</span>
+                  <span className="text-xl font-bold text-primary">{formatPrice(total)}</span>
                 </div>
               </div>
 
@@ -179,7 +179,7 @@ const CartPage = () => {
                 onClick={() => router.push('/checkout')}
                 loading={false}
                 disabled={loading}
-                className="w-full mt-6 bg-black hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg"
+                className="w-full mt-6 bg-ink hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg"
               >
                 Ir a pagar
               </LoadingButton>
@@ -187,7 +187,7 @@ const CartPage = () => {
               <LoadingButton
                 onClick={handleClear}
                 loading={loading}
-                className="w-full mt-3 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+                className="w-full mt-3 bg-surface border border-border hover:bg-gray-100 text-text-secondary font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2"
               >
                 <FaTrash size={14} />
                 Vaciar carrito

@@ -72,7 +72,7 @@ export default function NavbarClient({ user, rolId }: Props) {
   }
 
   const NavLink: React.FC<{ href: string; children: React.ReactNode; className?: string }> = ({ href, children, className }) => {
-    const baseClasses = "text-[#FFF8F0] hover:text-red-500 transition-colors py-2 px-3 rounded-md font-medium text-lg";
+    const baseClasses = "text-cream hover:text-primary-light transition-colors py-2 px-3 rounded-md font-medium text-lg";
     const combinedClasses = className ? `${baseClasses} ${className}` : baseClasses;
 
     return (
@@ -90,9 +90,9 @@ export default function NavbarClient({ user, rolId }: Props) {
     <>
       {/* Navbar principal */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-black border-b-2 border-red-600 shadow-lg' 
-          : 'bg-black'
+        isScrolled
+          ? 'bg-ink border-b-2 border-primary shadow-lg'
+          : 'bg-ink'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-3">
@@ -100,7 +100,7 @@ export default function NavbarClient({ user, rolId }: Props) {
             <div className="flex items-center">
               <button
                 onClick={toggleMenu}
-                className="md:hidden text-[#FFF8F0] focus:outline-none mr-4"
+                className="md:hidden text-cream focus:outline-none mr-4"
                 aria-label="Toggle menu"
               >
                 <svg 
@@ -116,7 +116,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                   )}
                 </svg>
               </button>
-              <Link href="/" className="text-xl font-bold text-[#FFF8F0]">
+              <Link href="/" className="text-xl font-bold text-cream">
                 MangaNihon
               </Link>
             </div>
@@ -141,9 +141,9 @@ export default function NavbarClient({ user, rolId }: Props) {
                 <div className="relative hidden md:block" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 text-[#FFF8F0] hover:text-red-500 transition-colors py-2 px-3 rounded-md font-medium text-lg"
+                    className="flex items-center gap-2 text-cream hover:text-primary-light transition-colors py-2 px-3 rounded-md font-medium text-lg"
                   >
-                    <span className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-sm font-bold text-white">
+                    <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white">
                       {user.email?.[0]?.toUpperCase() || user.id[0].toUpperCase()}
                     </span>
                     <svg
@@ -155,28 +155,28 @@ export default function NavbarClient({ user, rolId }: Props) {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-semibold text-gray-800 truncate">{user.email || user.id}</p>
+                    <div className="absolute right-0 mt-2 w-56 bg-surface rounded-lg shadow-xl border border-border py-2 z-50">
+                      <div className="px-4 py-2 border-b border-border">
+                        <p className="text-sm font-semibold text-text truncate">{user.email || user.id}</p>
                       </div>
                       <Link
                         href="/perfil"
                         onClick={() => setDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#FFF8F0] hover:text-red-600 transition-colors"
+                        className="block px-4 py-2 text-sm text-text-secondary hover:bg-cream hover:text-primary transition-colors"
                       >
                         Mi Perfil
                       </Link>
                       <Link
                         href="/perfil/pedidos"
                         onClick={() => setDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#FFF8F0] hover:text-red-600 transition-colors"
+                        className="block px-4 py-2 text-sm text-text-secondary hover:bg-cream hover:text-primary transition-colors"
                       >
                         Mis Pedidos
                       </Link>
                       <Link
                         href="/perfil/direcciones"
                         onClick={() => setDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#FFF8F0] hover:text-red-600 transition-colors"
+                        className="block px-4 py-2 text-sm text-text-secondary hover:bg-cream hover:text-primary transition-colors"
                       >
                         Mis Direcciones
                       </Link>
@@ -184,7 +184,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                         <Link
                           href="/admin"
                           onClick={() => setDropdownOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#FFF8F0] hover:text-red-600 transition-colors border-t border-gray-100"
+                          className="block px-4 py-2 text-sm text-text-secondary hover:bg-cream hover:text-primary transition-colors border-t border-border"
                         >
                           Panel Admin
                         </Link>
@@ -192,7 +192,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                       <form action="/logout" method="post">
                         <button
                           type="submit"
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100"
+                          className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-red-50 transition-colors border-t border-border"
                         >
                           Cerrar sesión
                         </button>
@@ -212,14 +212,14 @@ export default function NavbarClient({ user, rolId }: Props) {
 
         {/* Menú móvil */}
         <div 
-          className={`md:hidden fixed inset-0 bg-black z-40 transform ${
+          className={`md:hidden fixed inset-0 bg-ink z-40 transform ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
           } transition-transform duration-300 ease-in-out`}
         >
           {/* Botón de cierre en la esquina superior derecha */}
           <button
             onClick={closeMenu}
-            className="absolute top-4 right-4 text-[#FFF8F0] focus:outline-none z-50"
+            className="absolute top-4 right-4 text-cream focus:outline-none z-50"
             aria-label="Cerrar menú"
           >
             <svg 
@@ -245,10 +245,10 @@ export default function NavbarClient({ user, rolId }: Props) {
               </>
             )}
             
-            <div className="border-t border-gray-700 pt-4">
+            <div className="border-t border-border pt-4">
               {user ? (
                 <div className="space-y-4">
-                  <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Mi Cuenta</p>
+                  <p className="text-xs text-text-muted uppercase tracking-wider font-semibold">Mi Cuenta</p>
                   <NavLink href="/perfil">Mi Perfil</NavLink>
                   <NavLink href="/perfil/pedidos">Mis Pedidos</NavLink>
                   <NavLink href="/perfil/direcciones">Mis Direcciones</NavLink>
@@ -276,7 +276,7 @@ function Button({ type = 'button', disabled = false, children }: { type?: "butto
     <button 
       type={type}
       disabled={disabled}
-      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-red-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="bg-primary hover:bg-primary-hover text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-primary-hover active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {children}
     </button>

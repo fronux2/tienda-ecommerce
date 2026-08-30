@@ -100,7 +100,7 @@ export default function MisDirecciones() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -111,7 +111,7 @@ export default function MisDirecciones() {
         <h1 className="text-2xl font-bold">Mis Direcciones</h1>
         <button
           onClick={() => { resetForm(); setShowForm(!showForm) }}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors active:scale-95"
+          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors active:scale-95"
         >
           {showForm ? 'Cancelar' : 'Agregar dirección'}
         </button>
@@ -195,8 +195,8 @@ export default function MisDirecciones() {
       )}
 
       {direcciones.length === 0 ? (
-        <div className="text-center py-16 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No tienes direcciones guardadas</p>
+        <div className="text-center py-16 bg-surface-alt rounded-lg">
+          <p className="text-text-muted">No tienes direcciones guardadas</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -205,16 +205,16 @@ export default function MisDirecciones() {
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">{d.nombre_direccion}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-text-secondary">
                     {d.calle} #{d.numero}
                     {d.departamento && `, ${d.departamento}`}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-text-secondary">
                     {d.comuna}, {d.ciudad}
                     {d.region && `, ${d.region}`}
                   </p>
                   {d.codigo_postal && (
-                    <p className="text-sm text-gray-500">CP: {d.codigo_postal}</p>
+                    <p className="text-sm text-text-muted">CP: {d.codigo_postal}</p>
                   )}
                 </div>
                 <div className="flex gap-2">
@@ -226,7 +226,7 @@ export default function MisDirecciones() {
                   </button>
                   <button
                     onClick={() => handleDelete(d.id)}
-                    className="text-red-600 hover:text-red-800 text-sm active:scale-95 transition-all"
+                    className="text-primary hover:text-primary-hover text-sm active:scale-95 transition-all"
                   >
                     Eliminar
                   </button>

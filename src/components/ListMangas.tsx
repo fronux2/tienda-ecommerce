@@ -67,16 +67,16 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
   return (
     <section className="space-y-8">
       {/* Encabezado y Filtros */}
-      <header className="bg-[#FFF8F0] p-6 rounded-xl border-2 border-red-600 shadow-lg">
-        <h2 className="text-2xl md:text-3xl font-bold text-black mb-6">
+      <header className="bg-cream p-6 rounded-xl border-2 border-primary shadow-lg">
+        <h2 className="text-2xl md:text-3xl font-bold text-ink mb-6">
           Explora nuestra colección
-          <span className="block h-1 w-16 bg-red-600 rounded-full mt-2"></span>
+          <span className="block h-1 w-16 bg-primary rounded-full mt-2"></span>
         </h2>
-        
+
         <fieldset className="grid grid-cols-1 gap-6">
           {/* Buscador */}
           <figure className="relative">
-            <label htmlFor="busqueda" className="block text-black font-medium mb-2">
+            <label htmlFor="busqueda" className="block text-ink font-medium mb-2">
               Buscar
             </label>
             <div className="relative">
@@ -86,9 +86,9 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 placeholder="Buscar por título, autor, editorial..."
-                className="w-full p-3 pl-10 rounded-lg border-2 border-gray-300 bg-white text-black shadow-sm focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600"
+                className="w-full p-3 pl-10 rounded-lg border-2 border-border bg-surface text-ink shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
-              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-text-muted">
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                 </svg>
@@ -99,7 +99,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Selector de categoría */}
             <figure className="relative">
-              <label htmlFor="categoria" className="block text-black font-medium mb-2">
+              <label htmlFor="categoria" className="block text-ink font-medium mb-2">
                 Filtrar por categoría
               </label>
             <div className="relative">
@@ -107,7 +107,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                 id="categoria"
                 onChange={(e) => setCategoriaSeleccionada(e.target.value)}
                 value={categoriaSeleccionada}
-                className="w-full p-3 pl-4 pr-10 rounded-lg border-2 border-gray-300 bg-white text-black shadow-sm focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 appearance-none"
+                className="w-full p-3 pl-4 pr-10 rounded-lg border-2 border-border bg-surface text-ink shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary appearance-none"
               >
                 <option value="Todos">Todas las categorías</option>
                 {categoria.map((categoria) => (
@@ -116,7 +116,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                   </option>
                 ))}
               </select>
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-secondary">
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -126,7 +126,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
 
           {/* Selector de serie */}
           <figure className="relative">
-            <label htmlFor="serie" className="block text-black font-medium mb-2">
+            <label htmlFor="serie" className="block text-ink font-medium mb-2">
               Filtrar por serie
             </label>
             <div className="relative">
@@ -134,7 +134,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                 id="serie"
                 onChange={(e) => setserieSeleccionada(e.target.value)}
                 value={serieSeleccionada}
-                className="w-full p-3 pl-4 pr-10 rounded-lg border-2 border-gray-300 bg-white text-black shadow-sm focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 appearance-none"
+                className="w-full p-3 pl-4 pr-10 rounded-lg border-2 border-border bg-surface text-ink shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary appearance-none"
               >
                 <option value="Todas">Todas las series</option>
                 {series.map((serie) => (
@@ -143,7 +143,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                   </option>
                 ))}
               </select>
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-secondary">
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -176,14 +176,14 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
             </ul>
 
             {/* Info + Cargar más */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-border">
+              <p className="text-sm text-text-secondary">
                 Mostrando {mangasPaginados.length} de {mangasFiltrados.length} resultado{mangasFiltrados.length !== 1 ? "s" : ""}
               </p>
               {paginaActual < totalPaginas && (
                 <button
                   onClick={() => setPaginaActual((prev) => prev + 1)}
-                  className="px-6 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cargar más mangas
                 </button>
@@ -191,10 +191,10 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
             </div>
           </>
         ) : (
-          <article className="bg-white rounded-xl p-8 border-2 border-dashed border-gray-300 text-center max-w-2xl mx-auto">
+          <article className="bg-surface rounded-xl p-8 border-2 border-dashed border-border text-center max-w-2xl mx-auto">
             <div className="text-5xl mb-4">📚</div>
-            <h3 className="text-xl font-bold text-black mb-2">No se encontraron mangas</h3>
-            <p className="text-gray-700">
+            <h3 className="text-xl font-bold text-ink mb-2">No se encontraron mangas</h3>
+            <p className="text-text-secondary">
               Prueba con diferentes filtros para encontrar lo que buscas
             </p>
           </article>

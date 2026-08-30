@@ -105,6 +105,15 @@ import LoadingButton from '@/components/LoadingButton'
 
 Para botones que **no** usan `LoadingButton`, agregar las clases `active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed` manualmente.
 
+**Uso conocido**: `AddToCartButton`, `checkout/page.tsx`, `perfil/datos/page.tsx`, `perfil/direcciones/page.tsx`.
+
+### MangaCard (`src/components/MangaCard.tsx`)
+Tarjeta de manga para listados. Props: `id`, `imagen`, `titulo`, `autor`, `editorial`, `precio`, `userId`, `es_popular?`.
+- Muestra badge "POPULAR" (rojo, esquina superior derecha) solo cuando `es_popular` es `true`.
+- Enlaza a `/mangas/{id}` para imagen y título.
+- Incluye `AddToCartButton` con el `userId` recibido.
+- Se usa en `Popular.tsx` (filtra solo `es_popular`) y en `ListMangas.tsx` (pasa el valor directo desde cada manga).
+
 ### Prevención de doble clic en tablas admin
 Todas las tablas con edición inline (`MangasTable`, `UsuariosTable`, `CategoriaTable`, `SeriesTable`, `PedidosTable`) usan un `useRef(false)` como flag `guardandoRef` para evitar que `manejarGuardar` se ejecute múltiples veces:
 
@@ -131,7 +140,10 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 
 ## Admin inline editing
 
-- `MangasTable`, `UsuariosTable`, `CategoriaTable`, `SeriesTable` all follow the same pattern: double-click to edit, Enter to save.
+- Las tablas usan el componente reutilizable **`EditableCell`** (`src/components/EditableCell.tsx`) que maneja double-click → input → Enter/blur para guardar. Soporta tipos `text`, `number`, `textarea` y `select` (con array de opciones).
+- **Tablas que usan `EditableCell`**: `MangasTable`, `PedidosTable`, `SeriesTable`.
+- **Tablas con patrón manual** (condicionales inline): `CategoriaTable`, `UsuariosTable` — siguen el mismo flujo pero sin el componente reutilizable.
+- Todas siguen el patrón: double-click to edit, Enter to save.
 - After `update*()` in Supabase, update the local/Zustand state immediately:
   - **Local state** (`CategoriaTable`): `setLista((prev) => prev.map(...))` replacing the matching item.
   - **Zustand state** (`MangasTable`): call `set({ mangas: await fetchAll() })` (full replace), never a merge function.
@@ -170,6 +182,12 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - **UI**: botón "Cargar más mangas" (rojo, solo visible si `paginaActual < totalPaginas`) + texto "Mostrando X de Y resultados".
 - **No usar páginas numéricas** — el patrón es "show more" progresivo, no paginación con números.
 - **Admin MangasTable** no tiene paginación — muestra todos los mangas en una sola tabla.
+
+## Error page (`/error`)
+
+- Página pública (`src/app/error/page.tsx`), componente cliente.
+- Diseño centrado: icono SVG en círculo rojo, título "Algo salió mal", descripción en español, botón "Volver al inicio" (redirige a `/`).
+- Se usa como destino de redirects en caso de errores (registro, login, etc.).
 
 ## Middleware
 

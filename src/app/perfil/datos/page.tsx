@@ -43,7 +43,7 @@ export default function MisDatos() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -54,25 +54,25 @@ export default function MisDatos() {
 
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label className="block text-sm font-medium text-text-secondary mb-1">Email</label>
           <input
             type="email"
             value={email}
             readOnly
-            className="w-full p-2 border rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+            className="w-full p-2 border rounded bg-gray-100 text-text-muted cursor-not-allowed"
           />
-          <p className="text-xs text-gray-400 mt-1">El email no se puede cambiar desde aquí</p>
+          <p className="text-xs text-text-muted mt-1">El email no se puede cambiar desde aquí</p>
         </div>
 
         <div className="border-t pt-6">
           <h2 className="font-semibold mb-2">Contraseña</h2>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-text-secondary mb-4">
             Recibirás un correo con instrucciones para restablecer tu contraseña
           </p>
           <LoadingButton
             onClick={handleChangePassword}
             loading={cambiandoPass}
-            className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+            className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
           >
             Cambiar contraseña
           </LoadingButton>
@@ -80,13 +80,13 @@ export default function MisDatos() {
 
         <div className="border-t pt-6">
           <h2 className="font-semibold mb-2">Cerrar sesión</h2>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-text-secondary mb-4">
             Cierra tu sesión en este dispositivo
           </p>
           <form action="/logout" method="post">
             <button
               type="submit"
-              className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors active:scale-95"
+              className="bg-gray-200 text-text-secondary px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors active:scale-95"
             >
               Cerrar sesión
             </button>

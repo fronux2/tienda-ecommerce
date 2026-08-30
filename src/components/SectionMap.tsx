@@ -39,40 +39,40 @@ const schedule = [
 
 export default function SectionMap() {
   return (
-    <section id="location" className="w-full bg-[#FFF8F0] py-16 border-t-2 border-red-600">
+    <section id="location" className="w-full bg-cream py-16 border-t-2 border-primary">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-black">
-          ¿Dónde <span className="text-red-600">encontrarnos</span>?
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-ink">
+          ¿Dónde <span className="text-primary">encontrarnos</span>?
         </h2>
-        
+
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="flex-1 flex flex-col gap-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+          <div className="flex-1 flex flex-col gap-8 bg-surface p-8 rounded-xl shadow-lg border border-border">
             {contactInfo.map((item, index) => (
                 <div key={index} className="flex items-start gap-5">
-                    <div className="bg-red-600 p-3 rounded-full shrink-0">
+                    <div className="bg-primary p-3 rounded-full shrink-0">
                         {item.icon}
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold text-black mb-1">{item.title}</h3>
-                        <p className="text-lg text-gray-800">{item.content}</p>
+                        <h3 className="text-xl font-semibold text-ink mb-1">{item.title}</h3>
+                        <p className="text-lg text-text">{item.content}</p>
                     </div>
                 </div>
             ))}
-            
-            <div className="mt-4 pt-6 border-t border-gray-200">
-                <h3 className="text-xl font-semibold text-black mb-4">Horarios de atención</h3>
+
+            <div className="mt-4 pt-6 border-t border-border">
+                <h3 className="text-xl font-semibold text-ink mb-4">Horarios de atención</h3>
                 <div className="grid grid-cols-2 gap-4">
                     {schedule.map((item, index) => (
                         <div key={index}>
-                            <p className="text-gray-700 font-medium">{item.days}</p>
-                            <p className="text-black">{item.hours}</p>
+                            <p className="text-text-secondary font-medium">{item.days}</p>
+                            <p className="text-ink">{item.hours}</p>
                         </div>
                     ))}
                 </div>
             </div>
           </div>
-          
-          <div className="flex-1 w-full h-96 rounded-xl overflow-hidden shadow-2xl border-4 border-red-600">
+
+          <div className="flex-1 w-full h-96 rounded-xl overflow-hidden shadow-2xl border-4 border-primary">
             <iframe
                 title="Ubicación MangaNihon"
                 src="https://www.openstreetmap.org/export/embed.html?bbox=-58.3816%2C-34.6037%2C-58.3816%2C-34.6037&amp;layer=mapnik"
@@ -84,9 +84,9 @@ export default function SectionMap() {
         </div>
         
         <div className="mt-12 text-center">
-          <Link 
-            href="/contacto" 
-            className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-md transition-colors duration-300"
+          <Link
+            href="/contacto"
+            className="inline-flex items-center bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-md transition-colors duration-300"
           >
             Envíanos un mensaje
           </Link>

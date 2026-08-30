@@ -6,11 +6,11 @@ export default function ErrorPage() {
   const router = useRouter()
 
   return (
-    <main className="h-screen flex items-center justify-center bg-[#FFF8F0] px-4">
+    <main className="h-screen flex items-center justify-center bg-cream px-4">
       <div className="text-center max-w-md">
         <div className="mx-auto bg-red-100 w-20 h-20 rounded-full flex items-center justify-center mb-6">
           <svg
-            className="w-10 h-10 text-red-600"
+            className="w-10 h-10 text-danger"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -23,15 +23,15 @@ export default function ErrorPage() {
             />
           </svg>
         </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-3">
+        <h1 className="text-3xl font-bold text-text mb-3">
           Algo salió mal
         </h1>
-        <p className="text-gray-600 mb-8">
+        <p className="text-text-secondary mb-8">
           Ha ocurrido un error inesperado. Por favor, intenta nuevamente.
         </p>
         <button
           onClick={() => router.push('/')}
-          className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors active:scale-95"
+          className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors active:scale-95"
         >
           Volver al inicio
         </button>

@@ -14,10 +14,10 @@ export default function Popular({id}:{id:string}) {
     const popularMangas = mangas.filter(manga => manga.es_popular);
     
     return (
-        <section id="popular" className="bg-[#FFF8F0] py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-red-600">
+        <section id="popular" className="bg-cream py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-primary">
             <div className="max-w-7xl mx-auto">
-                <h2 className="text-3xl font-bold text-center text-black mb-2">Mangas Populares</h2>
-                <p className="text-xl text-center text-gray-800 mb-12">Los favoritos de nuestros lectores</p>
+                <h2 className="text-3xl font-bold text-center text-ink mb-2">Mangas Populares</h2>
+                <p className="text-xl text-center text-text mb-12">Los favoritos de nuestros lectores</p>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center">
                     {popularMangas.map(manga => (

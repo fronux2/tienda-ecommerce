@@ -17,9 +17,9 @@ const MangaDetailClient = ({ id, manga }: Props) => {
   // -- UI para ID no válido --
   if (!id) {
     return (
-      <div className="min-h-[50vh] flex flex-col items-center justify-center text-[#FFF8F0]">
+      <div className="min-h-[50vh] flex flex-col items-center justify-center text-cream">
         <h2 className="text-2xl font-bold mb-4">Bienvenido a MangaNihon</h2>
-        <Link href="/mangas" className="text-red-500 hover:text-red-400 underline">
+        <Link href="/mangas" className="text-primary-light hover:text-red-400 underline">
           Explora nuestro catálogo completo
         </Link>
       </div>
@@ -29,10 +29,10 @@ const MangaDetailClient = ({ id, manga }: Props) => {
   // -- UI para Manga no encontrado (Estilo Dark) --
   if (!manga) {
     return (
-      <div className="max-w-xl mx-auto p-8 mt-12 bg-neutral-900 border border-red-600/50 text-[#FFF8F0] rounded-lg text-center shadow-lg shadow-red-900/20">
-        <h1 className="text-3xl font-bold mb-4 text-red-500">Manga no encontrado</h1>
-        <p className="text-gray-400 mb-6">No pudimos encontrar el manga con ID: <span className="font-mono text-sm bg-black px-2 py-1 rounded">{id}</span></p>
-        <Link href="/mangas" className="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded transition-colors">
+      <div className="max-w-xl mx-auto p-8 mt-12 bg-neutral-900 border border-primary/50 text-cream rounded-lg text-center shadow-lg shadow-red-900/20">
+        <h1 className="text-3xl font-bold mb-4 text-primary-light">Manga no encontrado</h1>
+        <p className="text-gray-400 mb-6">No pudimos encontrar el manga con ID: <span className="font-mono text-sm bg-ink px-2 py-1 rounded">{id}</span></p>
+        <Link href="/mangas" className="inline-block bg-primary hover:bg-primary-hover text-white font-medium py-2 px-6 rounded transition-colors">
           Volver al catálogo
         </Link>
       </div>
@@ -43,7 +43,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
   const isAvailable = manga.stock > 0;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#FFF8F0] pb-20">
+    <div className="min-h-screen bg-[#0a0a0a] text-cream pb-20">
       
       {/* Fondo decorativo difuminado (Opcional, da un toque muy pro) */}
       <div className="absolute top-0 left-0 w-full h-100 overflow-hidden opacity-20 pointer-events-none z-0">
@@ -59,7 +59,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 relative z-10">
         
         {/* Breadcrumb / Botón Volver */}
-        <Link href="/mangas" className="inline-flex items-center text-gray-400 hover:text-red-500 mb-8 transition-colors group">
+        <Link href="/mangas" className="inline-flex items-center text-gray-400 hover:text-primary-light mb-8 transition-colors group">
           <svg className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -81,11 +81,11 @@ const MangaDetailClient = ({ id, manga }: Props) => {
               {/* Badge de Stock flotante */}
               <div className="absolute top-4 right-4">
                  {isAvailable ? (
-                    <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    <span className="bg-success text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                       EN STOCK
                     </span>
                  ) : (
-                    <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    <span className="bg-danger text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                       AGOTADO
                     </span>
                  )}
@@ -100,7 +100,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
             <div>
               <div className="flex flex-wrap gap-2 mb-3">
                 {manga.categorias?.nombre && (
-                  <span className="bg-red-600/10 text-red-500 border border-red-600/30 text-xs font-semibold px-3 py-1 rounded uppercase tracking-wide">
+                  <span className="bg-primary/10 text-primary-light border border-primary/30 text-xs font-semibold px-3 py-1 rounded uppercase tracking-wide">
                     {manga.categorias.nombre}
                   </span>
                 )}
@@ -140,7 +140,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
 
             {/* Descripción */}
             <div className="prose prose-invert max-w-none">
-              <h3 className="text-xl font-bold text-white mb-2 border-l-4 border-red-600 pl-3">Sinopsis</h3>
+              <h3 className="text-xl font-bold text-white mb-2 border-l-4 border-primary pl-3">Sinopsis</h3>
               <p className="text-gray-300 leading-relaxed text-lg">
                 {manga.descripcion}
               </p>
@@ -175,7 +175,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
 const DetailItem = ({ label, value }: { label: string, value: string | number | undefined | null }) => (
   <div className="flex justify-between border-b border-neutral-800 pb-2">
     <dt className="text-gray-500 font-medium">{label}</dt>
-    <dd className="text-[#FFF8F0] font-semibold text-right">{value || '---'}</dd>
+    <dd className="text-cream font-semibold text-right">{value || '---'}</dd>
   </div>
 );
 

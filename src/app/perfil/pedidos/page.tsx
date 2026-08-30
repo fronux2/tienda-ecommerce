@@ -42,7 +42,7 @@ export default function MisPedidos() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -58,8 +58,8 @@ export default function MisPedidos() {
             onClick={() => setFiltro(estado)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filtro === estado
-                ? 'bg-red-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-primary text-white'
+                : 'bg-gray-100 text-text-secondary hover:bg-gray-200'
             }`}
           >
             {estado === 'todos' ? 'Todos' : estado.charAt(0).toUpperCase() + estado.slice(1)}
@@ -68,11 +68,11 @@ export default function MisPedidos() {
       </div>
 
       {filtrados.length === 0 ? (
-        <div className="text-center py-16 bg-gray-50 rounded-lg">
-          <p className="text-gray-500 mb-4">No hay pedidos que mostrar</p>
+        <div className="text-center py-16 bg-surface-alt rounded-lg">
+          <p className="text-text-muted mb-4">No hay pedidos que mostrar</p>
           <Link
             href="/mangas"
-            className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors"
           >
             Ir a la tienda
           </Link>
@@ -87,7 +87,7 @@ export default function MisPedidos() {
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-text-muted">
                     {new Date(pedido.fecha_pedido).toLocaleDateString('es-CL', {
                       year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
                     })}
@@ -95,7 +95,7 @@ export default function MisPedidos() {
                   <p className="font-semibold mt-1">
                     {pedido.detalle_pedidos?.length ?? 0} producto(s) — {formatPrice(pedido.total)}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">ID: {pedido.id.slice(0, 8)}…</p>
+                  <p className="text-xs text-text-muted mt-0.5">ID: {pedido.id.slice(0, 8)}…</p>
                 </div>
                 <EstadoBadge estado={pedido.estado} />
               </div>

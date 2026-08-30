@@ -25,19 +25,19 @@ export default async function PerfilDashboard() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-2">Bienvenido de nuevo</h1>
-      <p className="text-gray-600 mb-8">{user.email}</p>
+      <p className="text-text-secondary mb-8">{user.email}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
         <div className="border rounded-lg p-4 bg-gradient-to-br from-red-50 to-white">
-          <p className="text-sm text-gray-500">Total pedidos</p>
-          <p className="text-3xl font-bold text-red-600">{pedidosRecientes.length}</p>
+          <p className="text-sm text-text-muted">Total pedidos</p>
+          <p className="text-3xl font-bold text-primary">{pedidosRecientes.length}</p>
         </div>
         <Link href="/perfil/pedidos" className="border rounded-lg p-4 bg-gradient-to-br from-blue-50 to-white hover:shadow-md transition-shadow">
-          <p className="text-sm text-gray-500">Mis Pedidos</p>
+          <p className="text-sm text-text-muted">Mis Pedidos</p>
           <p className="text-lg font-semibold text-blue-600 mt-2">Ver historial →</p>
         </Link>
         <Link href="/perfil/direcciones" className="border rounded-lg p-4 bg-gradient-to-br from-green-50 to-white hover:shadow-md transition-shadow">
-          <p className="text-sm text-gray-500">Direcciones</p>
+          <p className="text-sm text-text-muted">Direcciones</p>
           <p className="text-lg font-semibold text-green-600 mt-2">Administrar →</p>
         </Link>
       </div>
@@ -45,11 +45,11 @@ export default async function PerfilDashboard() {
       <h2 className="text-xl font-semibold mb-4">Últimos pedidos</h2>
 
       {pedidosRecientes.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500 mb-4">Aún no has realizado ningún pedido</p>
+        <div className="text-center py-12 bg-surface-alt rounded-lg">
+          <p className="text-text-muted mb-4">Aún no has realizado ningún pedido</p>
           <Link
             href="/mangas"
-            className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors"
           >
             Explorar mangas
           </Link>
@@ -64,7 +64,7 @@ export default async function PerfilDashboard() {
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-text-muted">
                     {new Date(pedido.fecha_pedido).toLocaleDateString('es-CL', {
                       year: 'numeric', month: 'long', day: 'numeric'
                     })}
