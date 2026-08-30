@@ -67,8 +67,8 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
   return (
     <section className="space-y-8">
       {/* Encabezado y Filtros */}
-      <header className="bg-cream p-6 rounded-xl border-2 border-primary shadow-lg">
-        <h2 className="text-2xl md:text-3xl font-bold text-ink mb-6">
+      <header className="bg-surface p-6 rounded-xl border border-border shadow-sm">
+        <h2 className="text-2xl md:text-3xl font-bold text-text mb-6">
           Explora nuestra colección
           <span className="block h-1 w-16 bg-primary rounded-full mt-2"></span>
         </h2>
@@ -170,6 +170,8 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
                     precio={manga.precio}
                     userId={userId}
                     es_popular={manga.es_popular}
+                    volumen={manga.volumen}
+                    stock={manga.stock}
                   />
                 </li>
               ))}
@@ -183,7 +185,7 @@ export default function ListMangas({ mangas, userId }: { mangas: Manga[], userId
               {paginaActual < totalPaginas && (
                 <button
                   onClick={() => setPaginaActual((prev) => prev + 1)}
-                  className="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
                 >
                   Cargar más mangas
                 </button>

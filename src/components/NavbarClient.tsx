@@ -276,8 +276,8 @@ export default function NavbarClient({ user, rolId }: Props) {
         </div>
       </nav>
 
-      {/* Espacio para el navbar fijo */}
-      <div className="h-16"></div>
+      {/* Espacio para el navbar fijo (72px reales: py-3 + contenido) */}
+      <div className="h-[72px]"></div>
     </>
   )
 }

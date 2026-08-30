@@ -31,6 +31,8 @@ export default function Popular({id}:{id:string}) {
                             precio={manga.precio}
                             userId={id}
                             es_popular={manga.es_popular}
+                            volumen={manga.volumen}
+                            stock={manga.stock}
                         />
                     ))}
                 </div>

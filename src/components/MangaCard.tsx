@@ -13,9 +13,13 @@ type CardProps = {
   precio: number;
   userId: string | null;
   es_popular?: boolean;
+  volumen?: string | number;
+  stock?: number;
 };
 
-export default function MangaCard({ id, imagen, titulo, autor, editorial, precio, userId, es_popular }: CardProps) {
+export default function MangaCard({ id, imagen, titulo, autor, editorial, precio, userId, es_popular, volumen, stock }: CardProps) {
+  const stockBajo = typeof stock === "number" && stock > 0 && stock <= 5;
+
   return (
     <div className="bg-cream rounded-xl shadow-lg overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 w-64">
       <Link href={`/mangas/${id}`} className="block">
@@ -30,6 +34,14 @@ export default function MangaCard({ id, imagen, titulo, autor, editorial, precio
           {es_popular && (
             <div className="absolute top-3 right-3 bg-primary text-white px-2 py-1 rounded-lg text-xs font-bold">
               POPULAR
+            </div>
+          )}
+          {(volumen || volumen === 0) && (
+            <div
+              className="absolute bottom-3 left-3 w-9 h-9 rounded-full bg-ink text-cream border-2 border-cream shadow-md flex items-center justify-center text-sm font-bold"
+              title={`Volumen ${volumen}`}
+            >
+              {volumen}
             </div>
           )}
         </div>
@@ -57,6 +69,9 @@ export default function MangaCard({ id, imagen, titulo, autor, editorial, precio
           <p className="text-xl font-bold text-primary">{formatPrice(precio)}</p>
           <AddToCartButton mangaId={id} userId={userId} />
         </div>
+        {stockBajo && (
+          <p className="text-xs text-warning font-medium mt-2">¡Solo {stock} unidades disponibles!</p>
+        )}
       </div>
     </div>
   );
