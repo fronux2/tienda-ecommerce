@@ -150,8 +150,8 @@ export default function WebpayResultadoPage() {
   if (status === 'loading') {
     return (
       <div className="max-w-md mx-auto mt-20 text-center">
-        <div className="animate-spin h-10 w-10 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4" />
-        <p className="text-gray-600">Procesando tu pago...</p>
+        <div className="animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+        <p className="text-text-secondary">Procesando tu pago...</p>
       </div>
     )
   }
@@ -159,21 +159,21 @@ export default function WebpayResultadoPage() {
   if (status === 'success') {
     return (
       <div className="max-w-md mx-auto mt-20 text-center">
-        <div className="text-green-600 text-6xl mb-4">✓</div>
+        <div className="text-success text-6xl mb-4">✓</div>
         <h1 className="text-2xl font-bold mb-2">¡Pago exitoso!</h1>
-        <p className="text-gray-600">Redirigiendo a tu pedido...</p>
+        <p className="text-text-secondary">Redirigiendo a tu pedido...</p>
       </div>
     )
   }
 
   return (
     <div className="max-w-md mx-auto mt-20 text-center">
-      <div className="text-red-600 text-6xl mb-4">✕</div>
+      <div className="text-danger text-6xl mb-4">✕</div>
       <h1 className="text-2xl font-bold mb-2">Error en el pago</h1>
-      <p className="text-gray-600 mb-6">{errorMsg}</p>
+      <p className="text-text-secondary mb-6">{errorMsg}</p>
       <Link
         href="/cart"
-        className="inline-block px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+        className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
       >
         Volver al carrito
       </Link>

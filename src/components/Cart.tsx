@@ -23,7 +23,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
       {/* Botón del carrito en el navbar */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 group active:scale-90 transition-transform"
+        className="relative p-2 group rounded-full active:scale-90 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
         aria-label="Abrir carrito"
       >
         <FaShoppingCart 
@@ -48,7 +48,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
           <h2 className="text-xl font-bold text-white">Tu Carrito</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-white hover:text-gray-200 active:scale-90 transition-all"
+            className="text-white hover:text-white/80 rounded-full active:scale-90 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             aria-label="Cerrar carrito"
           >
             <FaTimes size={20} />
@@ -88,7 +88,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                         <div className="flex items-center mt-2 gap-2">
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad - 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-cream border border-border rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-6 h-6 flex items-center justify-center bg-cream border border-border rounded-md hover:bg-surface-alt active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                             disabled={item.cantidad <= 1 || cartLoading}
                             aria-label="Reducir cantidad"
                           >
@@ -99,7 +99,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
                           <button
                             onClick={() => updateQuantity(userId, item.manga_id, item.cantidad + 1)}
-                            className="w-6 h-6 flex items-center justify-center bg-cream border border-border rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-6 h-6 flex items-center justify-center bg-cream border border-border rounded-md hover:bg-surface-alt active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                             disabled={item.cantidad >= (item.mangas.stock || 10) || cartLoading}
                             aria-label="Aumentar cantidad"
                           >
@@ -116,7 +116,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
                             try { await removeFromCart(item.manga_id, userId) }
                             finally { setCartLoading(false) }
                           }}
-                          className="text-primary hover:text-primary-hover active:scale-90 transition-all disabled:opacity-50"
+                          className="text-primary hover:text-primary-hover rounded-full active:scale-90 transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                           disabled={cartLoading}
                           aria-label="Eliminar del carrito"
                         >
@@ -144,7 +144,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
 
             <div className="grid grid-cols-2 gap-2">
               <button
-                className="bg-primary hover:bg-primary-hover text-white py-2 px-4 rounded transition flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-primary hover:bg-primary-hover text-white py-2 px-4 rounded-lg transition flex items-center justify-center active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
                 onClick={async () => {
                   if (cartLoading) return
                   setCartLoading(true)
@@ -158,7 +158,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
               </button>
               
               <button
-                className="bg-ink hover:bg-gray-800 text-white py-2 px-4 rounded transition active:scale-95"
+                className="bg-ink hover:bg-ink/90 text-white py-2 px-4 rounded-lg transition active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
                 onClick={() => {
                   setIsOpen(false)
                   router.push('/checkout')

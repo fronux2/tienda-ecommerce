@@ -19,11 +19,11 @@ export default function GlobalLoading() {
   if (!isLoading) return null;
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+    <div className="fixed inset-0 bg-surface z-50 flex flex-col items-center justify-center">
       <div className="mb-4">
         <Loading />
       </div>
-      <p className="text-lg text-gray-600">Cargando aplicación...</p>
+      <p className="text-lg text-text-secondary">Cargando aplicación...</p>
     </div>
   );
 }

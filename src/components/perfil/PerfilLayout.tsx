@@ -23,8 +23,10 @@ export default function PerfilLayout({ children }: { children: React.ReactNode }
 
   return (
     <div className="min-h-screen bg-ink flex flex-col md:flex-row">
-      <div
-        className={`fixed top-0 bottom-0 z-20 w-6 bg-ink flex items-center justify-center cursor-pointer transition-all duration-300 ${
+      <button
+        type="button"
+        aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+        className={`fixed top-0 bottom-0 z-20 w-6 bg-ink flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light ${
           isMenuOpen ? 'left-64' : 'left-0'
         }`}
         onClick={toggleMenu}
@@ -32,7 +34,7 @@ export default function PerfilLayout({ children }: { children: React.ReactNode }
         <div className="text-cream hover:text-primary-light transition-colors">
           {isMenuOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </div>
-      </div>
+      </button>
 
       <aside
         className={`fixed top-0 bottom-0 z-10 bg-surface shadow-lg transition-all duration-300 ${
@@ -50,7 +52,7 @@ export default function PerfilLayout({ children }: { children: React.ReactNode }
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light ${
                       activo
                         ? 'bg-cream text-primary font-semibold'
                         : 'hover:bg-cream hover:text-primary'

@@ -59,12 +59,12 @@ export default function MisDatos() {
             type="email"
             value={email}
             readOnly
-            className="w-full p-2 border rounded bg-gray-100 text-text-muted cursor-not-allowed"
+            className="w-full p-2 border border-border rounded-md bg-surface-alt text-text-muted cursor-not-allowed"
           />
           <p className="text-xs text-text-muted mt-1">El email no se puede cambiar desde aquí</p>
         </div>
 
-        <div className="border-t pt-6">
+        <div className="border-t border-border pt-6">
           <h2 className="font-semibold mb-2">Contraseña</h2>
           <p className="text-sm text-text-secondary mb-4">
             Recibirás un correo con instrucciones para restablecer tu contraseña
@@ -72,24 +72,21 @@ export default function MisDatos() {
           <LoadingButton
             onClick={handleChangePassword}
             loading={cambiandoPass}
-            className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+            variant="primary"
           >
             Cambiar contraseña
           </LoadingButton>
         </div>
 
-        <div className="border-t pt-6">
+        <div className="border-t border-border pt-6">
           <h2 className="font-semibold mb-2">Cerrar sesión</h2>
           <p className="text-sm text-text-secondary mb-4">
             Cierra tu sesión en este dispositivo
           </p>
           <form action="/logout" method="post">
-            <button
-              type="submit"
-              className="bg-gray-200 text-text-secondary px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors active:scale-95"
-            >
+            <LoadingButton type="submit" variant="secondary">
               Cerrar sesión
-            </button>
+            </LoadingButton>
           </form>
         </div>
       </div>

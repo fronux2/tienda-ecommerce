@@ -101,7 +101,30 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 
 **Hecho** (2026-08-30): Fase 4 completa dentro del alcance de Admin (los 3 ítems). `npx tsc --noEmit` sin errores nuevos fuera de `__tests__`. Verificado visualmente en `/admin/mangas` (incluyendo navegación por teclado del toggle del sidebar y foco visible en selects/chips), `/admin/pedidos`, `/admin/series`, `/admin/usuarios`, `/admin/categorias`.
 
-**Pendiente real (fuera del alcance de hoy):** aplicar la misma escala de radios y auditoría de hover/focus/disabled a la tienda (`checkout`, `cart`, `webpay`, `perfil/*`, `MangaDetailClient`) — no se tocó porque son flujos de compra/pago que no formaban parte del trabajo de Admin de hoy y merecen su propia revisión.
+**Pendiente real (fuera del alcance de hoy):** ~~aplicar la misma escala de radios y auditoría de hover/focus/disabled a la tienda~~ — **hecho** (ver sección "Fase 4 extendida a la tienda" más abajo).
+
+---
+
+## Fase 4 extendida a la tienda (2026-08-30, mismo día)
+
+Se aplicó la misma escala de radios + colores/tokens + hover/focus/disabled que en Admin, ahora a toda la tienda:
+
+- **`checkout/page.tsx`** — no se había tocado en ninguna fase anterior (tenía `blue-600`/`green-600` crudos). Migrado completo: botón "Agregar dirección" → `variant`-secondary manual (outline ink), inputs → `border-border rounded-md focus:ring-primary`, "Guardar dirección" → `bg-primary`, botón final "Pagar con Webpay" → `bg-primary rounded-lg` (antes verde) con focus-visible ring. Solo cambios de clases CSS, ningún handler del flujo de pago se tocó.
+- **`webpay/resultado/page.tsx`** — spinner/success/error migrados a `border-primary`/`text-success`/`text-danger`/`text-text-secondary`; botón "Volver al carrito" → `bg-primary rounded-lg` + focus ring.
+- **`Cart.tsx`** (panel lateral) y **`app/cart/page.tsx`** — grises sueltos (`hover:bg-gray-100`, `hover:bg-gray-800`) → `hover:bg-surface-alt`/`hover:bg-ink/90`; radios `rounded`→`rounded-md`/`rounded-lg`; focus-visible ring en todos los botones (toggle, cerrar, +/-, eliminar, vaciar, comprar).
+- **`perfil/page.tsx`** — los 3 tiles de acceso rápido (antes `from-blue-50`/`from-green-50` crudos, ya documentado como decisión deliberada) migrados a `from-info/5`/`from-success/5` — mantienen la diferenciación de color por tile pero atada a tokens semánticos en vez de literales Tailwind.
+- **`perfil/datos/page.tsx`** — input readonly → tokens; botón "Cerrar sesión" migrado a `LoadingButton variant="secondary"` (elimina duplicación); "Cambiar contraseña" migrado a `variant="primary"`.
+- **`perfil/direcciones/page.tsx`** — 7 inputs + caja de formulario → tokens; botón "Guardar/Actualizar" → `bg-success` (antes `green-600`); "Editar" → `text-info` (antes `blue-600`, mantiene la distinción semántica editar=info ya documentada); "Eliminar" ya era `text-primary`.
+- **`perfil/pedidos/page.tsx`** y **`perfil/pedidos/[id]/page.tsx`** — tabs de filtro, cards, "Gratis" (→ `text-success`) y separadores migrados.
+- **`TimelineEstado.tsx`** — no se había tocado; migrado completo de `red-400/green-500/gray-300` a `border-danger`/`bg-success`/`border-border`.
+- **`PerfilLayout.tsx`** — mismo fix de accesibilidad que `admin/layout.tsx`: el toggle del sidebar pasó de `<div onClick>` a `<button>` con `aria-label`, más focus-visible en los links del menú.
+- **`direccion/page.tsx`**, **`busqueda/page.tsx`** — autocompletar de direcciones/búsqueda migrados a tokens (no eran parte de ningún flujo documentado antes, encontrados en el barrido).
+- **`login/page.tsx`**, **`registro/page.tsx`** — el botón secundario ("Crear cuenta"/"Iniciar sesión", outline) tenía `hover:bg-gray-100` suelto; el submit primario no tenía focus-visible ring. Ambos corregidos.
+- **`app/loading.tsx`**, **`components/Loading.tsx`** — spinners globales migrados (`border-blue-500`→`border-primary`, `text-gray-600`→`text-text-secondary`).
+- **`AddToCartButton.tsx`** — usaba `bg-red-600` crudo en vez del token; migrado a `LoadingButton variant="primary"`.
+- **`MangaDetailClient.tsx`** — **los grises oscuros se dejaron intactos a propósito** (mismo motivo documentado en Fase 1: tema oscuro real, tokens de texto calibrados para fondo claro). Solo se corrigieron los radios sueltos (`rounded`→`rounded-md`/`rounded-lg`) sin tocar ningún color.
+
+`npx tsc --noEmit` sin errores nuevos fuera de `__tests__` en todo el proceso. Verificado visualmente: `/cart` (vacío y con producto), `/mangas` (botón "Añadir al Carrito"), `/checkout` (formulario de dirección completo, incluyendo el submit).
 
 ---
 
@@ -113,9 +136,9 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 | 1 — Tienda | ✅ Hecha (2026-08-30) — 17/17 archivos |
 | 2 — Componentes compartidos | ✅ Hecha (2026-08-30, sin commitear) |
 | 3 — Admin | ✅ Hecha (2026-08-30, sin commitear) |
-| 4 — Pulido | ✅ Hecha en Admin (2026-08-30) — pendiente extender a la tienda |
+| 4 — Pulido | ✅ Hecha en Admin **y en la tienda** (2026-08-30) |
 
-**Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2, Fase 3 y Fase 4 completas para Admin (que era el foco de todo el trabajo de hoy). La tienda (checkout/cart/webpay/perfil) no se tocó en Fase 4 — ver nota al final de esa sección. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
+**Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2, Fase 3 y Fase 4 completas — Admin y tienda. El plan de unificación de diseño está terminado en su totalidad. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
 
 **Nota sobre `MangaDetailClient.tsx`:** es la única página con tema oscuro (fondo casi negro, `neutral-800/900`, grises claros de texto). Ahí solo se tocaron los valores con equivalencia exacta de color (cream, ink, primary, success, danger); los grises/neutros específicos del modo oscuro se dejaron sin tocar a propósito porque los tokens `text-text*` están calibrados para fondo claro y perderían contraste sobre negro. Si más adelante se quiere un tema oscuro real, eso necesita sus propios tokens (fuera del alcance de este plan).
 
@@ -131,4 +154,4 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 - `bg-[#FFF8F0]`/`text-[#FFF8F0]` → `bg-cream`/`text-cream`
 - `red-600` → `primary` · `red-700` (hover) → `primary-hover` · `red-500`/`red-400` → `primary-light`
 
-**Próximo paso concreto:** el plan de unificación de Admin (Fases 0-4) está terminado. Si se quiere seguir, el trabajo pendiente es extender la misma escala de radios + auditoría de hover/focus/disabled a la tienda (`checkout`, `cart`, `webpay`, `perfil/*`, `MangaDetailClient`) — no era parte del alcance de hoy.
+**Próximo paso concreto:** el plan de unificación de diseño (Fases 0-4, Admin y tienda) está terminado. Lo único que queda deliberadamente fuera es un tema oscuro real para el resto del sitio (hoy solo `MangaDetailClient.tsx` es oscuro) — eso necesitaría sus propios tokens y es un proyecto aparte, no parte de este plan.

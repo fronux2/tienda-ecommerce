@@ -55,7 +55,7 @@ const CartPage = () => {
         </div>
         <Link
           href="/mangas"
-          className="text-primary hover:text-primary-hover font-medium transition-colors active:scale-95"
+          className="text-primary hover:text-primary-hover font-medium transition-colors active:scale-95 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
         >
           Seguir comprando
         </Link>
@@ -71,7 +71,7 @@ const CartPage = () => {
           <p className="text-text-muted mb-8">Agrega algunos mangas para empezar</p>
           <Link
             href="/mangas"
-            className="inline-block bg-primary hover:bg-primary-hover text-white font-medium py-3 px-8 rounded-lg transition-colors active:scale-95"
+            className="inline-block bg-primary hover:bg-primary-hover text-white font-medium py-3 px-8 rounded-lg transition-colors active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
           >
             Explorar mangas
           </Link>
@@ -112,7 +112,7 @@ const CartPage = () => {
                         <button
                           onClick={() => updateQuantity(userId, item.manga_id, item.cantidad - 1)}
                           disabled={item.cantidad <= 1 || loading}
-                          className="w-8 h-8 flex items-center justify-center bg-cream border border-border rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-8 h-8 flex items-center justify-center bg-cream border border-border rounded-md hover:bg-surface-alt active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                           aria-label="Reducir cantidad"
                         >
                           <FaMinus size={10} />
@@ -123,7 +123,7 @@ const CartPage = () => {
                         <button
                           onClick={() => updateQuantity(userId, item.manga_id, item.cantidad + 1)}
                           disabled={item.cantidad >= (item.mangas.stock || 99) || loading}
-                          className="w-8 h-8 flex items-center justify-center bg-cream border border-border rounded hover:bg-gray-100 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-8 h-8 flex items-center justify-center bg-cream border border-border rounded-md hover:bg-surface-alt active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                           aria-label="Aumentar cantidad"
                         >
                           <FaPlus size={10} />
@@ -142,7 +142,7 @@ const CartPage = () => {
                     <button
                       onClick={() => handleRemove(item.manga_id)}
                       disabled={loading}
-                      className="text-text-muted hover:text-primary active:scale-90 transition-all disabled:opacity-50"
+                      className="text-text-muted hover:text-primary rounded-full active:scale-90 transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                       aria-label="Eliminar del carrito"
                     >
                       <FaTrash size={16} />
@@ -179,7 +179,7 @@ const CartPage = () => {
                 onClick={() => router.push('/checkout')}
                 loading={false}
                 disabled={loading}
-                className="w-full mt-6 bg-ink hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg"
+                className="w-full mt-6 bg-ink hover:bg-ink/90 text-white font-medium py-3 px-6 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
               >
                 Ir a pagar
               </LoadingButton>
@@ -187,7 +187,7 @@ const CartPage = () => {
               <LoadingButton
                 onClick={handleClear}
                 loading={loading}
-                className="w-full mt-3 bg-surface border border-border hover:bg-gray-100 text-text-secondary font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+                className="w-full mt-3 bg-surface border border-border hover:bg-surface-alt text-text-secondary font-medium py-3 px-6 rounded-lg flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
               >
                 <FaTrash size={14} />
                 Vaciar carrito

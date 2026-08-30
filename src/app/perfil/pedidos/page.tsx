@@ -56,10 +56,10 @@ export default function MisPedidos() {
           <button
             key={estado}
             onClick={() => setFiltro(estado)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light ${
               filtro === estado
                 ? 'bg-primary text-white'
-                : 'bg-gray-100 text-text-secondary hover:bg-gray-200'
+                : 'bg-surface-alt text-text-secondary hover:bg-border'
             }`}
           >
             {estado === 'todos' ? 'Todos' : estado.charAt(0).toUpperCase() + estado.slice(1)}
@@ -72,7 +72,7 @@ export default function MisPedidos() {
           <p className="text-text-muted mb-4">No hay pedidos que mostrar</p>
           <Link
             href="/mangas"
-            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors"
+            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
           >
             Ir a la tienda
           </Link>
@@ -83,7 +83,7 @@ export default function MisPedidos() {
             <Link
               key={pedido.id}
               href={`/perfil/pedidos/${pedido.id}`}
-              className="block border rounded-lg p-4 hover:shadow-md hover:border-red-300 transition-all"
+              className="block border border-border rounded-lg p-4 hover:shadow-md hover:border-primary-light transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
             >
               <div className="flex justify-between items-center">
                 <div>

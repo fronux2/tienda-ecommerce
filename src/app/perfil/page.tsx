@@ -28,17 +28,17 @@ export default async function PerfilDashboard() {
       <p className="text-text-secondary mb-8">{user.email}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-        <div className="border rounded-lg p-4 bg-gradient-to-br from-red-50 to-white">
+        <div className="border border-border rounded-lg p-4 bg-gradient-to-br from-primary/5 to-surface">
           <p className="text-sm text-text-muted">Total pedidos</p>
           <p className="text-3xl font-bold text-primary">{pedidosRecientes.length}</p>
         </div>
-        <Link href="/perfil/pedidos" className="border rounded-lg p-4 bg-gradient-to-br from-blue-50 to-white hover:shadow-md transition-shadow">
+        <Link href="/perfil/pedidos" className="border border-border rounded-lg p-4 bg-gradient-to-br from-info/5 to-surface hover:shadow-md transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">
           <p className="text-sm text-text-muted">Mis Pedidos</p>
-          <p className="text-lg font-semibold text-blue-600 mt-2">Ver historial →</p>
+          <p className="text-lg font-semibold text-info mt-2">Ver historial →</p>
         </Link>
-        <Link href="/perfil/direcciones" className="border rounded-lg p-4 bg-gradient-to-br from-green-50 to-white hover:shadow-md transition-shadow">
+        <Link href="/perfil/direcciones" className="border border-border rounded-lg p-4 bg-gradient-to-br from-success/5 to-surface hover:shadow-md transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">
           <p className="text-sm text-text-muted">Direcciones</p>
-          <p className="text-lg font-semibold text-green-600 mt-2">Administrar →</p>
+          <p className="text-lg font-semibold text-success mt-2">Administrar →</p>
         </Link>
       </div>
 
@@ -49,7 +49,7 @@ export default async function PerfilDashboard() {
           <p className="text-text-muted mb-4">Aún no has realizado ningún pedido</p>
           <Link
             href="/mangas"
-            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors"
+            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-hover transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
           >
             Explorar mangas
           </Link>
@@ -60,7 +60,7 @@ export default async function PerfilDashboard() {
             <Link
               key={pedido.id}
               href={`/perfil/pedidos/${pedido.id}`}
-              className="block border rounded-lg p-4 hover:shadow-md hover:border-red-300 transition-all"
+              className="block border border-border rounded-lg p-4 hover:shadow-md hover:border-primary-light transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
             >
               <div className="flex justify-between items-center">
                 <div>

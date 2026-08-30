@@ -219,60 +219,60 @@ const CheckoutPage = () => {
         <h2 className="text-xl font-semibold mb-4">Dirección de Envío</h2>
 
         <button
-          className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="mb-4 px-4 py-2 bg-surface border-2 border-ink text-ink rounded-md hover:bg-surface-alt transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
           onClick={() => setShowAddressForm(!showAddressForm)}
         >
           {showAddressForm ? 'Cancelar' : 'Agregar nueva dirección'}
         </button>
 
         {showAddressForm && (
-          <div className="border p-4 rounded mb-4">
+          <div className="border border-border p-4 rounded-lg mb-4">
             <input
               type="text"
               placeholder="Nombre de dirección Casa/Trabajo/departamento de mi mama, etc."
               value={newAddress.nombre_direccion}
               onChange={(e) => setNewAddress({ ...newAddress, nombre_direccion: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Calle / Pasaje / Av."
               value={newAddress.calle}
               onChange={(e) => setNewAddress({ ...newAddress, calle: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="N° (ej: 1234)"
               value={newAddress.numero}
               onChange={(e) => setNewAddress({ ...newAddress, numero: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Depto / Oficina (opcional)"
               value={newAddress.departamento}
               onChange={(e) => setNewAddress({ ...newAddress, departamento: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Comuna"
               value={newAddress.comuna}
               onChange={(e) => setNewAddress({ ...newAddress, comuna: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Ciudad"
               value={newAddress.ciudad}
               onChange={(e) => setNewAddress({ ...newAddress, ciudad: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <select
               value={newAddress.region}
               onChange={(e) => setNewAddress({ ...newAddress, region: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             >
               <option value="">Selecciona una región</option>
               {REGIONES_CHILE.map((r) => (
@@ -284,12 +284,12 @@ const CheckoutPage = () => {
               placeholder="Código postal"
               value={newAddress.codigo_postal}
               onChange={(e) => setNewAddress({ ...newAddress, codigo_postal: e.target.value })}
-              className="w-full mb-4 p-2 border rounded"
+              className="w-full mb-4 p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <LoadingButton
               onClick={handleAddAddress}
               loading={savingAddress}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
             >
               Guardar dirección
             </LoadingButton>
@@ -301,7 +301,7 @@ const CheckoutPage = () => {
           <select
             value={addressId}
             onChange={(e) => setAddressId(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="">Selecciona una dirección</option>
             {addresses.map(addr => (
@@ -311,12 +311,12 @@ const CheckoutPage = () => {
             ))}
           </select>
         ) : (
-          <p className="text-gray-600">No tienes direcciones registradas.</p>
+          <p className="text-text-muted">No tienes direcciones registradas.</p>
         )}
       </div>
 
       {/* Resumen del pedido */}
-      <div className="border p-4 rounded-lg mb-6">
+      <div className="border border-border p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-4">Resumen del Pedido</h2>
         {cart.map(item => {
           const title = item.mangas?.titulo ?? 'Manga desconocido'
@@ -328,7 +328,7 @@ const CheckoutPage = () => {
             </div>
           )
         })}
-        <div className="flex justify-between mt-4 pt-4 border-t">
+        <div className="flex justify-between mt-4 pt-4 border-t border-border">
           <span className="font-bold">Total:</span>
           <span className="font-bold">{formatPrice(total)}</span>
         </div>
@@ -337,12 +337,12 @@ const CheckoutPage = () => {
       {/* Método de pago */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Método de Pago</h2>
-        <div className="border rounded-lg p-4 bg-gray-50">
+        <div className="border border-border rounded-lg p-4 bg-surface-alt">
           <div className="flex items-center gap-3">
             <div className="text-2xl">💳</div>
             <div>
               <p className="font-semibold">Webpay Plus</p>
-              <p className="text-sm text-gray-600">Tarjetas de crédito y débito</p>
+              <p className="text-sm text-text-secondary">Tarjetas de crédito y débito</p>
             </div>
           </div>
         </div>
@@ -352,7 +352,7 @@ const CheckoutPage = () => {
         onClick={handleWebpayPayment}
         loading={loading}
         disabled={!addressId}
-        className="w-full px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 text-lg font-semibold"
+        className="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-hover text-lg font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
       >
         {`Pagar con Webpay — ${formatPrice(total)}`}
       </LoadingButton>

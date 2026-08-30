@@ -44,7 +44,8 @@ export function AddToCartButton({ mangaId, userId }: { mangaId: string, userId: 
       loading={loading}
       disabled={stockAgotado || loading}
       type="button"
-      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg shadow transition-colors duration-300"
+      variant="primary"
+      className="shadow"
     >
       {stockAgotado ? 'Stock agotado en carrito' : 'Añadir al Carrito'}
     </LoadingButton>

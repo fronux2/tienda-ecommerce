@@ -111,14 +111,14 @@ export default function MisDirecciones() {
         <h1 className="text-2xl font-bold">Mis Direcciones</h1>
         <button
           onClick={() => { resetForm(); setShowForm(!showForm) }}
-          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors active:scale-95"
+          className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
           {showForm ? 'Cancelar' : 'Agregar dirección'}
         </button>
       </div>
 
       {showForm && (
-        <div className="border rounded-lg p-4 mb-6 bg-gray-50">
+        <div className="border border-border rounded-lg p-4 mb-6 bg-surface-alt">
           <h2 className="font-semibold mb-4">
             {editandoId ? 'Editar dirección' : 'Nueva dirección'}
           </h2>
@@ -128,47 +128,47 @@ export default function MisDirecciones() {
               placeholder="Nombre (ej: Casa, Trabajo)"
               value={form.nombre_direccion}
               onChange={(e) => setForm({ ...form, nombre_direccion: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Calle / Pasaje / Av."
               value={form.calle}
               onChange={(e) => setForm({ ...form, calle: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="N° (ej: 1234)"
               value={form.numero}
               onChange={(e) => setForm({ ...form, numero: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Depto / Oficina (opcional)"
               value={form.departamento}
               onChange={(e) => setForm({ ...form, departamento: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Comuna"
               value={form.comuna}
               onChange={(e) => setForm({ ...form, comuna: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <input
               type="text"
               placeholder="Ciudad"
               value={form.ciudad}
               onChange={(e) => setForm({ ...form, ciudad: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <select
               value={form.region}
               onChange={(e) => setForm({ ...form, region: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             >
               <option value="">Selecciona una región</option>
               {REGIONES_CHILE.map((r) => (
@@ -180,13 +180,13 @@ export default function MisDirecciones() {
               placeholder="Código postal (opcional)"
               value={form.codigo_postal}
               onChange={(e) => setForm({ ...form, codigo_postal: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
             <LoadingButton
               onClick={handleSubmit}
               loading={saving}
               disabled={!form.nombre_direccion || !form.calle || !form.numero || !form.comuna || !form.ciudad}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+              className="bg-success text-white px-4 py-2 rounded-lg hover:bg-success/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2"
             >
               {editandoId ? 'Actualizar' : 'Guardar'}
             </LoadingButton>
@@ -201,7 +201,7 @@ export default function MisDirecciones() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {direcciones.map((d) => (
-            <div key={d.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div key={d.id} className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">{d.nombre_direccion}</p>
@@ -220,13 +220,13 @@ export default function MisDirecciones() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(d)}
-                    className="text-blue-600 hover:text-blue-800 text-sm active:scale-95 transition-all"
+                    className="text-info hover:opacity-80 text-sm active:scale-95 transition-all rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-info"
                   >
                     Editar
                   </button>
                   <button
                     onClick={() => handleDelete(d.id)}
-                    className="text-primary hover:text-primary-hover text-sm active:scale-95 transition-all"
+                    className="text-primary hover:text-primary-hover text-sm active:scale-95 transition-all rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                   >
                     Eliminar
                   </button>

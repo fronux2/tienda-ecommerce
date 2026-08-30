@@ -31,8 +31,8 @@ const MangaDetailClient = ({ id, manga }: Props) => {
     return (
       <div className="max-w-xl mx-auto p-8 mt-12 bg-neutral-900 border border-primary/50 text-cream rounded-lg text-center shadow-lg shadow-red-900/20">
         <h1 className="text-3xl font-bold mb-4 text-primary-light">Manga no encontrado</h1>
-        <p className="text-gray-400 mb-6">No pudimos encontrar el manga con ID: <span className="font-mono text-sm bg-ink px-2 py-1 rounded">{id}</span></p>
-        <Link href="/mangas" className="inline-block bg-primary hover:bg-primary-hover text-white font-medium py-2 px-6 rounded transition-colors">
+        <p className="text-gray-400 mb-6">No pudimos encontrar el manga con ID: <span className="font-mono text-sm bg-ink px-2 py-1 rounded-md">{id}</span></p>
+        <Link href="/mangas" className="inline-block bg-primary hover:bg-primary-hover text-white font-medium py-2 px-6 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2">
           Volver al catálogo
         </Link>
       </div>
@@ -100,11 +100,11 @@ const MangaDetailClient = ({ id, manga }: Props) => {
             <div>
               <div className="flex flex-wrap gap-2 mb-3">
                 {manga.categorias?.nombre && (
-                  <span className="bg-primary/10 text-primary-light border border-primary/30 text-xs font-semibold px-3 py-1 rounded uppercase tracking-wide">
+                  <span className="bg-primary/10 text-primary-light border border-primary/30 text-xs font-semibold px-3 py-1 rounded-md uppercase tracking-wide">
                     {manga.categorias.nombre}
                   </span>
                 )}
-                 <span className="bg-neutral-800 text-gray-300 border border-neutral-700 text-xs font-semibold px-3 py-1 rounded uppercase tracking-wide">
+                 <span className="bg-neutral-800 text-gray-300 border border-neutral-700 text-xs font-semibold px-3 py-1 rounded-md uppercase tracking-wide">
                     {manga.idioma}
                   </span>
               </div>
@@ -158,7 +158,7 @@ const MangaDetailClient = ({ id, manga }: Props) => {
                   <DetailItem label="Categoría" value={manga.categorias?.nombre || 'N/A'} />
                </dl>
                {manga.categorias?.descripcion && (
-                 <div className="mt-4 text-sm text-gray-500 italic bg-neutral-900 p-3 rounded border border-neutral-800">
+                 <div className="mt-4 text-sm text-gray-500 italic bg-neutral-900 p-3 rounded-md border border-neutral-800">
                    Sobre {manga.categorias.nombre}: {manga.categorias.descripcion}
                  </div>
                )}

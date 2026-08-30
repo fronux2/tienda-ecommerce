@@ -42,10 +42,10 @@ export default function BusquedaDireccionPage() {
         onChange={(e) => setBusqueda(e.target.value)}
         type="text"
         placeholder="Ej: Av. Providencia 1234"
-        className="w-full border p-2 rounded"
+        className="w-full border border-border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
       />
       {resultados.length > 0 && (
-        <ul className="bg-white border rounded shadow mt-2 max-h-60 overflow-y-auto">
+        <ul className="bg-surface border border-border rounded-lg shadow mt-2 max-h-60 overflow-y-auto">
           {resultados.map((r, i) => (
             <li
               key={i}
@@ -54,7 +54,7 @@ export default function BusquedaDireccionPage() {
                 setSeleccionado(r)
                 setResultados([])
               }}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
+              className="p-2 hover:bg-surface-alt cursor-pointer"
             >
               {r.display_name}
             </li>

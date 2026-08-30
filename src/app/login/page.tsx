@@ -143,7 +143,7 @@ export default function LoginPage() {
           <LoadingButton
             type="submit"
             loading={loading}
-            className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg"
+            className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
           >
             Iniciar sesión
           </LoadingButton>
@@ -161,7 +161,7 @@ export default function LoginPage() {
           {/* Registrarse */}
           <Link
             href="/registro"
-            className="block text-center w-full border-2 border-ink text-ink hover:bg-gray-100 font-bold py-3 px-4 rounded-lg shadow transition-colors duration-300"
+            className="block text-center w-full border-2 border-ink text-ink hover:bg-surface-alt font-bold py-3 px-4 rounded-lg shadow transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
           >
             Crear cuenta nueva
           </Link>

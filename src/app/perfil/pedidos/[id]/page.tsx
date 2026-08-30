@@ -47,7 +47,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
     <div>
       <Link
         href="/perfil/pedidos"
-        className="text-sm text-primary hover:text-primary-hover mb-4 inline-block"
+        className="text-sm text-primary hover:text-primary-hover mb-4 inline-block rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
       >
         ← Volver a mis pedidos
       </Link>
@@ -73,7 +73,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
             {pedidoData.detalle_pedidos.map((detalle) => (
               <div
                 key={detalle.id}
-                className="flex items-center gap-4 border rounded-lg p-3"
+                className="flex items-center gap-4 border border-border rounded-lg p-3"
               >
                 {detalle.mangas?.imagen_portada && (
                   <Image
@@ -81,7 +81,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
                     alt={detalle.mangas.titulo}
                     width={64}
                     height={80}
-                    className="w-16 h-20 object-cover rounded"
+                    className="w-16 h-20 object-cover rounded-md"
                   />
                 )}
                 <div className="flex-1">
@@ -97,7 +97,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="space-y-6">
-          <div className="border rounded-lg p-4">
+          <div className="border border-border rounded-lg p-4">
             <h3 className="font-semibold mb-3">Resumen</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -106,16 +106,16 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
               </div>
               <div className="flex justify-between">
                 <span className="text-text-muted">Envío</span>
-                <span className="text-green-600">Gratis</span>
+                <span className="text-success">Gratis</span>
               </div>
-              <div className="flex justify-between font-bold text-base pt-2 border-t">
+              <div className="flex justify-between font-bold text-base pt-2 border-t border-border">
                 <span>Total</span>
                 <span>{formatPrice(pedidoData.total)}</span>
               </div>
             </div>
           </div>
 
-          <div className="border rounded-lg p-4">
+          <div className="border border-border rounded-lg p-4">
             <h3 className="font-semibold mb-3">Pago</h3>
             <p className="text-sm text-text-secondary">
               {metodoPagoLabels[pedidoData.metodo_pago] || pedidoData.metodo_pago}
@@ -123,7 +123,7 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
           </div>
 
           {direccion && (
-            <div className="border rounded-lg p-4">
+            <div className="border border-border rounded-lg p-4">
               <h3 className="font-semibold mb-3">Dirección de envío</h3>
               <div className="text-sm text-text-secondary space-y-1">
                 <p className="font-medium text-text">{direccion.nombre_direccion}</p>

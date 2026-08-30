@@ -17,17 +17,17 @@ export default function TimelineEstado({ estadoActual }: { estadoActual: string 
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors ${
                   esCancelado
-                    ? 'border-red-400 bg-red-100 text-red-600'
+                    ? 'border-danger bg-danger/10 text-danger'
                     : completado
-                      ? 'border-green-500 bg-green-500 text-white'
-                      : 'border-gray-300 bg-white text-gray-400'
+                      ? 'border-success bg-success text-white'
+                      : 'border-border bg-surface text-text-muted'
                 }`}
               >
                 {esCancelado ? '✕' : completado ? '✓' : i + 1}
               </div>
               <span
                 className={`text-xs mt-1 font-medium ${
-                  activo ? 'text-green-600' : esCancelado ? 'text-red-500' : 'text-gray-500'
+                  activo ? 'text-success' : esCancelado ? 'text-danger' : 'text-text-muted'
                 }`}
               >
                 {paso.charAt(0).toUpperCase() + paso.slice(1)}
@@ -37,10 +37,10 @@ export default function TimelineEstado({ estadoActual }: { estadoActual: string 
               <div
                 className={`flex-1 h-0.5 mx-2 ${
                   esCancelado
-                    ? 'bg-red-300'
+                    ? 'bg-danger/30'
                     : completado && i < indiceActual
-                      ? 'bg-green-500'
-                      : 'bg-gray-300'
+                      ? 'bg-success'
+                      : 'bg-border'
                 }`}
               />
             )}
