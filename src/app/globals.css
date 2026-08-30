@@ -63,6 +63,10 @@
  * para que el panel no cambie si el staff navega ahí con el tema oscuro activo.
  */
 .admin-scope {
+  /* <body> tiene color adaptativo (para las superficies de la tienda en dark mode);
+     sin esto, cualquier texto de Admin sin clase text-* explícita heredaría ese
+     color claro/oscuro del body en vez del valor fijo de Admin. */
+  color: #111827;
   --color-cream: #fff8f0;
   --color-ink: #000000;
   --color-surface: #ffffff;

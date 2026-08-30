@@ -149,6 +149,12 @@ Toggle manual con `localStorage`, respetando `prefers-color-scheme` del sistema 
 
 Verificado visualmente en ambos temas: home completo (Hero/Populares/Invitation/Footer), login, `/cart`, y confirmado que `/admin/mangas` se mantiene en claro con el toggle en oscuro. `npx tsc --noEmit` sin errores nuevos.
 
+**Bug reportado por el usuario (2026-08-30, mismo día) — corregido:** en Admin, con el tema oscuro activo, el fondo se quedaba claro (correcto, es lo esperado) **pero las letras se volvían claras también** — texto claro sobre fondo claro, ilegible. Visto en `/admin/usuarios` y la sidebar.
+
+**Causa:** `.admin-scope` solo redefinía las *custom properties* (`--color-text`, etc.), pero nunca fijaba la propiedad `color` en sí sobre el propio contenedor. El `<body>` (agregado en esta misma Fase 5 para arreglar los huecos blancos) sí tiene `text-text` aplicado, que en modo oscuro es un color claro. Cualquier elemento de Admin sin una clase `text-*` explícita heredaba ese `color` claro directamente del `<body>` — el mecanismo de custom properties de `.admin-scope` nunca entraba en juego para esos elementos porque `color` es una propiedad heredada normal, no algo que sus descendientes recalculen desde `var(--color-text)` a menos que tengan la clase.
+
+**Fix:** `.admin-scope` ahora también fija `color: #111827;` directamente (no solo la variable), así el contenedor raíz de Admin tiene su propio `color` correcto para heredar hacia abajo, sin depender de que cada elemento tenga una clase `text-*` explícita.
+
 ---
 
 ## Progreso
