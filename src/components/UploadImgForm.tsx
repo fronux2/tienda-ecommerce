@@ -52,11 +52,12 @@ export default function UploadImgForm() {
         onClick={handleUpload}
         disabled={!file}
         loading={loading}
-        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+        variant="primary"
+        className="mt-2"
       >
         Subir imagen
       </LoadingButton>
-      {errorMsg && <p className="mt-2 text-red-600 text-sm">{errorMsg}</p>}
+      {errorMsg && <p className="mt-2 text-danger text-sm">{errorMsg}</p>}
       {url && (
         <div className="mt-4">
           <p>Imagen subida:</p>

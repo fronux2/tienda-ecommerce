@@ -7,6 +7,7 @@ import { fetchCartFromSupabase, addToCartSupabase } from '@/lib/supabase/service
 import { loadCartFromLocalStorage, clearCartFromLocalStorage } from '@/lib/cartLocalStorage'
 import { useEffect, useState, useRef } from 'react'
 import Cart from '@/components/Cart'
+import LoadingButton from '@/components/LoadingButton'
 
 type Props = {
   user: { id: string; email?: string } | null
@@ -254,7 +255,9 @@ export default function NavbarClient({ user, rolId }: Props) {
                   <NavLink href="/perfil/direcciones">Mis Direcciones</NavLink>
                   {rolId! >= 2 && <NavLink href="/admin">Panel Admin</NavLink>}
                   <form action="/logout" method="post">
-                    <Button type="submit">Cerrar sesión</Button>
+                    <LoadingButton type="submit" variant="primary" className="text-lg">
+                      Cerrar sesión
+                    </LoadingButton>
                   </form>
                 </div>
               ) : (
@@ -268,17 +271,5 @@ export default function NavbarClient({ user, rolId }: Props) {
       {/* Espacio para el navbar fijo */}
       <div className="h-16"></div>
     </>
-  )
-}
-
-function Button({ type = 'button', disabled = false, children }: { type?: "button" | "submit" | "reset"; disabled?: boolean; children: React.ReactNode }) {
-  return (
-    <button 
-      type={type}
-      disabled={disabled}
-      className="bg-primary hover:bg-primary-hover text-white font-medium py-2 px-4 rounded-md transition-colors cursor-pointer text-lg border border-primary-hover active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      {children}
-    </button>
   )
 }

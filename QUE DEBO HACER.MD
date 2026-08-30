@@ -61,12 +61,14 @@ Reemplazar `bg-[#FFF8F0]` → `bg-cream`, `text-red-600` → `text-primary`, etc
 
 Antes de tocar más archivos de Admin, crear los dos componentes que van a absorber toda la duplicación de badges/botones.
 
-- [ ] **`Button`**: variantes `primary` / `secondary` / `danger` / `ghost`. Ya existe `LoadingButton` — extenderlo con `variant` en vez de crear otro. Reemplaza el `Button` local duplicado dentro de `NavbarClient.tsx` y los estilos de botón copy-pasteados en login/registro/perfil.
-- [ ] **`Badge` / `StatusPill`**: un componente semántico único (`variant="success" | "warning" | "danger" | "info" | "neutral"`) que reemplaza:
-  - `components/perfil/EstadoBadge.tsx` (ya es semántico, es el modelo a seguir)
-  - el badge-map duplicado dentro de `MangasTable.tsx` (categorías: 40 usos de color)
-  - el badge-map duplicado dentro de `PedidosTable.tsx` (24 usos)
-  - el badge-map duplicado dentro de `SeriesTable.tsx` (5 usos)
+- [x] **`Button`**: variantes `primary` / `secondary` / `danger` / `ghost` (+ `size` sm/md/lg), agregadas como props opcionales a `LoadingButton` — sin variant/size, el componente se comporta exactamente igual que antes (los 12 call sites existentes no se tocaron). Reemplazado el `Button` local duplicado dentro de `NavbarClient.tsx` (menú móvil, botón "Cerrar sesión"). **Pendiente:** los estilos de botón copy-pasteados en login/registro/perfil no se tocaron todavía (bajo riesgo pero se dejó fuera de esta pasada).
+- [x] **`Badge`** (`src/components/Badge.tsx`): componente semántico único (`variant="success" | "warning" | "danger" | "info" | "neutral"`), pill con `bg-{color}/10 text-{color} border-{color}/20` usando los tokens de Fase 0. Reemplaza:
+  - [x] `components/perfil/EstadoBadge.tsx` — migrado a usar `Badge` por dentro (misma prop `estado`, cero cambios en call sites). Verificado visualmente en `/perfil/pedidos`.
+  - [ ] el badge-map duplicado dentro de `MangasTable.tsx` (categorías: 40 usos de color) — Fase 3
+  - [ ] el badge-map duplicado dentro de `PedidosTable.tsx` (24 usos) — Fase 3
+  - [ ] el badge-map duplicado dentro de `SeriesTable.tsx` (5 usos) — Fase 3
+
+**Hecho** (2026-08-30): `npx tsc --noEmit` sin errores nuevos (solo los preexistentes de `__tests__`, sin relación). Verificado en el navegador logueado: botón "Cerrar sesión" pixel-idéntico al anterior (bg `#dc2626`, radio 6px, padding 8px/16px, 18px), badge "Procesando" en `/perfil/pedidos` se ve como pill celeste discreto. Sin commitear todavía.
 
 ---
 
@@ -74,14 +76,20 @@ Antes de tocar más archivos de Admin, crear los dos componentes que van a absor
 
 Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 
-- [ ] `components/MangasTable.tsx` — mayor impacto (40 usos de color, 7+ colores distintos para categorías sin criterio)
-- [ ] `components/PedidosTable.tsx` — estados de pedido (24 usos, colores duplicados con distinto criterio que `EstadoBadge`)
-- [ ] `components/SeriesTable.tsx`
-- [ ] `components/CategoriaTable.tsx` / `CategoriaDataTable.tsx`
-- [ ] `components/UsuariosTable.tsx`
-- [ ] `components/UploadImgForm.tsx`
-- [ ] `app/admin/*` (layout, dashboard, formularios `new`)
-- [ ] `components/forms/CrearMangaForm.tsx` (34 usos — el más grande de `components/forms`)
+- [x] `components/MangasTable.tsx` — mayor impacto. Los 6 chips de filtro (búsqueda/categoría/serie/estado/activo/popular, antes 6 colores arbitrarios sin criterio) ahora son `Badge variant="neutral"`; círculo de volumen → tokens neutral; stock (success/warning/danger según cantidad), estado (success/danger/neutral), activo (success/danger) y popular (info/neutral) ahora usan `Badge`. Verificado visualmente en `/admin/mangas`.
+- [x] `components/PedidosTable.tsx` — 4 chips de filtro → `Badge variant="neutral"`; el estado del pedido ahora reusa `EstadoBadge` directamente (mismo mapeo que `/perfil/pedidos`, cero duplicación). Verificado visualmente en `/admin/pedidos`.
+- [x] `components/SeriesTable.tsx` — no tenía badges tipo pill; el único candidato era el botón "Recargar datos" (estado vacío), migrado a `LoadingButton variant="secondary" size="sm"`. El stat box "Total de series" y el focus ring índigo quedaron sin tocar (no son pills, candidatos para Fase 4).
+- [x] `components/CategoriaTable.tsx` / `CategoriaDataTable.tsx` — revisado, no tiene pills ni botones que migrar (solo texto plano). Sin cambios.
+- [x] `components/UsuariosTable.tsx` — revisado, no tiene pills ni botones (rol se muestra como texto plano). Sin cambios.
+- [x] `components/UploadImgForm.tsx` — `LoadingButton` migrado de clases azules manuales a `variant="primary"`; mensaje de error a `text-danger`.
+- [x] `app/admin/*`:
+  - `layout.tsx` — sidebar migrado a tokens (`bg-ink`, `text-cream`, `hover:text-primary`, `border-primary`, `hover:bg-cream`).
+  - `page.tsx` (dashboard) — los 3 CTA (`Crear Nuevo Manga/Serie/Usuario`) tenían colores arbitrarios (azul/verde/púrpura) sin significado semántico; unificados a rojo de marca (son botones de igual peso, no estados). Fondo migrado a `bg-surface-alt`/`text-text`.
+  - `mangas/new`, `categorias`, `pedidos`, `series`, `usuarios` (list pages) — revisados, sin colores que migrar (solo auth + wrappers).
+  - `series/new/page.tsx`, `usuarios/new/page.tsx` — `LoadingButton` migrado a `variant="primary" size="lg"`; mensajes de éxito/error a tokens.
+- [x] `components/forms/CrearMangaForm.tsx` (34 usos) — todos los inputs/selects/textarea migrados de `border-gray-300`/`focus:ring-blue-400` a `border-border`/`focus:ring-primary`; mensajes de error a `text-danger`; caja de error a `bg-danger/10 border-danger/30`; checkbox a `text-primary`/`border-border`; botón submit a `variant="primary" size="lg"`.
+
+**Hecho** (2026-08-30): `npx tsc --noEmit` sin errores nuevos fuera de `__tests__`. Verificado visualmente en el navegador (logueado): `/admin/mangas`, `/admin/pedidos`, `/admin/series`, `/admin` (dashboard) y `/admin/mangas/new`. Sin commitear todavía — Fase 3 completa.
 
 ---
 
@@ -99,17 +107,17 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 |------|--------|
 | 0 — Tokens | ✅ Hecha (2026-08-30, sin commitear) |
 | 1 — Tienda | ✅ Hecha (2026-08-30) — 17/17 archivos |
-| 2 — Componentes compartidos | ⬜ No iniciada — **retomar aquí mañana** |
-| 3 — Admin | ⬜ No iniciada |
-| 4 — Pulido | ⬜ No iniciada |
+| 2 — Componentes compartidos | ✅ Hecha (2026-08-30, sin commitear) |
+| 3 — Admin | ✅ Hecha (2026-08-30, sin commitear) |
+| 4 — Pulido | ⬜ No iniciada — **retomar aquí** |
 
-**Hecho hoy (2026-08-30):** Fase 0 y Fase 1 completas. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Nada de esto está commiteado todavía** — falta decidir cuándo commitear (ver nota abajo).
+**Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2 y Fase 3 completas. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
 
 **Nota sobre `MangaDetailClient.tsx`:** es la única página con tema oscuro (fondo casi negro, `neutral-800/900`, grises claros de texto). Ahí solo se tocaron los valores con equivalencia exacta de color (cream, ink, primary, success, danger); los grises/neutros específicos del modo oscuro se dejaron sin tocar a propósito porque los tokens `text-text*` están calibrados para fondo claro y perderían contraste sobre negro. Si más adelante se quiere un tema oscuro real, eso necesita sus propios tokens (fuera del alcance de este plan).
 
 **Nota sobre páginas de `perfil/*`:** estas páginas ya tenían colores mixtos por-función (azul para "editar", verde para "guardar"/gratis, gradientes de 3 colores en el dashboard). Fase 1 solo tocó rojo/crema/grises hacia los tokens nuevos; el azul/verde de esas acciones se dejó igual a propósito — ese tipo de limpieza (badges y acciones semánticas) es trabajo de Fase 2/3, no de Fase 1.
 
-**Pendiente de revisar antes de commitear:** todavía no se ha visto el sitio corriendo en el navegador con estos cambios. Antes de hacer commit, correr `npm run dev` y revisar visualmente al menos: home (Hero/Popular/About/SectionMap/Invitation/Footer), navbar (desktop + menú móvil + dropdown de usuario), carrito (panel lateral y `/cart`), detalle de manga (la página de tema oscuro), login/registro, y el layout de `/perfil`.
+**Pendiente de revisar mañana (visual, en producción ya que local no levanta sin `.env.local`):** home (Hero/Popular/About/SectionMap/Invitation/Footer), navbar (desktop + menú móvil + dropdown de usuario), carrito (panel lateral y `/cart`), detalle de manga (la página de tema oscuro), login/registro, y el layout de `/perfil`. Si algo se ve mal, es más rápido corregirlo ahora que dejarlo arrastrar a Fase 2/3.
 
 **Regla de mapeo usada** (para mantener consistencia en el resto de Fase 1):
 - `text-gray-900/800` → `text-text` · `text-gray-700/600` → `text-text-secondary` · `text-gray-500/400` → `text-text-muted`
@@ -119,4 +127,4 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 - `bg-[#FFF8F0]`/`text-[#FFF8F0]` → `bg-cream`/`text-cream`
 - `red-600` → `primary` · `red-700` (hover) → `primary-hover` · `red-500`/`red-400` → `primary-light`
 
-**Próximo paso concreto:** revisar visualmente los cambios de Fase 1 (ver checklist de arriba), y si todo se ve bien, commitear Fase 0 + Fase 1 juntas. Después seguir con Fase 2: crear el componente `Badge`/`StatusPill` semántico y extender `LoadingButton` con variantes (`primary`/`secondary`/`danger`/`ghost`) — ver detalle en la sección "Fase 2" más abajo.
+**Próximo paso concreto:** Fase 4 (pulido, opcional) — revisar hover/focus/disabled en inputs/botones que quedaron sin tocar, uniformar radios de borde, y pasada de `text-gray-*` sueltos restantes (p. ej. stat boxes de "Total de X" en Mangas/Pedidos/Series, que quedaron fuera de Fase 3 por no ser pills). Todo el trabajo de hoy (Fase 0-3) sigue sin commitear.

@@ -85,10 +85,12 @@ export default function Page() {
       </div>
          
 
-      <LoadingButton 
-        type="submit" 
+      <LoadingButton
+        type="submit"
         loading={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        variant="primary"
+        size="lg"
+        className="w-full"
       >
         Crear
       </LoadingButton>

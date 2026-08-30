@@ -4,6 +4,7 @@ import { updateManga } from "@/lib/supabase/services/mangas.client";
 import { useMangaStore } from "@/store/mangaStore";
 import { formatPrice } from "@/lib/formatPrice";
 import EditableCell from "@/components/EditableCell";
+import Badge from "@/components/Badge";
 import { type Serie, type Categoria } from "@/types/supabase";
 
 export default function MangasTable({
@@ -291,40 +292,40 @@ export default function MangasTable({
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex gap-2 flex-wrap">
               {terminoBusqueda && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                <Badge variant="neutral">
                   Buscando: &quot;{terminoBusqueda}&quot;
-                  <button onClick={() => setTerminoBusqueda("")} className="ml-2 hover:text-blue-600">✕</button>
-                </span>
+                  <button onClick={() => setTerminoBusqueda("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroCategoria && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800">
+                <Badge variant="neutral">
                   {categorias.find(c => c.id === filtroCategoria)?.nombre || filtroCategoria}
-                  <button onClick={() => setFiltroCategoria("")} className="ml-2 hover:text-purple-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroCategoria("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroSerie && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-indigo-100 text-indigo-800">
+                <Badge variant="neutral">
                   {series.find(s => s.id === filtroSerie)?.nombre || filtroSerie}
-                  <button onClick={() => setFiltroSerie("")} className="ml-2 hover:text-indigo-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroSerie("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroEstado && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-100 text-orange-800">
+                <Badge variant="neutral">
                   Estado: {filtroEstado}
-                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-orange-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroActivo !== "" && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                <Badge variant="neutral">
                   Activo: {filtroActivo === "true" ? "Sí" : "No"}
-                  <button onClick={() => setFiltroActivo("")} className="ml-2 hover:text-green-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroActivo("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroPopular !== "" && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-pink-100 text-pink-800">
+                <Badge variant="neutral">
                   Popular: {filtroPopular === "true" ? "Sí" : "No"}
-                  <button onClick={() => setFiltroPopular("")} className="ml-2 hover:text-pink-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroPopular("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
             </div>
             
@@ -443,7 +444,7 @@ export default function MangasTable({
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
                         tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <div className="cursor-pointer bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mx-auto">
+                        <div className="cursor-pointer inline-flex bg-text-muted/10 text-text-secondary rounded-full w-8 h-8 items-center justify-center mx-auto font-semibold text-sm">
                           {manga.volumen}
                         </div>
                       </EditableCell>
@@ -483,13 +484,12 @@ export default function MangasTable({
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
                         tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <div className={`cursor-pointer px-2 py-1 rounded-full font-medium ${
-                          manga.stock > 10 ? 'bg-green-100 text-green-800' : 
-                          manga.stock > 0 ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-red-100 text-red-800'
-                        }`}>
+                        <Badge
+                          variant={manga.stock > 10 ? 'success' : manga.stock > 0 ? 'warning' : 'danger'}
+                          className="cursor-pointer"
+                        >
                           {manga.stock}
-                        </div>
+                        </Badge>
                       </EditableCell>
                     </td>
                     
@@ -558,13 +558,12 @@ export default function MangasTable({
                         onDoubleClick={() => manejarDobleClick(manga.id, "estado", manga.estado)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
                       >
-                        <div className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
-                          manga.estado === 'disponible' ? 'bg-green-100 text-green-800' :
-                          manga.estado === 'agotado' ? 'bg-red-100 text-red-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
+                        <Badge
+                          variant={manga.estado === 'disponible' ? 'success' : manga.estado === 'agotado' ? 'danger' : 'neutral'}
+                          className="cursor-pointer"
+                        >
                           {manga.estado}
-                        </div>
+                        </Badge>
                       </EditableCell>
                     </td>
                     
@@ -576,11 +575,9 @@ export default function MangasTable({
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
                         tipo="select" opciones={[{ value: "true", label: "Sí" }, { value: "false", label: "No" }]}
                       >
-                        <div className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
-                          manga.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
+                        <Badge variant={manga.activo ? 'success' : 'danger'} className="cursor-pointer">
                           {manga.activo ? "Sí" : "No"}
-                        </div>
+                        </Badge>
                       </EditableCell>
                     </td>
                     
@@ -592,11 +589,9 @@ export default function MangasTable({
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
                         tipo="select" opciones={[{ value: "true", label: "Sí" }, { value: "false", label: "No" }]}
                       >
-                        <div className={`cursor-pointer text-sm font-medium px-2 py-1 rounded-full inline-block ${
-                          manga.es_popular ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
+                        <Badge variant={manga.es_popular ? 'info' : 'neutral'} className="cursor-pointer">
                           {manga.es_popular ? "Sí" : "No"}
-                        </div>
+                        </Badge>
                       </EditableCell>
                     </td>
                   </tr>

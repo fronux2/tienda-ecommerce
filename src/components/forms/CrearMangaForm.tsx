@@ -92,9 +92,9 @@ export default function CrearMangaForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="shadow-lg rounded-lg p-8 w-full max-w-md space-y-6 bg-white">
+    <form onSubmit={handleSubmit(onSubmit)} className="shadow-lg rounded-lg p-8 w-full max-w-md space-y-6 bg-surface">
       {formError && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div className="bg-danger/10 border border-danger/30 text-danger px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Error: </strong>
           <span className="block sm:inline">{formError}</span>
         </div>
@@ -106,9 +106,9 @@ export default function CrearMangaForm() {
            type="text" 
            id="titulo" 
            {...register('titulo')} 
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.titulo && <span className="text-red-500 text-sm">{errors.titulo.message}</span>}
+         {errors.titulo && <span className="text-danger text-sm">{errors.titulo.message}</span>}
        </div>
        <div>
          <label htmlFor="autor" className="block font-semibold mb-1">Autor:</label>
@@ -116,9 +116,9 @@ export default function CrearMangaForm() {
            type="text" 
            id="autor" 
            {...register('autor')} 
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.autor && <span className="text-red-500 text-sm">{errors.autor.message}</span>}
+         {errors.autor && <span className="text-danger text-sm">{errors.autor.message}</span>}
        </div>
        <div>
          <label htmlFor="editorial" className="block font-semibold mb-1">Editorial:</label>
@@ -126,14 +126,14 @@ export default function CrearMangaForm() {
            type="text" 
            id="editorial" 
            {...register('editorial')} 
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.editorial && <span className="text-red-500 text-sm">{errors.editorial.message}</span>}
+         {errors.editorial && <span className="text-danger text-sm">{errors.editorial.message}</span>}
        </div>      
        <div>
          <label htmlFor="categoria_id" className="block font-semibold mb-1">Categoría:</label>
          <select 
-           className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400" 
+           className="w-full border border-border rounded px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary" 
            id="categoria_id" 
            {...register('categoria_id')}
          >
@@ -144,14 +144,14 @@ export default function CrearMangaForm() {
              </option>
            ))}
          </select>
-         {errors.categoria_id && <span className="text-red-500 text-sm">{errors.categoria_id.message}</span>}
+         {errors.categoria_id && <span className="text-danger text-sm">{errors.categoria_id.message}</span>}
        </div>
        <div>
          <label htmlFor="serie_id" className="block font-semibold mb-1">Serie:</label>
          <select 
            id="serie_id" 
            {...register('serie_id')}
-           className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary"
          >
            <option value="">Selecciona una serie</option>
            {series.map((serie) => (
@@ -160,7 +160,7 @@ export default function CrearMangaForm() {
              </option>
            ))}
          </select>
-         {errors.serie_id && <span className="text-red-500 text-sm">{errors.serie_id.message}</span>}
+         {errors.serie_id && <span className="text-danger text-sm">{errors.serie_id.message}</span>}
        </div>
        <div>
          <label htmlFor="volumen" className="block font-semibold mb-1">Volumen:</label>
@@ -168,18 +168,18 @@ export default function CrearMangaForm() {
            type="number" 
            id="volumen" 
            {...register('volumen' , { valueAsNumber: true })} 
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.volumen && <span className="text-red-500 text-sm">{errors.volumen.message}</span>}
+         {errors.volumen && <span className="text-danger text-sm">{errors.volumen.message}</span>}
        </div>
        <div>
          <label htmlFor="descripcion" className="block font-semibold mb-1">Descripción:</label>
          <textarea 
            id="descripcion" 
            {...register('descripcion')} 
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.descripcion && <span className="text-red-500 text-sm">{errors.descripcion.message}</span>}
+         {errors.descripcion && <span className="text-danger text-sm">{errors.descripcion.message}</span>}
        </div>
        <div>
          <label htmlFor="precio" className="block font-semibold mb-1">Precio:</label>
@@ -188,9 +188,9 @@ export default function CrearMangaForm() {
            id="precio" 
            step="0.01"
            {...register('precio', { valueAsNumber: true })} 
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.precio && <span className="text-red-500 text-sm">{errors.precio.message}</span>}
+         {errors.precio && <span className="text-danger text-sm">{errors.precio.message}</span>}
        </div>
        <div>
          <label htmlFor="stock" className="block font-semibold mb-1">Stock:</label>
@@ -198,9 +198,9 @@ export default function CrearMangaForm() {
            type="number"
            id="stock"
            {...register('stock', { valueAsNumber: true })}
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.stock && <span className="text-red-500 text-sm">{errors.stock.message}</span>}
+         {errors.stock && <span className="text-danger text-sm">{errors.stock.message}</span>}
        </div>
        <div>
          <label htmlFor="imagen_portada" className="block font-semibold mb-1">Imagen Portada:</label>
@@ -209,7 +209,7 @@ export default function CrearMangaForm() {
            id="imagen_portada"           
            accept="image/png, image/jpeg, image/webp"
            onChange={(e) => setFile(e.target.files?.[0] || null)}
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
        </div>
        <div>
@@ -218,9 +218,9 @@ export default function CrearMangaForm() {
            type="text"
            id="isbn"
            {...register('isbn')}
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.isbn && <span className="text-red-500 text-sm">{errors.isbn.message}</span>}
+         {errors.isbn && <span className="text-danger text-sm">{errors.isbn.message}</span>}
        </div>
        <div>
          <label htmlFor="numero_paginas" className="block font-semibold mb-1">Número de páginas:</label>
@@ -228,9 +228,9 @@ export default function CrearMangaForm() {
            type="number"
            id="numero_paginas"
            {...register('numero_paginas', { valueAsNumber: true })}
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.numero_paginas && <span className="text-red-500 text-sm">{errors.numero_paginas.message}</span>}
+         {errors.numero_paginas && <span className="text-danger text-sm">{errors.numero_paginas.message}</span>}
        </div>
        <div>
          <label htmlFor="idioma" className="block font-semibold mb-1">Idioma:</label>
@@ -238,9 +238,9 @@ export default function CrearMangaForm() {
            type="text"
            id="idioma"
            {...register('idioma')}
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.idioma && <span className="text-red-500 text-sm">{errors.idioma.message}</span>}
+         {errors.idioma && <span className="text-danger text-sm">{errors.idioma.message}</span>}
        </div>
        <div>
          <label htmlFor="fecha_publicacion" className="block font-semibold mb-1">Fecha de publicación:</label>
@@ -248,30 +248,30 @@ export default function CrearMangaForm() {
            type="date"
            id="fecha_publicacion"
            {...register('fecha_publicacion')}
-           className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
          />
-         {errors.fecha_publicacion && <span className="text-red-500 text-sm">{errors.fecha_publicacion.message}</span>}
+         {errors.fecha_publicacion && <span className="text-danger text-sm">{errors.fecha_publicacion.message}</span>}
        </div>
        <div>
          <label htmlFor="estado" className="block font-semibold mb-1">Estado:</label>
          <select
            id="estado"
            {...register('estado')}
-           className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+           className="w-full border border-border rounded px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary"
          >
            <option value="">Selecciona un estado</option>
            <option value="nuevo">Nuevo</option>
            <option value="usado">Usado</option>
            <option value="edicion_limitada">Edición limitada</option>
          </select>
-         {errors.estado && <span className="text-red-500 text-sm">{errors.estado.message}</span>}
+         {errors.estado && <span className="text-danger text-sm">{errors.estado.message}</span>}
        </div>
        <div className="flex items-center space-x-2">
          <input
            type="checkbox"
            id="activo"
            {...register('activo')}
-           className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-400"
+           className="h-4 w-4 text-primary border-border rounded focus:ring-primary"
          />
          <label htmlFor="activo" className="font-semibold">Activo</label>
        </div>      
@@ -282,18 +282,20 @@ export default function CrearMangaForm() {
               {...register('es_popular', {
                 setValueAs: (val) => val === '' ? undefined : val === 'true',
               })}
-             className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+             className="w-full border border-border rounded px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary"
            >
              <option value="">No especificar</option>
              <option value="true">Sí</option>
              <option value="false">No</option>
            </select>
-           {errors.es_popular && <span className="text-red-500 text-sm">{errors.es_popular.message}</span>}
+           {errors.es_popular && <span className="text-danger text-sm">{errors.es_popular.message}</span>}
        </div> 
       <LoadingButton
         type="submit"
         loading={isSubmitting}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        variant="primary"
+        size="lg"
+        className="w-full"
       >
         Crear
       </LoadingButton>

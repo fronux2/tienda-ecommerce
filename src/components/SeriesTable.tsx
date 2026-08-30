@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { Serie } from '@/types/supabase';
 import { updateSerie } from '@/lib/supabase/services/series.client';
 import EditableCell from '@/components/EditableCell';
+import LoadingButton from '@/components/LoadingButton';
 
 export default function SeriesTable({ series }: { series: Serie[] }) {
   const [editando, setEditando] = useState<{ id: string; campo: string } | null>(null);
@@ -152,12 +153,14 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
           {seriesFiltradas.length === 0 && !busqueda && (
             <div className="text-center py-10 bg-gray-50">
               <p className="text-gray-500 text-lg">No hay series disponibles</p>
-              <button 
-                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              <LoadingButton
+                variant="secondary"
+                size="sm"
+                className="mt-4"
                 onClick={() => location.reload()}
               >
                 Recargar datos
-              </button>
+              </LoadingButton>
             </div>
           )}
         </div>

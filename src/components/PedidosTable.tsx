@@ -6,6 +6,8 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { type Pedido } from "@/types/supabase";
 import { formatPrice } from "@/lib/formatPrice";
 import EditableCell from "@/components/EditableCell";
+import Badge from "@/components/Badge";
+import EstadoBadge from "@/components/perfil/EstadoBadge";
 
 export default function PedidosTable() {
   const [editando, setEditando] = useState<{id: string, campo: string} | null>(null);
@@ -203,28 +205,28 @@ export default function PedidosTable() {
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex gap-2 flex-wrap">
               {busqueda && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                <Badge variant="neutral">
                   Buscando: &quot;{busqueda}&quot;
-                  <button onClick={() => setBusqueda("")} className="ml-2 hover:text-blue-600">✕</button>
-                </span>
+                  <button onClick={() => setBusqueda("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroEstado && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-800">
+                <Badge variant="neutral">
                   Estado: {filtroEstado}
-                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-purple-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroEstado("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroFechaDesde && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                <Badge variant="neutral">
                   Desde: {filtroFechaDesde}
-                  <button onClick={() => setFiltroFechaDesde("")} className="ml-2 hover:text-green-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroFechaDesde("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
               {filtroFechaHasta && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                <Badge variant="neutral">
                   Hasta: {filtroFechaHasta}
-                  <button onClick={() => setFiltroFechaHasta("")} className="ml-2 hover:text-green-600">✕</button>
-                </span>
+                  <button onClick={() => setFiltroFechaHasta("")} className="ml-2 hover:text-text">✕</button>
+                </Badge>
               )}
             </div>
             
@@ -312,15 +314,9 @@ export default function PedidosTable() {
                           { value: "cancelado", label: "Cancelado" },
                         ]}
                       >
-                        <div className={`text-sm font-medium px-2 py-1 rounded-full inline-block cursor-pointer ${
-                          pedido.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
-                          pedido.estado === 'procesando' ? 'bg-blue-100 text-blue-800' :
-                          pedido.estado === 'enviado' ? 'bg-indigo-100 text-indigo-800' :
-                          pedido.estado === 'entregado' ? 'bg-green-100 text-green-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                          {pedido.estado}
-                        </div>
+                        <span className="cursor-pointer inline-block">
+                          <EstadoBadge estado={pedido.estado} />
+                        </span>
                       </EditableCell>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

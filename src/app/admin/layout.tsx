@@ -20,35 +20,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="min-h-screen bg-black flex flex-col md:flex-row">
+    <div className="min-h-screen bg-ink flex flex-col md:flex-row">
       {/* Barra de toggle */}
-      <div 
-        className={`fixed top-0 bottom-0 z-20 w-6 bg-black flex items-center justify-center cursor-pointer transition-all duration-300 ${
+      <div
+        className={`fixed top-0 bottom-0 z-20 w-6 bg-ink flex items-center justify-center cursor-pointer transition-all duration-300 ${
           isMenuOpen ? 'left-64' : 'left-0'
         }`}
         onClick={toggleMenu}
       >
-        <div className="text-[#FFF8F0] hover:text-red-500 transition-colors">
+        <div className="text-cream hover:text-primary transition-colors">
           {isMenuOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </div>
       </div>
 
       {/* Sidebar */}
-      <aside 
-        className={`fixed top-0 bottom-0 z-10 bg-white shadow-lg transition-all duration-300 ${
+      <aside
+        className={`fixed top-0 bottom-0 z-10 bg-surface shadow-lg transition-all duration-300 ${
           isMenuOpen ? 'left-0 w-64' : '-left-64 w-64'
         }`}
       >
         <nav className="p-4 h-full overflow-y-auto">
-          <h2 className="text-xl font-bold mb-6 text-center border-b-2 border-red-600 pb-2">
+          <h2 className="text-xl font-bold mb-6 text-center border-b-2 border-primary pb-2">
             {isMenuOpen && "Administración"}
           </h2>
           <ul className="flex flex-col gap-y-2">
             {menuItems.map((item) => (
               <li key={item.href}>
-                <Link 
-                  href={item.href} 
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#FFF8F0] hover:text-red-600 transition-colors"
+                <Link
+                  href={item.href}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-cream hover:text-primary transition-colors"
                 >
                   {item.icon}
                   {isMenuOpen && <span>{item.label}</span>}
@@ -60,13 +60,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <main 
+      <main
         className={`flex-1 transition-all duration-300 ${
           isMenuOpen ? 'ml-64' : 'ml-0'
         }`}
       >
         <div className="p-6">
-          <div className="bg-white rounded-xl border-2 border-black shadow-lg p-6 overflow-x-auto">
+          <div className="bg-surface rounded-xl border-2 border-ink shadow-lg p-6 overflow-x-auto">
             {children}
           </div>
         </div>

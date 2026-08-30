@@ -118,12 +118,14 @@ export default function Page() {
                     <LoadingButton
                         type="submit"
                         loading={loading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        variant="primary"
+                        size="lg"
+                        className="w-full"
                     >
                         Crear Serie
                     </LoadingButton>
                     {success && (
-                        <div className="text-green-600 text-center font-semibold mt-2">
+                        <div className="text-success text-center font-semibold mt-2">
                             ¡Serie agregada satisfactoriamente!
                         </div>
                     )}
