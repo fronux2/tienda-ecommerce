@@ -147,25 +147,25 @@ export default function MangasTable({
   };
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen min-w-screen ">
+    <div className="p-4 bg-surface-alt min-h-screen min-w-screen ">
       <div className="max-w-7xl mx-auto">
         <div className="flex md:justify-between flex-col md:flex-row items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Panel de Mangas</h1>
-            <p className="text-gray-600 mt-2">Administra y actualiza tu catálogo de mangas</p>
+            <h1 className="text-3xl font-bold text-text">Panel de Mangas</h1>
+            <p className="text-text-secondary mt-2">Administra y actualiza tu catálogo de mangas</p>
           </div>
-          <div className="bg-purple-100 p-3 rounded-lg">
-            <p className="text-purple-800 font-medium">
+          <div className="bg-primary/10 p-3 rounded-lg">
+            <p className="text-primary font-medium">
               Total de mangas: <span className="font-bold">{mangasFiltrados.length}</span>
             </p>
           </div>
         </div>
 
         {/* Filtros */}
-        <div className="bg-white p-5 rounded-lg shadow-md mb-6">
+        <div className="bg-surface p-5 rounded-lg shadow-md mb-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div className="md:col-span-2">
-              <label htmlFor="busqueda" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="busqueda" className="block text-sm font-medium text-text-secondary mb-1">
                 Buscar en toda la tabla
               </label>
               <input
@@ -174,18 +174,18 @@ export default function MangasTable({
                 placeholder="Título, autor, editorial, ISBN, categoría, serie, estado..."
                 value={terminoBusqueda}
                 onChange={(e) => setTerminoBusqueda(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
             <div>
-              <label htmlFor="filtro-categoria" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="filtro-categoria" className="block text-sm font-medium text-text-secondary mb-1">
                 Categoría
               </label>
               <select
                 id="filtro-categoria"
                 value={filtroCategoria}
                 onChange={(e) => setFiltroCategoria(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Todas</option>
                 {categorias.map((cat) => (
@@ -194,14 +194,14 @@ export default function MangasTable({
               </select>
             </div>
             <div>
-              <label htmlFor="filtro-serie" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="filtro-serie" className="block text-sm font-medium text-text-secondary mb-1">
                 Serie
               </label>
               <select
                 id="filtro-serie"
                 value={filtroSerie}
                 onChange={(e) => setFiltroSerie(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Todas</option>
                 {series.map((ser) => (
@@ -212,14 +212,14 @@ export default function MangasTable({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
             <div>
-              <label htmlFor="filtro-estado" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="filtro-estado" className="block text-sm font-medium text-text-secondary mb-1">
                 Estado
               </label>
               <select
                 id="filtro-estado"
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Todos</option>
                 <option value="disponible">Disponible</option>
@@ -227,14 +227,14 @@ export default function MangasTable({
               </select>
             </div>
             <div>
-              <label htmlFor="filtro-activo" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="filtro-activo" className="block text-sm font-medium text-text-secondary mb-1">
                 Activo
               </label>
               <select
                 id="filtro-activo"
                 value={filtroActivo}
                 onChange={(e) => setFiltroActivo(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Todos</option>
                 <option value="true">Sí</option>
@@ -242,14 +242,14 @@ export default function MangasTable({
               </select>
             </div>
             <div>
-              <label htmlFor="filtro-popular" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="filtro-popular" className="block text-sm font-medium text-text-secondary mb-1">
                 Popular
               </label>
               <select
                 id="filtro-popular"
                 value={filtroPopular}
                 onChange={(e) => setFiltroPopular(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Todos</option>
                 <option value="true">Sí</option>
@@ -257,14 +257,14 @@ export default function MangasTable({
               </select>
             </div>
             <div>
-              <label htmlFor="sort-por" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="sort-por" className="block text-sm font-medium text-text-secondary mb-1">
                 Ordenar por
               </label>
               <select
                 id="sort-por"
                 value={sortPor}
                 onChange={(e) => setSortPor(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="titulo">Título</option>
                 <option value="precio">Precio</option>
@@ -274,14 +274,14 @@ export default function MangasTable({
               </select>
             </div>
             <div>
-              <label htmlFor="sort-dir" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="sort-dir" className="block text-sm font-medium text-text-secondary mb-1">
                 Dirección
               </label>
               <select
                 id="sort-dir"
                 value={sortDir}
                 onChange={(e) => setSortDir(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="asc">Ascendente</option>
                 <option value="desc">Descendente</option>
@@ -329,55 +329,55 @@ export default function MangasTable({
               )}
             </div>
             
-            <div className="bg-green-50 px-4 py-2 rounded-lg whitespace-nowrap">
-              <p className="text-sm font-medium text-green-800">
+            <div className="bg-success/10 px-4 py-2 rounded-lg whitespace-nowrap">
+              <p className="text-sm font-medium text-success">
                 Mostrando: <span className="font-bold">{mangasFiltrados.length}</span> de {mangas.length} mangas
               </p>
             </div>
           </div>
-          
+
           {terminoBusqueda && mangasFiltrados.length === 0 && (
-            <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
-              <p className="text-yellow-700">
+            <div className="mt-4 p-3 bg-warning/10 rounded-lg">
+              <p className="text-warning">
                 No se encontraron resultados para: <span className="font-mono font-bold">{terminoBusqueda}</span>
               </p>
             </div>
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-surface rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto max-h-[calc(100vh-200px)] scroll-smooth">
             <table className="min-w-full w-full">
-              <thead className="bg-gray-100">
+              <thead className="bg-surface-alt">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Autor</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Editorial</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serie</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vol</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Portada</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISBN</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Págs</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Idioma</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Publicación</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Popular</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Título</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Autor</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Editorial</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Categoría</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Serie</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Vol</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Descripción</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Precio</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Stock</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Portada</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">ISBN</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Págs</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Idioma</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Publicación</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Estado</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Activo</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Popular</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-surface divide-y divide-border">
                 {mangasFiltrados.map((manga) => (
-                  <tr key={manga.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <tr key={manga.id} className="hover:bg-surface-alt">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
                       <p className="truncate max-w-xs">{manga.id}</p>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
                       <EditableCell
                         id={manga.id} campo="titulo" valor={manga.titulo}
                         editando={editando} valorEditado={valorEditado}
@@ -388,7 +388,7 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="autor" valor={manga.autor}
                         editando={editando} valorEditado={valorEditado}
@@ -399,7 +399,7 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="editorial" valor={manga.editorial}
                         editando={editando} valorEditado={valorEditado}
@@ -410,7 +410,7 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="categoria_id" valor={manga.categoria_id}
                         editando={editando} valorEditado={valorEditado}
@@ -423,7 +423,7 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="serie_id" valor={manga.serie_id}
                         editando={editando} valorEditado={valorEditado}
@@ -442,7 +442,7 @@ export default function MangasTable({
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "volumen", manga.volumen)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
                       >
                         <div className="cursor-pointer inline-flex bg-text-muted/10 text-text-secondary rounded-full w-8 h-8 items-center justify-center mx-auto font-semibold text-sm">
                           {manga.volumen}
@@ -450,7 +450,7 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                    <td className="px-6 py-4 text-sm text-text-muted max-w-xs">
                       <EditableCell
                         id={manga.id} campo="descripcion" valor={manga.descripcion}
                         editando={editando} valorEditado={valorEditado}
@@ -464,13 +464,13 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-700">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-success">
                       <EditableCell
                         id={manga.id} campo="precio" valor={manga.precio}
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "precio", manga.precio)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
                       >
                         {formatPrice(manga.precio)}
                       </EditableCell>
@@ -482,7 +482,7 @@ export default function MangasTable({
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "stock", manga.stock)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        tipo="number" inputClassName="w-20 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
                       >
                         <Badge
                           variant={manga.stock > 10 ? 'success' : manga.stock > 0 ? 'warning' : 'danger'}
@@ -493,20 +493,20 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted max-w-xs">
                       <EditableCell
                         id={manga.id} campo="imagen_portada" valor={manga.imagen_portada}
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "imagen_portada", manga.imagen_portada)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
                       >
-                        <div className="cursor-pointer truncate text-blue-600 underline" title={manga.imagen_portada || ''}>
+                        <div className="cursor-pointer truncate text-primary underline" title={manga.imagen_portada || ''}>
                           {manga.imagen_portada?.substring(0, 20)}...
                         </div>
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="isbn" valor={manga.isbn}
                         editando={editando} valorEditado={valorEditado}
@@ -517,19 +517,19 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted text-center">
                       <EditableCell
                         id={manga.id} campo="numero_paginas" valor={manga.numero_paginas}
                         editando={editando} valorEditado={valorEditado}
                         onDoubleClick={() => manejarDobleClick(manga.id, "numero_paginas", manga.numero_paginas)}
                         onChange={manejarCambio} onSave={manejarGuardar} onEnter={manejarEnter}
-                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        tipo="number" inputClassName="w-16 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
                       >
                         {manga.numero_paginas}
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="idioma" valor={manga.idioma}
                         editando={editando} valorEditado={valorEditado}
@@ -540,7 +540,7 @@ export default function MangasTable({
                       </EditableCell>
                     </td>
                     
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={manga.id} campo="fecha_publicacion" valor={manga.fecha_publicacion}
                         editando={editando} valorEditado={valorEditado}
@@ -601,8 +601,8 @@ export default function MangasTable({
           </div>
           
           {mangasFiltrados.length === 0 && !terminoBusqueda && !filtroCategoria && !filtroSerie && !filtroEstado && !filtroActivo && !filtroPopular && (
-            <div className="text-center py-10 bg-gray-50">
-              <p className="text-gray-500 text-lg">No hay mangas disponibles</p>
+            <div className="text-center py-10 bg-surface-alt">
+              <p className="text-text-muted text-lg">No hay mangas disponibles</p>
             </div>
           )}
         </div>

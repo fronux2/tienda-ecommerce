@@ -57,11 +57,11 @@ export default function Page() {
 
     return (
         <>
-            <main className="h-screen flex flex-col items-center justify-center pt-16 p-4 bg-gray-100">
+            <main className="h-screen flex flex-col items-center justify-center pt-16 p-4 bg-surface-alt">
                 <h1 className="text-3xl font-bold mb-8">Admin Series</h1>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="bg-white shadow-lg text-black rounded-lg p-8 w-full max-w-md space-y-6"
+                    className="bg-surface shadow-lg text-ink rounded-lg p-8 w-full max-w-md space-y-6"
                 >
                     <div>
                         <label htmlFor="nombre" className="block font-semibold mb-1">Nombre:</label>
@@ -69,18 +69,18 @@ export default function Page() {
                             type="text"
                             id="nombre"
                             {...register('nombre')}
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
-                        {errors.nombre && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+                        {errors.nombre && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
                     <div>
                         <label htmlFor="descripcion" className="block font-semibold mb-1">Descripción:</label>
                         <textarea
                             id="descripcion"
                             {...register('descripcion')}
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
-                        {errors.descripcion && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+                        {errors.descripcion && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
                     <div>
                         <label htmlFor="autor" className="block font-semibold mb-1">Autor:</label>
@@ -88,22 +88,22 @@ export default function Page() {
                             type="text"
                             id="autor"
                             {...register('autor')}
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
-                        {errors.autor && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+                        {errors.autor && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
                     <div>
                         <label htmlFor="estado" className="block font-semibold mb-1">Estado:</label>
                         <select
                             id="estado"
                             {...register('estado')}
-                            className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full border border-border rounded px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                             <option value="en_curso">En curso</option>
                             <option value="pausado">Pausado</option>
                             <option value="finalizada">Finalizada</option>
                         </select>
-                        {errors.estado && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+                        {errors.estado && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
                     <div>
                         <label htmlFor="imagen_url" className="block font-semibold mb-1">Imagen URL:</label>
@@ -111,9 +111,9 @@ export default function Page() {
                             type="text"
                             id="imagen_url"
                             {...register('imagen_serie')}
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
-                        {errors.imagen_serie && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+                        {errors.imagen_serie && <span className="text-danger text-sm">Este campo es obligatorio</span>}
                     </div>
                     <LoadingButton
                         type="submit"

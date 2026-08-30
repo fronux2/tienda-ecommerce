@@ -95,9 +95,11 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 
 ## Fase 4 — Pulido final (opcional, cuando las anteriores estén listas)
 
-- [ ] Revisar estados `hover` / `focus` / `disabled` — que todos los inputs/botones los tengan, no solo los que alguien recordó
-- [ ] Uniformar radios de borde (inputs vs cards vs modales — hoy mezclados)
-- [ ] Pasada de `text-gray-*` sueltos que no se migraron en fases anteriores
+- [ ] Revisar estados `hover` / `focus` / `disabled` — que todos los inputs/botones los tengan, no solo los que alguien recordó. Parcialmente cubierto de paso (todo lo que se migró a `focus:ring-primary` en esta pasada ya tiene focus state), pero no se hizo una auditoría dedicada de faltantes.
+- [ ] Uniformar radios de borde (inputs vs cards vs modales — hoy mezclados: `rounded`, `rounded-md`, `rounded-lg`, `rounded-xl` sin escala definida). Requiere definir una escala de radios primero — no se tocó, sigue abierto.
+- [x] Pasada de `text-gray-*` sueltos que no se migraron en fases anteriores — **completa** en `MangasTable.tsx`, `PedidosTable.tsx`, `SeriesTable.tsx`, `CategoriaTable.tsx`, `UsuariosTable.tsx` y los formularios `series/new`/`usuarios/new` (stat boxes, thead/th/tbody, hover de fila, labels, inputs, mensajes de error/éxito, estados vacíos). Todos migrados a `text-text`/`text-text-secondary`/`text-text-muted`, `bg-surface`/`bg-surface-alt`, `border-border`, `focus:ring-primary`, y los boxes de "Total de X" antes en azul/púrpura/índigo ahora usan `bg-primary/10 text-primary` (un solo acento de marca en vez de un color arbitrario por tabla).
+
+**Hecho** (2026-08-30): `npx tsc --noEmit` sin errores nuevos fuera de `__tests__`. Verificado visualmente en `/admin/mangas`, `/admin/pedidos`, `/admin/series`, `/admin/usuarios`, `/admin/categorias`. Commiteado junto con Fase 2+3.
 
 ---
 
@@ -109,9 +111,9 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 | 1 — Tienda | ✅ Hecha (2026-08-30) — 17/17 archivos |
 | 2 — Componentes compartidos | ✅ Hecha (2026-08-30, sin commitear) |
 | 3 — Admin | ✅ Hecha (2026-08-30, sin commitear) |
-| 4 — Pulido | ⬜ No iniciada — **retomar aquí** |
+| 4 — Pulido | 🟡 Parcial (2026-08-30) — falta escala de radios y auditoría de hover/focus/disabled |
 
-**Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2 y Fase 3 completas. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
+**Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2 y Fase 3 completas; Fase 4 parcial (la pasada de `text-gray-*` está lista, quedan pendientes los otros dos ítems de pulido). Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
 
 **Nota sobre `MangaDetailClient.tsx`:** es la única página con tema oscuro (fondo casi negro, `neutral-800/900`, grises claros de texto). Ahí solo se tocaron los valores con equivalencia exacta de color (cream, ink, primary, success, danger); los grises/neutros específicos del modo oscuro se dejaron sin tocar a propósito porque los tokens `text-text*` están calibrados para fondo claro y perderían contraste sobre negro. Si más adelante se quiere un tema oscuro real, eso necesita sus propios tokens (fuera del alcance de este plan).
 
@@ -127,4 +129,4 @@ Con `Button` y `Badge` ya listos, esto es reemplazar, no rediseñar.
 - `bg-[#FFF8F0]`/`text-[#FFF8F0]` → `bg-cream`/`text-cream`
 - `red-600` → `primary` · `red-700` (hover) → `primary-hover` · `red-500`/`red-400` → `primary-light`
 
-**Próximo paso concreto:** Fase 4 (pulido, opcional) — revisar hover/focus/disabled en inputs/botones que quedaron sin tocar, uniformar radios de borde, y pasada de `text-gray-*` sueltos restantes (p. ej. stat boxes de "Total de X" en Mangas/Pedidos/Series, que quedaron fuera de Fase 3 por no ser pills). Todo el trabajo de hoy (Fase 0-3) sigue sin commitear.
+**Próximo paso concreto:** de los dos ítems que quedan de Fase 4 (opcional): (1) definir una escala de radios de borde (hoy mezclados entre `rounded`/`rounded-md`/`rounded-lg`/`rounded-xl` sin criterio) y aplicarla; (2) auditoría dedicada de estados `hover`/`focus`/`disabled` faltantes en inputs/botones no cubiertos por las migraciones mecánicas de hoy.

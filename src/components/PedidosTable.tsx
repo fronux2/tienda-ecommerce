@@ -133,23 +133,23 @@ export default function PedidosTable() {
   }, []);
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen min-w-screen ">
+    <div className="p-4 bg-surface-alt min-h-screen min-w-screen ">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Panel de Pedidos</h1>
-            <p className="text-gray-600 mt-2">Administra y actualiza los pedidos de los clientes</p>
+            <h1 className="text-3xl font-bold text-text">Panel de Pedidos</h1>
+            <p className="text-text-secondary mt-2">Administra y actualiza los pedidos de los clientes</p>
           </div>
-          <div className="bg-blue-100 p-3 rounded-lg">
-            <p className="text-blue-800 font-medium">Total de pedidos: {pedidos.length}</p>
+          <div className="bg-primary/10 p-3 rounded-lg">
+            <p className="text-primary font-medium">Total de pedidos: {pedidos.length}</p>
           </div>
         </div>
 
         {/* Filtros */}
-        <div className="bg-white p-5 rounded-lg shadow-md mb-6">
+        <div className="bg-surface p-5 rounded-lg shadow-md mb-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div className="md:col-span-2">
-              <label htmlFor="busqueda" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="busqueda" className="block text-sm font-medium text-text-secondary mb-1">
                 Buscar en toda la tabla
               </label>
               <input
@@ -158,18 +158,18 @@ export default function PedidosTable() {
                 placeholder="ID, email, dirección, total, estado, método de pago, notas, fechas..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
             <div>
-              <label htmlFor="filtro-estado" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="filtro-estado" className="block text-sm font-medium text-text-secondary mb-1">
                 Estado
               </label>
               <select
                 id="filtro-estado"
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Todos</option>
                 <option value="pendiente">Pendiente</option>
@@ -180,7 +180,7 @@ export default function PedidosTable() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1">
                 Rango de fechas
               </label>
               <div className="flex gap-2">
@@ -188,14 +188,14 @@ export default function PedidosTable() {
                   type="date"
                   value={filtroFechaDesde}
                   onChange={(e) => setFiltroFechaDesde(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   title="Desde"
                 />
                 <input
                   type="date"
                   value={filtroFechaHasta}
                   onChange={(e) => setFiltroFechaHasta(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   title="Hasta"
                 />
               </div>
@@ -230,16 +230,16 @@ export default function PedidosTable() {
               )}
             </div>
             
-            <div className="bg-green-50 px-4 py-2 rounded-lg whitespace-nowrap">
-              <p className="text-sm font-medium text-green-800">
+            <div className="bg-success/10 px-4 py-2 rounded-lg whitespace-nowrap">
+              <p className="text-sm font-medium text-success">
                 Mostrando: <span className="font-bold">{pedidosFiltrados.length}</span> de {pedidos.length} pedidos
               </p>
             </div>
           </div>
-          
+
           {busqueda && pedidosFiltrados.length === 0 && (
-            <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
-              <p className="text-yellow-700">
+            <div className="mt-4 p-3 bg-warning/10 rounded-lg">
+              <p className="text-warning">
                 No se encontraron resultados para: <span className="font-mono font-bold">{busqueda}</span>
               </p>
             </div>
@@ -247,37 +247,37 @@ export default function PedidosTable() {
         </div>
 
         {/* Tabla de Pedidos */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-surface rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full w-full">
-              <thead className="bg-gray-100">
+              <thead className="bg-surface-alt">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dirección</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método de Pago</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Webpay Token</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buy Order</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notas</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actualización</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Usuario</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Dirección</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Estado</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Método de Pago</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Webpay Token</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Buy Order</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Notas</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Fecha</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Actualización</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-surface divide-y divide-border">
                 {pedidosFiltrados.map((pedido) => (
-                  <tr key={pedido.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pedido.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <tr key={pedido.id} className="hover:bg-surface-alt">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">{pedido.id}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       {pedido.usuarios?.email || pedido.usuario_id}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       {pedido.direcciones
                         ? `${pedido.direcciones.nombre_direccion} - ${pedido.direcciones.calle} #${pedido.direcciones.numero}, ${pedido.direcciones.comuna}`
                         : pedido.direccion_id}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
                       <EditableCell
                         id={pedido.id}
                         campo="total"
@@ -289,7 +289,7 @@ export default function PedidosTable() {
                         onSave={manejarGuardar}
                         onEnter={manejarEnter}
                         tipo="number"
-                        inputClassName="w-24 px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
+                        inputClassName="w-24 px-2 py-1 border rounded focus:ring-primary focus:border-primary"
                       >
                         {formatPrice(pedido.total)}
                       </EditableCell>
@@ -319,7 +319,7 @@ export default function PedidosTable() {
                         </span>
                       </EditableCell>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={pedido.id}
                         campo="metodo_pago"
@@ -334,15 +334,15 @@ export default function PedidosTable() {
                         {pedido.metodo_pago}
                       </EditableCell>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                    <td className="px-6 py-4 text-sm text-text-muted max-w-xs">
                       <div className="truncate max-w-[120px]" title={pedido.webpay_token || ''}>
                         {pedido.webpay_token || '-'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       {pedido.buy_order || '-'}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                    <td className="px-6 py-4 text-sm text-text-muted max-w-xs">
                       <EditableCell
                         id={pedido.id}
                         campo="notas_pedido"
@@ -360,10 +360,10 @@ export default function PedidosTable() {
                         </div>
                       </EditableCell>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       {pedido.fecha_pedido}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       {pedido.fecha_actualizacion}
                     </td>
                   </tr>
@@ -373,8 +373,8 @@ export default function PedidosTable() {
           </div>
           
           {pedidosFiltrados.length === 0 && !busqueda && !filtroEstado && !filtroFechaDesde && !filtroFechaHasta && (
-            <div className="text-center py-10 bg-gray-50">
-              <p className="text-gray-500 text-lg">No hay pedidos disponibles</p>
+            <div className="text-center py-10 bg-surface-alt">
+              <p className="text-text-muted text-lg">No hay pedidos disponibles</p>
             </div>
           )}
         </div>

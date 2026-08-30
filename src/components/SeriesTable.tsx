@@ -55,19 +55,19 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
     : listaSeries;
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen min-w-screen ">
+    <div className="p-4 bg-surface-alt min-h-screen min-w-screen ">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between md:items-center mb-6 flex-col md:flex-row">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Panel de Series</h1>
-            <p className="text-gray-600 mt-2">Administra las series de tu catálogo</p>
-          </div>          
+            <h1 className="text-3xl font-bold text-text">Panel de Series</h1>
+            <p className="text-text-secondary mt-2">Administra las series de tu catálogo</p>
+          </div>
         </div>
 
         {/* Barra de búsqueda */}
-        <div className="mb-6 bg-white p-5 rounded-lg shadow-md">
+        <div className="mb-6 bg-surface p-5 rounded-lg shadow-md">
           <div className="w-full max-w-md">
-            <label htmlFor="buscar-series" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="buscar-series" className="block text-sm font-medium text-text-secondary mb-1">
               Buscar series
             </label>
             <div className="relative flex items-center gap-4">
@@ -77,18 +77,18 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
                 placeholder="Buscar por nombre o ID..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
               {busqueda && (
-                <button 
+                <button
                   onClick={() => setBusqueda("")}
-                  className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-2 text-text-muted hover:text-text-secondary"
                 >
                   ✕
                 </button>
               )}
-              <div className="bg-indigo-100 p-3 rounded-lg">
-                <p className="text-indigo-800 font-medium">
+              <div className="bg-primary/10 p-3 rounded-lg">
+                <p className="text-primary font-medium">
                   Total de series: <span className="font-bold">{listaSeries.length}</span>
                 </p>
               </div>
@@ -96,22 +96,22 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-surface rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full w-full">
-              <thead className="bg-gray-100">
+              <thead className="bg-surface-alt">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Nombre</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-surface divide-y divide-border">
                 {seriesFiltradas.map((serie) => (
-                  <tr key={serie.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <tr key={serie.id} className="hover:bg-surface-alt">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
                       <p className="truncate max-w-xs">{serie.id}</p>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted">
                       <EditableCell
                         id={serie.id}
                         campo="nombre"
@@ -123,11 +123,11 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
                         onSave={manejarGuardar}
                         onEnter={manejarEnter}
                       >
-                        <span className="group-hover:text-indigo-600 transition-colors">
+                        <span className="group-hover:text-primary transition-colors">
                           {serie.nombre}
                         </span>
-                        <svg 
-                          className="ml-2 h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" 
+                        <svg
+                          className="ml-2 h-4 w-4 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
                           fill="none" 
                           viewBox="0 0 24 24" 
                           stroke="currentColor"
@@ -143,16 +143,16 @@ export default function SeriesTable({ series }: { series: Serie[] }) {
           </div>
 
           {seriesFiltradas.length === 0 && busqueda && (
-            <div className="text-center py-10 bg-gray-50">
-              <p className="text-gray-500">
+            <div className="text-center py-10 bg-surface-alt">
+              <p className="text-text-muted">
                 No se encontraron series para: <span className="font-semibold">&quot;{busqueda}&quot;</span>
               </p>
             </div>
           )}
 
           {seriesFiltradas.length === 0 && !busqueda && (
-            <div className="text-center py-10 bg-gray-50">
-              <p className="text-gray-500 text-lg">No hay series disponibles</p>
+            <div className="text-center py-10 bg-surface-alt">
+              <p className="text-text-muted text-lg">No hay series disponibles</p>
               <LoadingButton
                 variant="secondary"
                 size="sm"

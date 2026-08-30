@@ -69,9 +69,9 @@ export default function Page() {
           type="text" 
           id="email" 
           {...register('email')} 
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        {errors.email && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+        {errors.email && <span className="text-danger text-sm">Este campo es obligatorio</span>}
       </div>
       <div>
         <label htmlFor="password" className="block font-semibold mb-1">Contraseña:</label>
@@ -79,9 +79,9 @@ export default function Page() {
           type="password" 
           id="password" 
           {...register('password')} 
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        {errors.password && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
+        {errors.password && <span className="text-danger text-sm">Este campo es obligatorio</span>}
       </div>
          
 

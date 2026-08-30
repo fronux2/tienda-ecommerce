@@ -46,10 +46,10 @@ export default function CategoriaTable({ categorias }: { categorias: Categoria[]
   return (
     <div className="p-4 min-h-screen min-w-screen ">
       <h1 className="text-2xl font-bold mb-4">Panel de Administración</h1>
-      <p className="mb-2 text-gray-700">Lista de Categorias</p>
-      <div className="rounded-lg border border-gray-300 shadow">
+      <p className="mb-2 text-text-secondary">Lista de Categorias</p>
+      <div className="rounded-lg border border-border shadow">
         <table className="min-w-full w-full table-auto border-collapse">
-          <thead className="bg-gray-100 text-sm text-gray-700">
+          <thead className="bg-surface-alt text-sm text-text-secondary">
             <tr>
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Nombre</th>

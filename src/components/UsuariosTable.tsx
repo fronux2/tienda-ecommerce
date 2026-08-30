@@ -68,13 +68,13 @@ export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }
   return (
     <main className="flex flex-col items-center justify-start min-w-screen md:min-w-auto min-h-screen py-8 px-4">
       <div>
-        <h1 className="text-3xl font-bold text-gray-800">Panel de Usuarios</h1>
-        <p className="text-gray-600 mt-2">Administra y actualiza a los usuarios</p>
+        <h1 className="text-3xl font-bold text-text">Panel de Usuarios</h1>
+        <p className="text-text-secondary mt-2">Administra y actualiza a los usuarios</p>
       </div>
 
-      <div className="overflow-x-auto w-full max-w-4xl rounded-lg border border-gray-300 shadow">
+      <div className="overflow-x-auto w-full max-w-4xl rounded-lg border border-border shadow">
         <table className="w-full table-auto text-sm">
-          <thead className="bg-gray-100 text-gray-700">
+          <thead className="bg-surface-alt text-text-secondary">
             <tr>
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Email</th>
@@ -106,7 +106,7 @@ export default function UsuariosTable({ usuarioRolId }: { usuarioRolId: number }
                   )}
                 </td>
                 <td 
-                  className={`px-4 py-2 border ${!puedeEditarRol(usuario.rol_id) ? 'text-gray-400' : 'cursor-pointer'}`}
+                  className={`px-4 py-2 border ${!puedeEditarRol(usuario.rol_id) ? 'text-text-muted' : 'cursor-pointer'}`}
                   onDoubleClick={() => puedeEditarRol(usuario.rol_id) && manejarDobleClick(usuario.id, "rol_id", usuario.rol_id)}>
                     {
                       editando?.id === usuario.id && editando?.campo === "rol_id" ? (
