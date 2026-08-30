@@ -158,7 +158,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
               </button>
               
               <button
-                className="bg-ink hover:bg-ink/90 text-white py-2 px-4 rounded-lg transition active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
+                className="bg-chrome hover:bg-chrome/90 text-chrome-foreground py-2 px-4 rounded-lg transition active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
                 onClick={() => {
                   setIsOpen(false)
                   router.push('/checkout')
@@ -174,7 +174,7 @@ const Cart = ({ userId }: { userId: string | null }) => {
       {/* Fondo oscuro para móviles */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-ink bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-chrome bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}

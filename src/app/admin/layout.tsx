@@ -20,7 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ]
 
   return (
-    <div className="min-h-screen bg-ink flex flex-col md:flex-row">
+    <div className="admin-scope min-h-screen bg-ink flex flex-col md:flex-row">
       {/* Barra de toggle */}
       <button
         type="button"

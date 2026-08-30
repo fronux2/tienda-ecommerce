@@ -47,10 +47,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="scroll-smooth!">
+    <html lang="es" className="scroll-smooth!" suppressHydrationWarning>
       <body
-        className={`${geistRoboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistRoboto.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-cream text-text`}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
         <Navbar />
         {children}
       </body>

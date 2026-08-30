@@ -26,12 +26,12 @@ export default function PerfilLayout({ children }: { children: React.ReactNode }
       <button
         type="button"
         aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-        className={`fixed top-0 bottom-0 z-20 w-6 bg-ink flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light ${
+        className={`fixed top-0 bottom-0 z-20 w-6 bg-chrome flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light ${
           isMenuOpen ? 'left-64' : 'left-0'
         }`}
         onClick={toggleMenu}
       >
-        <div className="text-cream hover:text-primary-light transition-colors">
+        <div className="text-chrome-foreground hover:text-primary-light transition-colors">
           {isMenuOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </div>
       </button>

@@ -179,7 +179,7 @@ const CartPage = () => {
                 onClick={() => router.push('/checkout')}
                 loading={false}
                 disabled={loading}
-                className="w-full mt-6 bg-ink hover:bg-ink/90 text-white font-medium py-3 px-6 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
+                className="w-full mt-6 bg-chrome hover:bg-chrome/90 text-chrome-foreground font-medium py-3 px-6 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
               >
                 Ir a pagar
               </LoadingButton>

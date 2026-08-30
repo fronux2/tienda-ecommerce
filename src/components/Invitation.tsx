@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Invitation() {
   return (
-    <section className="w-full bg-linear-to-r from-cream to-[#FFF0E0] py-20 border-t-2 border-primary relative overflow-hidden">
+    <section className="w-full bg-linear-to-r from-cream to-surface-alt py-20 border-t-2 border-primary relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
           ¿Listo para tu próxima <span className="text-primary">aventura</span>?
@@ -27,7 +27,7 @@ export default function Invitation() {
 
           <Link
             href="/novedades"
-            className="bg-surface border-2 border-primary text-primary hover:bg-red-50 font-bold px-8 py-4 rounded-lg text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            className="bg-surface border-2 border-primary text-primary hover:bg-danger/10 font-bold px-8 py-4 rounded-lg text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
           >
             Ver Novedades
           </Link>

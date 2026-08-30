@@ -128,6 +128,29 @@ Se aplicó la misma escala de radios + colores/tokens + hover/focus/disabled que
 
 ---
 
+## Fase 5 — Modo oscuro/claro (2026-08-30, mismo día)
+
+Toggle manual con `localStorage`, respetando `prefers-color-scheme` del sistema la primera visita. **Alcance: toda la tienda, Admin queda anclado al claro a propósito** (decisión del usuario — Admin todavía no tiene su propio diseño oscuro).
+
+**Arquitectura** (`src/app/globals.css`):
+- Los tokens de superficie/texto ya existentes (`cream`, `ink`, `surface`, `surface-alt`, `text*`, `border`, semánticos) ahora son **adaptativos**: se redefinen dentro de una clase `.dark` en el `<html>`, y como todos los componentes ya usaban estos tokens (gracias a Fases 0-4), heredan el modo oscuro automáticamente sin tocar cada archivo.
+- `--color-primary` (rojo de marca) **no cambia** con el tema — es el único acento, se mantiene igual en ambos modos.
+- **Tokens nuevos `chrome` / `chrome-foreground`**: navbar, footer, overlay del menú móvil y los botones "Ir a pagar"/"Comprar" usaban `bg-ink`/`text-cream` como *fondo permanente casi-negro* (barra de marca), no como superficie de página. Si `ink`/`cream` se vuelven adaptativos, esas barras se habrían invertido a blanco — por eso se separaron en un par de tokens **constantes** (nunca redefinidos en `.dark`) para esos ~10 usos puntuales. El resto de `text-ink`/`bg-cream` (títulos, fondos de página) sigue usando los tokens adaptativos normales.
+- **`.admin-scope`**: reasigna los tokens adaptativos a sus valores claros dentro de `admin/layout.tsx`. Como los custom properties de CSS resuelven por el ancestro más cercano, esto "ancla" todo lo que cuelga de `/admin/*` al modo claro sin importar que `.dark` esté activo en el `<html>`.
+- `<body>` ahora tiene `bg-cream text-text` explícito — antes no tenía fondo, así que los huecos entre secciones se veían blanco puro en modo oscuro (bug real encontrado al probar).
+
+**Componentes nuevos:**
+- `ThemeToggle.tsx` — botón sol/luna (ícono según el tema activo), en el navbar (desktop) y en el menú móvil.
+- Script bloqueante inline en `app/layout.tsx` (antes de `<Navbar />`) que lee `localStorage` o `prefers-color-scheme` y agrega `.dark` al `<html>` antes del primer paint (evita parpadeo). `<html>` lleva `suppressHydrationWarning` porque el script puede tocar el DOM antes de que React hidrate.
+
+**Bugs encontrados y corregidos durante la verificación** (no eran parte de dark mode, ya existían):
+- `Invitation.tsx` tenía un hex crudo escondido dentro de un gradiente (`to-[#FFF0E0]`) que ningún grep de fases anteriores detectó porque no es un `bg-[#...]` plano — migrado a `to-surface-alt`.
+- `NavbarClient.tsx` tenía un `hover:bg-red-50` suelto en el dropdown ("Cerrar sesión") — migrado a `hover:bg-danger/10`.
+
+Verificado visualmente en ambos temas: home completo (Hero/Populares/Invitation/Footer), login, `/cart`, y confirmado que `/admin/mangas` se mantiene en claro con el toggle en oscuro. `npx tsc --noEmit` sin errores nuevos.
+
+---
+
 ## Progreso
 
 | Fase | Estado |
@@ -137,6 +160,7 @@ Se aplicó la misma escala de radios + colores/tokens + hover/focus/disabled que
 | 2 — Componentes compartidos | ✅ Hecha (2026-08-30, sin commitear) |
 | 3 — Admin | ✅ Hecha (2026-08-30, sin commitear) |
 | 4 — Pulido | ✅ Hecha en Admin **y en la tienda** (2026-08-30) |
+| 5 — Modo oscuro/claro | ✅ Hecha en la tienda (2026-08-30) — Admin queda en claro fijo |
 
 **Hecho hoy (2026-08-30):** Fase 0, Fase 1, Fase 2, Fase 3 y Fase 4 completas — Admin y tienda. El plan de unificación de diseño está terminado en su totalidad. Los 17 archivos de la tienda migrados a tokens (`bg-cream`, `text-primary`, `bg-ink`, `text-text`/`text-text-secondary`/`text-text-muted`, `border-border`, `bg-surface`, `success`/`danger`/`warning`). `npx tsc --noEmit` no muestra errores nuevos en ninguno de los archivos tocados (los errores existentes en el proyecto son de tests preexistentes y de `.next/dev/types`, sin relación con este trabajo). **Commiteado y pusheado a `main`** (commit `bdb0af0`) para verlo en producción — no se pudo levantar el dev server local porque falta `.env.local` con las credenciales de Supabase (preexistente, no relacionado con este trabajo).
 

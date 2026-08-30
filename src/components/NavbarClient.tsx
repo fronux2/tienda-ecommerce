@@ -8,6 +8,7 @@ import { loadCartFromLocalStorage, clearCartFromLocalStorage } from '@/lib/cartL
 import { useEffect, useState, useRef } from 'react'
 import Cart from '@/components/Cart'
 import LoadingButton from '@/components/LoadingButton'
+import ThemeToggle from '@/components/ThemeToggle'
 
 type Props = {
   user: { id: string; email?: string } | null
@@ -73,7 +74,7 @@ export default function NavbarClient({ user, rolId }: Props) {
   }
 
   const NavLink: React.FC<{ href: string; children: React.ReactNode; className?: string }> = ({ href, children, className }) => {
-    const baseClasses = "text-cream hover:text-primary-light transition-colors py-2 px-3 rounded-md font-medium text-lg";
+    const baseClasses = "text-chrome-foreground hover:text-primary-light transition-colors py-2 px-3 rounded-md font-medium text-lg";
     const combinedClasses = className ? `${baseClasses} ${className}` : baseClasses;
 
     return (
@@ -92,8 +93,8 @@ export default function NavbarClient({ user, rolId }: Props) {
       {/* Navbar principal */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-ink border-b-2 border-primary shadow-lg'
-          : 'bg-ink'
+          ? 'bg-chrome border-b-2 border-primary shadow-lg'
+          : 'bg-chrome'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-3">
@@ -101,7 +102,7 @@ export default function NavbarClient({ user, rolId }: Props) {
             <div className="flex items-center">
               <button
                 onClick={toggleMenu}
-                className="md:hidden text-cream focus:outline-none mr-4"
+                className="md:hidden text-chrome-foreground focus:outline-none mr-4"
                 aria-label="Toggle menu"
               >
                 <svg 
@@ -117,7 +118,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                   )}
                 </svg>
               </button>
-              <Link href="/" className="text-xl font-bold text-cream">
+              <Link href="/" className="text-xl font-bold text-chrome-foreground">
                 MangaNihon
               </Link>
             </div>
@@ -142,7 +143,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                 <div className="relative hidden md:block" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 text-cream hover:text-primary-light transition-colors py-2 px-3 rounded-md font-medium text-lg"
+                    className="flex items-center gap-2 text-chrome-foreground hover:text-primary-light transition-colors py-2 px-3 rounded-md font-medium text-lg"
                   >
                     <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white">
                       {user.email?.[0]?.toUpperCase() || user.id[0].toUpperCase()}
@@ -193,7 +194,7 @@ export default function NavbarClient({ user, rolId }: Props) {
                       <form action="/logout" method="post">
                         <button
                           type="submit"
-                          className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-red-50 transition-colors border-t border-border"
+                          className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-danger/10 transition-colors border-t border-border"
                         >
                           Cerrar sesión
                         </button>
@@ -205,6 +206,8 @@ export default function NavbarClient({ user, rolId }: Props) {
                 <NavLink href="/login" className="hidden md:block">Iniciar sesión</NavLink>
               )}
               
+              <ThemeToggle />
+
               {/* Carrito visible en todos los dispositivos */}
               <Cart userId={user?.id ?? null} />
             </div>
@@ -212,15 +215,15 @@ export default function NavbarClient({ user, rolId }: Props) {
         </div>
 
         {/* Menú móvil */}
-        <div 
-          className={`md:hidden fixed inset-0 bg-ink z-40 transform ${
+        <div
+          className={`md:hidden fixed inset-0 bg-chrome z-40 transform ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
           } transition-transform duration-300 ease-in-out`}
         >
           {/* Botón de cierre en la esquina superior derecha */}
           <button
             onClick={closeMenu}
-            className="absolute top-4 right-4 text-cream focus:outline-none z-50"
+            className="absolute top-4 right-4 text-chrome-foreground focus:outline-none z-50"
             aria-label="Cerrar menú"
           >
             <svg 
@@ -245,7 +248,12 @@ export default function NavbarClient({ user, rolId }: Props) {
                 <NavLink href="#section-map">Encuéntranos</NavLink>
               </>
             )}
-            
+
+            <div className="flex items-center gap-3 py-2 px-3">
+              <ThemeToggle />
+              <span className="text-chrome-foreground font-medium text-lg">Tema</span>
+            </div>
+
             <div className="border-t border-border pt-4">
               {user ? (
                 <div className="space-y-4">

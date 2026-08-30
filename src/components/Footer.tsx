@@ -22,16 +22,16 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-ink text-cream pt-16 pb-8 border-t-4 border-primary">
+    <footer className="w-full bg-chrome text-chrome-foreground pt-16 pb-8 border-t-4 border-primary">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
               <span className="text-2xl font-bold text-white">MangaNihon</span>
               <span className="w-2 h-2 bg-primary rounded-full mx-2"></span>
-              <span className="text-sm text-cream/80">© 2024</span>
+              <span className="text-sm text-chrome-foreground/80">© 2024</span>
             </div>
-            <p className="text-cream/80 mb-6 leading-relaxed">
+            <p className="text-chrome-foreground/80 mb-6 leading-relaxed">
               Tu destino para los mejores mangas importados directamente de Japón.
             </p>
             <div className="flex space-x-4">
@@ -39,7 +39,7 @@ export default function Footer() {
                 <a
                   key={social}
                   href="#"
-                  className="bg-cream/10 hover:bg-primary text-cream w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                  className="bg-chrome-foreground/10 hover:bg-primary text-chrome-foreground w-10 h-10 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                   aria-label={social}
                 >
                   <div className="w-5 h-5 bg-current rounded-full"></div>
@@ -49,11 +49,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b border-cream/20">Enlaces Rápidos</h3>
+            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b border-chrome-foreground/20">Enlaces Rápidos</h3>
             <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-cream/80 hover:text-primary-light transition-colors">
+                  <Link href={link.href} className="text-chrome-foreground/80 hover:text-primary-light transition-colors rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">
                     {link.label}
                   </Link>
                 </li>
@@ -62,11 +62,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b border-cream/20">Información</h3>
+            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b border-chrome-foreground/20">Información</h3>
             <ul className="space-y-4">
               {infoLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-cream/80 hover:text-primary-light transition-colors">
+                  <Link href={link.href} className="text-chrome-foreground/80 hover:text-primary-light transition-colors rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light">
                     {link.label}
                   </Link>
                 </li>
@@ -75,8 +75,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b border-cream/20">Contacto</h3>
-            <ul className="space-y-4 text-cream/80">
+            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b border-chrome-foreground/20">Contacto</h3>
+            <ul className="space-y-4 text-chrome-foreground/80">
               <li className="flex items-start">
                 <span className="mr-3 text-primary-light">📍</span>
                 <span>Av. Japón 123, Ciudad Manga</span>
@@ -93,10 +93,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-cream/20 my-8"></div>
+        <div className="border-t border-chrome-foreground/20 my-8"></div>
 
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="text-cream/60 text-sm mb-4 md:mb-0">
+          <div className="text-chrome-foreground/60 text-sm mb-4 md:mb-0">
             © 2024 MangaNihon.
           </div>
           <div className="flex space-x-6">
@@ -104,7 +104,7 @@ export default function Footer() {
                 <Link
                     key={link.href}
                     href={link.href}
-                    className="text-cream/60 hover:text-primary-light text-sm transition-colors"
+                    className="text-chrome-foreground/60 hover:text-primary-light text-sm transition-colors rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light"
                 >
                     {link.label}
                 </Link>
