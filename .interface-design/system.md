@@ -114,6 +114,14 @@ mientras alguien escribe correctamente:
   Todavía puede terminar bien: no hay error que señalar.
 - Ya divergieron → `text-danger`, "Las contraseñas no coinciden".
 
+**Acción destructiva** (`src/components/perfil/CancelarPedido.tsx`)
+Confirmación en dos pasos dentro de la propia página, nunca `window.confirm`
+(bloquea el hilo y se ve ajeno al sitio). Paso 1: botón contorneado
+`border-2 border-danger text-danger`. Paso 2: panel `border-2 border-danger
+bg-danger/5` que explica **qué consecuencia tiene**, con el botón de confirmar
+en `bg-danger` y una salida clara ("Mantener el pedido"). Ojo: `danger`, no
+`primary` — el rojo de marca es acción, no destrucción.
+
 **Iconos y transiciones compartidos**
 `src/components/icons/estado.tsx` (`IconoCumple`, `IconoPendiente`, `IconoError`, 12px)
 y `src/lib/ui/transiciones.ts` (`TRANSICION_ESTADO`). Úsalos en vez de redefinir el

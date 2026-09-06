@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { formatPrice } from '@/lib/formatPrice'
 import EstadoBadge from '@/components/perfil/EstadoBadge'
 import TimelineEstado from '@/components/perfil/TimelineEstado'
+import CancelarPedido from '@/components/perfil/CancelarPedido'
 import type { Pedido, DetallePedido, Direccion, Manga } from '@/types/supabase'
 
 type DetalleConManga = DetallePedido & { mangas: Manga | null }
@@ -139,6 +140,12 @@ export default async function DetallePedido({ params }: { params: Promise<{ id: 
               </div>
             </div>
           )}
+
+          <CancelarPedido
+            pedidoId={id}
+            estado={pedidoData.estado}
+            emailCliente={user.email}
+          />
         </div>
       </div>
     </div>
