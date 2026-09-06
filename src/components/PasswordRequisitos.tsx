@@ -1,25 +1,10 @@
 'use client'
 
+import { IconoCumple, IconoPendiente } from './icons/estado'
+import { TRANSICION_ESTADO as CURVA } from '@/lib/ui/transiciones'
+
 const LARGO_MINIMO = 10
 const SIMBOLOS = /[!@#$%^&*()_+\-=\[\]{};'\\:"|<>?,.\/`~]/
-
-const CURVA = 'transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none'
-
-function IconoCumple() {
-  return (
-    <svg className="h-3 w-3 shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-      <path d="M2.5 6.5L5 9l4.5-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconoPendiente() {
-  return (
-    <svg className="h-3 w-3 shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-      <circle cx="6" cy="6" r="3" />
-    </svg>
-  )
-}
 
 export default function PasswordRequisitos({ password }: { password: string }) {
   const largo = password.length

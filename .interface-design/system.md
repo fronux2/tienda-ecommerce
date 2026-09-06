@@ -106,6 +106,19 @@ cabecera `bg-primary py-6 border-b-2 border-ink` y título blanco.
 - Estado: línea concreta (`Te faltan 4 caracteres`, `Falta: símbolo`,
   `Contraseña lista`), nunca una etiqueta arbitraria tipo "Fortaleza: media".
 
+**Coincidencia de contraseñas** (`src/components/PasswordCoincidencia.tsx`)
+Tres estados, no dos. El binario coincide/no-coincide pinta rojo casi todo el rato
+mientras alguien escribe correctamente:
+- Iguales → `text-success`, "Las contraseñas coinciden".
+- Lo escrito es prefijo de la contraseña → `text-text-muted`, "Sigue escribiendo".
+  Todavía puede terminar bien: no hay error que señalar.
+- Ya divergieron → `text-danger`, "Las contraseñas no coinciden".
+
+**Iconos y transiciones compartidos**
+`src/components/icons/estado.tsx` (`IconoCumple`, `IconoPendiente`, `IconoError`, 12px)
+y `src/lib/ui/transiciones.ts` (`TRANSICION_ESTADO`). Úsalos en vez de redefinir el
+SVG o la cadena de transición en cada componente.
+
 ## Reglas de criterio (las que se rompen sin darse cuenta)
 
 - **Nunca color solo.** Todo estado que se comunique con rojo/verde lleva además
