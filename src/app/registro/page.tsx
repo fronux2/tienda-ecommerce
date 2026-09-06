@@ -7,6 +7,7 @@ import { registrarAction } from './actions'
 import Link from 'next/link'
 import { useState } from 'react'
 import LoadingButton from '@/components/LoadingButton'
+import PasswordRequisitos from '@/components/PasswordRequisitos'
 
 export default function RegistroPage() {
   const [loading, setLoading] = useState(false)
@@ -14,8 +15,11 @@ export default function RegistroPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<RegistroSchema>({ resolver: zodResolver(registroSchema), mode: 'onBlur' })
+
+  const password = watch('password') ?? ''
 
   const onSubmit = async (data: RegistroSchema) => {
     if (loading) return
@@ -92,19 +96,7 @@ export default function RegistroPage() {
                 </svg>
               </span>
             </div>
-            {!errors.password && (
-              <p className="mt-2 text-text-muted text-sm">
-                Mínimo 10 caracteres, con mayúscula, minúscula, número y símbolo.
-              </p>
-            )}
-            {errors.password && (
-              <p className="mt-2 text-danger text-sm flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                {errors.password.message}
-              </p>
-            )}
+            <PasswordRequisitos password={password} />
           </div>
 
           <div className="mb-6">
