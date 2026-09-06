@@ -1,9 +1,8 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import { supabaseAdmin } from '@/utils/supabase/admin'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { revalidatePath } from 'next/cache'
 import { registroSchema } from '@/schemas/registroSchema'
 import { passwordFueFiltrada } from '@/lib/auth/passwordFiltrada'
 
@@ -25,26 +24,25 @@ export async function registrarAction(formData: FormData) {
     redirect('/error?motivo=password-filtrada')
   }
 
-  const { error: createError } = await supabaseAdmin.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-  })
-
-  if (createError) {
-    redirect('/error')
-  }
+  const cabeceras = await headers()
+  const origen = cabeceras.get('origin') ?? `https://${cabeceras.get('host')}`
 
   const supabase = await createClient()
-  const { error: signInError } = await supabase.auth.signInWithPassword({
+
+  // signUp (no admin.createUser): la cuenta queda pendiente hasta que la persona
+  // abre el enlace del correo. Antes se creaba con email_confirm: true, lo que
+  // permitia registrarse con la direccion de cualquier otra persona.
+  const { error: signUpError } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      emailRedirectTo: `${origen}/auth/confirm?next=/`,
+    },
   })
 
-  if (signInError) {
+  if (signUpError) {
     redirect('/error')
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/registro/confirmar')
 }
