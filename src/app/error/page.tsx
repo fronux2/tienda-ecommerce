@@ -1,9 +1,27 @@
-'use client'
+import Link from 'next/link'
 
-import { useRouter } from 'next/navigation'
+const MOTIVOS: Record<string, { titulo: string; mensaje: string; volverA: string; volverTexto: string }> = {
+  'password-filtrada': {
+    titulo: 'Esa contraseña no es segura',
+    mensaje:
+      'La contraseña que elegiste aparece en filtraciones públicas de datos, así que cualquiera podría usarla para entrar a tu cuenta. Elige una distinta, idealmente generada por un gestor de contraseñas.',
+    volverA: '/registro',
+    volverTexto: 'Volver al registro',
+  },
+}
 
-export default function ErrorPage() {
-  const router = useRouter()
+export default async function ErrorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ motivo?: string }>
+}) {
+  const { motivo } = await searchParams
+  const detalle = motivo ? MOTIVOS[motivo] : undefined
+
+  const titulo = detalle?.titulo ?? 'Algo salió mal'
+  const mensaje = detalle?.mensaje ?? 'Ha ocurrido un error inesperado. Por favor, intenta nuevamente.'
+  const volverA = detalle?.volverA ?? '/'
+  const volverTexto = detalle?.volverTexto ?? 'Volver al inicio'
 
   return (
     <main className="h-screen flex items-center justify-center bg-cream px-4">
@@ -24,17 +42,17 @@ export default function ErrorPage() {
           </svg>
         </div>
         <h1 className="text-3xl font-bold text-text mb-3">
-          Algo salió mal
+          {titulo}
         </h1>
         <p className="text-text-secondary mb-8">
-          Ha ocurrido un error inesperado. Por favor, intenta nuevamente.
+          {mensaje}
         </p>
-        <button
-          onClick={() => router.push('/')}
-          className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors active:scale-95"
+        <Link
+          href={volverA}
+          className="inline-block bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-light focus-visible:ring-offset-2"
         >
-          Volver al inicio
-        </button>
+          {volverTexto}
+        </Link>
       </div>
     </main>
   )

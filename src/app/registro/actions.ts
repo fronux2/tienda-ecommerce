@@ -5,6 +5,7 @@ import { supabaseAdmin } from '@/utils/supabase/admin'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { registroSchema } from '@/schemas/registroSchema'
+import { passwordFueFiltrada } from '@/lib/auth/passwordFiltrada'
 
 export async function registrarAction(formData: FormData) {
   const raw = {
@@ -19,6 +20,10 @@ export async function registrarAction(formData: FormData) {
   }
 
   const { email, password } = parsed.data
+
+  if (await passwordFueFiltrada(password)) {
+    redirect('/error?motivo=password-filtrada')
+  }
 
   const { error: createError } = await supabaseAdmin.auth.admin.createUser({
     email,

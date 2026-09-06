@@ -5,17 +5,25 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { registroSchema, type RegistroSchema } from '@/schemas/registroSchema'
 import { registrarAction } from './actions'
 import Link from 'next/link'
-import { useState, type FormEvent } from 'react'
+import { useState } from 'react'
 import LoadingButton from '@/components/LoadingButton'
 
 export default function RegistroPage() {
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegistroSchema>({ resolver: zodResolver(registroSchema), mode: 'onBlur' })
+
+  const onSubmit = async (data: RegistroSchema) => {
     if (loading) return
     setLoading(true)
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData()
+    formData.append('email', data.email)
+    formData.append('password', data.password)
+    formData.append('confirmar_password', data.confirmar_password)
     try {
       await registrarAction(formData)
     } catch {
@@ -23,11 +31,6 @@ export default function RegistroPage() {
     }
     setLoading(false)
   }
-
-  const {
-    register,
-    formState: { errors },
-  } = useForm<RegistroSchema>({ resolver: zodResolver(registroSchema) })
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-cream p-4">
@@ -37,7 +40,7 @@ export default function RegistroPage() {
         </header>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="px-6 py-8 md:px-8 md:py-10"
         >
           <div className="mb-6">
@@ -89,6 +92,11 @@ export default function RegistroPage() {
                 </svg>
               </span>
             </div>
+            {!errors.password && (
+              <p className="mt-2 text-text-muted text-sm">
+                Mínimo 10 caracteres, con mayúscula, minúscula, número y símbolo.
+              </p>
+            )}
             {errors.password && (
               <p className="mt-2 text-danger text-sm flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
