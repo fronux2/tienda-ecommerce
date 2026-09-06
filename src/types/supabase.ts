@@ -55,7 +55,7 @@ export type Manga = {
   categorias?: Categoria
   serie_id: string
   series?: Serie
-  volumen: string
+  volumen: number
   descripcion: string
   precio: number
   stock: number

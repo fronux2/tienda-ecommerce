@@ -16,6 +16,11 @@ const datosValidos = {
   fecha_publicacion: '2023-01-01',
   estado: 'disponible',
   activo: true,
+  // Opcionales del schema. Estaban ausentes, asi que el test que los quitaba
+  // para comprobar que se puede prescindir de ellos no probaba nada.
+  imagen_portada: 'https://img.test/naruto.jpg',
+  fecha_creacion: '2023-01-01',
+  es_popular: true,
 }
 
 describe('nuevoMangaSchema', () => {

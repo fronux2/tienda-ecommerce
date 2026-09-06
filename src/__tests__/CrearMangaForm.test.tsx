@@ -90,8 +90,10 @@ describe('CrearMangaForm', () => {
     const submitButton = screen.getByText('Crear');
     await user.click(submitButton);
 
+    // Los mensajes de error pasaron de 'text-red-500' al token 'text-danger'
+    // con el sistema de diseno.
     await waitFor(() => {
-      const errors = document.querySelectorAll('span.text-red-500');
+      const errors = document.querySelectorAll('span.text-danger');
       expect(errors.length).toBeGreaterThan(0);
     });
   });

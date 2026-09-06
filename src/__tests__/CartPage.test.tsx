@@ -73,7 +73,7 @@ jest.mock('next/image', () => {
 })
 
 jest.mock('next/link', () => (props: Record<string, unknown>) => (
-  <a href={props.href as string}>{props.children}</a>
+  <a href={props.href as string}>{props.children as React.ReactNode}</a>
 ))
 
 jest.mock('next/navigation', () => ({
@@ -202,7 +202,7 @@ describe('CartPage', () => {
 
   describe('carrito vacio', () => {
     it('muestra estado vacio cuando no hay items', () => {
-      useCartStore.mockImplementation((selector) => {
+      useCartStore.mockImplementation((selector?: (estado: typeof emptyState) => unknown) => {
         return selector ? selector(emptyState) : emptyState
       })
 
@@ -213,7 +213,7 @@ describe('CartPage', () => {
     })
 
     it('muestra link "Explorar mangas" en estado vacio', () => {
-      useCartStore.mockImplementation((selector) => {
+      useCartStore.mockImplementation((selector?: (estado: typeof emptyState) => unknown) => {
         return selector ? selector(emptyState) : emptyState
       })
 

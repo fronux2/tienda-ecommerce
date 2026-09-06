@@ -26,7 +26,7 @@ describe('Cart component', () => {
   }
 
   beforeEach(() => {
-    (useCartStore as jest.Mock).mockImplementation((selector) => {
+    (useCartStore as unknown as jest.Mock).mockImplementation((selector) => {
       if (typeof selector === 'function') return selector(mockCartStore)
       return mockCartStore
     })
@@ -47,7 +47,7 @@ describe('Cart component', () => {
   })
 
   it('muestra mensaje de carrito vacío cuando no hay productos', () => {
-    (useCartStore as jest.Mock).mockImplementation((selector) => {
+    (useCartStore as unknown as jest.Mock).mockImplementation((selector) => {
       const state = { ...mockCartStore, cart: [] }
       if (typeof selector === 'function') return selector(state)
       return state
@@ -70,7 +70,7 @@ describe('Cart component', () => {
       },
     }
 
-    ;(useCartStore as jest.Mock).mockImplementation((selector) => {
+    ;(useCartStore as unknown as jest.Mock).mockImplementation((selector) => {
       const state = { ...mockCartStore, cart: [item] }
       if (typeof selector === 'function') return selector(state)
       return state
@@ -111,7 +111,7 @@ describe('Cart component', () => {
       },
     };
 
-    (useCartStore as jest.Mock).mockImplementation((selector) => {
+    (useCartStore as unknown as jest.Mock).mockImplementation((selector) => {
       const state = { ...mockCartStore, cart: [item], clearCart: mockClearCart }
       if (typeof selector === 'function') return selector(state)
       return state

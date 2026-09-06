@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import MangasTable from '@/components/MangasTable'
 import { useMangaStore } from '@/store/mangaStore'
 import { updateManga } from '@/lib/supabase/services/mangas.client'
+import { crearCategoria, crearManga, crearSerie } from '@/test-utils/fixtures'
 
 jest.mock('@/store/mangaStore', () => ({
   useMangaStore: jest.fn(),
@@ -19,27 +20,7 @@ jest.mock('@/lib/formatPrice', () => ({
 
 const mockLoadMangas = jest.fn().mockResolvedValue(undefined)
 
-const makeManga = (overrides: Record<string, unknown> = {}) => ({
-  id: 'm-1',
-  titulo: 'Naruto',
-  autor: 'Kishimoto',
-  editorial: 'Shueisha',
-  categoria_id: 'cat-1',
-  serie_id: 'ser-1',
-  volumen: 1,
-  descripcion: 'Primer tomo',
-  precio: 9900,
-  stock: 15,
-  isbn: '1234567890',
-  numero_paginas: 200,
-  idioma: 'Japones',
-  fecha_publicacion: '2023-01-01',
-  estado: 'disponible',
-  activo: true,
-  es_popular: true,
-  imagen_portada: 'https://img.test/naruto.jpg',
-  ...overrides,
-})
+const makeManga = crearManga
 
 const mangas = [
   makeManga(),
@@ -75,20 +56,23 @@ const mangas = [
 ]
 
 const categorias = [
-  { id: 'cat-1', nombre: 'Shonen' },
-  { id: 'cat-2', nombre: 'Seinen' },
+  crearCategoria({ id: 'cat-1', nombre: 'Shonen' }),
+  crearCategoria({ id: 'cat-2', nombre: 'Seinen' }),
 ]
 
 const series = [
-  { id: 'ser-1', nombre: 'Naruto' },
-  { id: 'ser-2', nombre: 'Berserk' },
-  { id: 'ser-3', nombre: 'One Piece' },
+  crearSerie({ id: 'ser-1', nombre: 'Naruto' }),
+  crearSerie({ id: 'ser-2', nombre: 'Berserk' }),
+  crearSerie({ id: 'ser-3', nombre: 'One Piece' }),
 ]
 
-const setupStoreMock = (data: { mangas: typeof mangas; loadMangas: jest.Mock }) => {
-  ;(useMangaStore as jest.Mock).mockImplementation((selector) => {
-    return selector ? selector(data) : data
-  })
+type DatosStore = { mangas: typeof mangas; loadMangas: jest.Mock }
+
+const setupStoreMock = (data: DatosStore) => {
+  // El store de Zustand no se solapa con jest.Mock: hay que pasar por unknown.
+  ;(useMangaStore as unknown as jest.Mock).mockImplementation(
+    (selector?: (estado: DatosStore) => unknown) => (selector ? selector(data) : data),
+  )
 }
 
 beforeEach(() => {
@@ -263,13 +247,16 @@ describe('MangasTable', () => {
     expect(tbody).toHaveTextContent('Seinen')
   })
 
+  // El stock se pinta con <Badge variant>, que mapea a tokens semanticos
+  // (text-success / text-danger). Antes se buscaban las clases 'green' y 'red',
+  // que desaparecieron al pasar al sistema de tokens.
   it('muestra stock con colores segun cantidad', () => {
     render(<MangasTable series={series} categorias={categorias} />)
     const stock15 = screen.getAllByText('15').find(
-      (el) => el.className.includes('green'),
+      (el) => el.className.includes('text-success'),
     )
     const stock0 = screen.getAllByText('0').find(
-      (el) => el.className.includes('red'),
+      (el) => el.className.includes('text-danger'),
     )
     expect(stock15).toBeDefined()
     expect(stock0).toBeDefined()

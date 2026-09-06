@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from '@testing-library/react'
+import { render, screen, waitFor, act, fireEvent, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import UsuariosTable from '@/components/UsuariosTable'
 
@@ -120,7 +120,11 @@ describe('UsuariosTable', () => {
   })
 
   describe('permisos de rol', () => {
-    it('admin puede editar cualquier rol', async () => {
+    // Se comprueba el comportamiento (si el doble clic abre el editor) en vez de
+    // la clase CSS: antes se afirmaba sobre 'text-gray-400', que dejo de existir
+    // al pasar a tokens semanticos, y la version "admin puede editar" pasaba por
+    // el motivo equivocado (la clase ya no esta nunca).
+    it('admin puede editar el rol de otro admin', async () => {
       await act(async () => {
         render(<UsuariosTable usuarioRolId={3} />)
       })
@@ -128,9 +132,12 @@ describe('UsuariosTable', () => {
         expect(screen.getByText('admin')).toBeInTheDocument()
       })
 
-      // admin cell should NOT be disabled (no text-gray-400 class)
       const adminCell = screen.getByText('admin').closest('td')!
-      expect(adminCell.className).not.toContain('text-gray-400')
+      await act(async () => {
+        fireEvent.doubleClick(adminCell)
+      })
+
+      expect(within(adminCell).getByRole('combobox')).toBeInTheDocument()
     })
 
     it('no-admin no puede editar rol de admin', async () => {
@@ -142,17 +149,28 @@ describe('UsuariosTable', () => {
       })
 
       const adminCell = screen.getByText('admin').closest('td')!
-      expect(adminCell.className).toContain('text-gray-400')
+      await act(async () => {
+        fireEvent.doubleClick(adminCell)
+      })
+
+      expect(within(adminCell).queryByRole('combobox')).not.toBeInTheDocument()
+      expect(adminCell).toHaveTextContent('admin')
     })
   })
 
   describe('estado vacio', () => {
     it('muestra nada cuando no hay usuarios', () => {
-      useUsuarioStore.mockReturnValue({
+      // El componente consume el store con un selector, asi que el mock tiene
+      // que aplicarlo: con mockReturnValue recibia el estado entero como lista.
+      const estadoVacio = {
         usuarios: [],
         getUsuarios: jest.fn().mockResolvedValue(undefined),
         updateUsuarioEnStore: jest.fn(),
-      })
+      }
+      useUsuarioStore.mockImplementation(
+        (selector?: (estado: typeof estadoVacio) => unknown) =>
+          selector ? selector(estadoVacio) : estadoVacio,
+      )
 
       render(<UsuariosTable usuarioRolId={3} />)
 

@@ -2,15 +2,16 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SeriesTable from '@/components/SeriesTable'
 import { updateSerie } from '@/lib/supabase/services/series.client'
+import { crearSerie } from '@/test-utils/fixtures'
 
 jest.mock('@/lib/supabase/services/series.client', () => ({
   updateSerie: jest.fn().mockResolvedValue(undefined),
 }))
 
 const series = [
-  { id: 'ser-1', nombre: 'One Piece' },
-  { id: 'ser-2', nombre: 'Naruto' },
-  { id: 'ser-3', nombre: 'Berserk' },
+  crearSerie({ id: 'ser-1', nombre: 'One Piece' }),
+  crearSerie({ id: 'ser-2', nombre: 'Naruto' }),
+  crearSerie({ id: 'ser-3', nombre: 'Berserk' }),
 ]
 
 beforeEach(() => {

@@ -2,15 +2,16 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CategoriaTable from '@/components/CategoriaTable'
 import { updateCategoria } from '@/lib/supabase/services/categorias.client'
+import { crearCategoria } from '@/test-utils/fixtures'
 
 jest.mock('@/lib/supabase/services/categorias.client', () => ({
   updateCategoria: jest.fn().mockResolvedValue(undefined),
 }))
 
 const categorias = [
-  { id: 'cat-1', nombre: 'Shonen' },
-  { id: 'cat-2', nombre: 'Seinen' },
-  { id: 'cat-3', nombre: 'Kodomo' },
+  crearCategoria({ id: 'cat-1', nombre: 'Shonen' }),
+  crearCategoria({ id: 'cat-2', nombre: 'Seinen' }),
+  crearCategoria({ id: 'cat-3', nombre: 'Kodomo' }),
 ]
 
 beforeEach(() => {
