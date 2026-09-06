@@ -37,6 +37,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
+> `SUPABASE_SERVICE_ROLE_KEY` **bypasea todo el Row Level Security**. Solo se usa en el servidor (`src/utils/supabase/admin.ts`) y únicamente para la Admin API de Auth. Nunca la expongas con prefijo `NEXT_PUBLIC_`. Sin ella, `next build` falla al recolectar `/api/crear-usuario`.
+
 ### Contexto de uso
 
 - `NEXT_PUBLIC_SUPABASE_URL`
@@ -96,15 +98,22 @@ npm run test
 
 ## Permisos y roles
 
-El sistema utiliza `rol_id` para controlar acceso.
+El sistema utiliza `rol_id` (tabla `roles`) para controlar acceso:
 
-- `rol_id === 2`
-  - Usuario con permisos de administración.
-  - Puede acceder a rutas de administración y operar sobre módulos de gestión.
+| `rol_id` | Rol | Acceso |
+|---|---|---|
+| 1 | cliente | Tienda, su carrito, sus pedidos y sus direcciones |
+| 2 | moderador | Todo lo anterior + panel de administración |
+| 3 | admin | Todo lo anterior + puede cambiar roles y editar a otros admins |
 
-- `rol_id !== 2`
-  - Usuario sin permisos administrativos.
-  - Debe ser redirigido o bloqueado al intentar entrar a rutas admin.
+El panel exige **`rol_id >= 2`**, no `=== 2`.
+
+Esto se aplica en dos capas, y las dos importan:
+
+1. **En la app**: cada página bajo `/admin` verifica el rol y redirige a `/login` si no cumple.
+2. **En la base de datos**: todas las tablas tienen Row Level Security. Aunque alguien se salte la interfaz y llame directo a la API de Supabase con la anon key, solo verá lo suyo. Ver la sección de RLS en `AGENTS.md`.
+
+La verificación de la app por sí sola no es seguridad: protege la pantalla, no los datos.
 
 ### Rutas administrativas esperadas
 

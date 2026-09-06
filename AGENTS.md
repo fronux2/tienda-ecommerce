@@ -193,6 +193,54 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 
 `middleware.ts` refreshes Supabase session + redirects unauthenticated users to `/login` **only on protected routes**. Public routes are defined in `publicPaths`: `/`, `/login`, `/auth`, `/mangas`, `/busqueda`, `/cart`, `/error`, `/unauthorized`, `/registro`. The matcher excludes `_next/static`, `_next/image`, favicon, and static image files.
 
+## Row Level Security (base de datos)
+
+**Todas las tablas de `public` tienen RLS activo.** Antes estaba apagado y cualquiera con la anon key podía leer o borrar cualquier fila. Las migraciones viven en `supabase/migrations/`.
+
+Dos funciones helper resuelven el rol, ambas `SECURITY DEFINER` para evitar recursión al consultar `usuarios` desde una política sobre `usuarios`:
+
+- `public.is_staff()` → `rol_id >= 2` (moderador o admin)
+- `public.is_admin()` → `rol_id = 3`
+
+Modelo de acceso:
+
+| Tabla | anon | Cliente autenticado | Staff (`rol_id >= 2`) |
+|---|---|---|---|
+| `mangas`, `categorias`, `series`, `roles` | lectura | lectura | lectura + escritura (`mangas` inactivos solo los ve staff) |
+| `usuarios` | — | su propia fila (lectura y edición) | todas |
+| `direcciones` | — | solo las suyas (CRUD) | lectura de todas |
+| `carrito` | — | solo el suyo (CRUD) | — |
+| `pedidos` | — | lectura de los suyos | lectura, edición y borrado |
+| `detalle_pedidos` | — | lectura vía sus pedidos | todas |
+| `log_pedidos` | — | — | lectura |
+
+Cosas que hay que respetar al tocar esto:
+
+- **Los pedidos NO se insertan directo**: se crean con el RPC `crear_pedido_completo` (`SECURITY DEFINER`), que valida `p_usuario_id = auth.uid()`, recalcula el total contra los precios de la base y descuenta stock atómicamente. Por eso no hay política de INSERT en `pedidos` ni `detalle_pedidos`.
+- **Un cliente cancela con el RPC `cancelar_pedido`**, no con un UPDATE. Ver la sección de cancelación.
+- **`usuarios.rol_id` está protegido por el trigger `proteger_cambio_rol`**: solo un admin puede cambiar roles o tocar la fila de otro admin. Sin él, cualquiera podría auto-ascenderse editando su propia fila.
+- **Las vistas usan `security_invoker = true`.** Sin eso, una vista se ejecuta con los permisos de su dueño y **saltaría el RLS** de las tablas que consulta.
+- **Los triggers de auditoría son `SECURITY DEFINER`**: si no, el INSERT en `log_pedidos` fallaría al no haber política de escritura, y tumbaría el UPDATE del pedido entero.
+- **Storage**: escribir en el bucket `mangas` exige `is_staff()`. La lectura es pública (bucket público).
+- La service role key (`src/utils/supabase/admin.ts`) **bypasea todo el RLS**. Solo se usa para `auth.admin.*`, nunca para tablas de negocio.
+
+Para verificar políticas sin levantar la app, se puede simular un rol por SQL:
+
+```sql
+begin;
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"<uuid del usuario>","role":"authenticated"}';
+select count(*) from public.pedidos;
+rollback;
+```
+
+## Cancelación de pedidos por el cliente
+
+- RPC `cancelar_pedido(p_pedido_id)` en `supabase/migrations/`. Valida que el pedido sea de `auth.uid()` y que siga en `pendiente` o `procesando`, repone el stock que descontó `crear_pedido_completo` y marca `cancelado`, todo en una transacción con `FOR UPDATE`.
+- UI en `src/components/perfil/CancelarPedido.tsx`, dentro del detalle del pedido. Confirmación en dos pasos, no `window.confirm`.
+- **No reembolsa**: la devolución de Webpay se gestiona a mano y el panel de confirmación se lo dice al cliente.
+- Avisa al cliente reutilizando el correo `pedido-actualizado`. Todavía no hay aviso por correo al admin.
+
 ## Testing patterns
 
 - Jest 30 + `@testing-library/react` with jsdom + `@testing-library/user-event`
@@ -201,7 +249,17 @@ Agregar estado `loading` local (o `savingAddress`/`isSubmitting`) que:
 - Run single file: `npx jest src/__tests__/Foo.test.tsx`
 - All test content is in **Spanish** (describe/it names, assertions, mock data)
 
-### Test files (19 suites, 185 tests)
+### Fixtures
+
+Usa las factories tipadas de `src/test-utils/fixtures.ts` (`crearManga`, `crearSerie`, `crearCategoria`): devuelven el objeto completo y aceptan overrides parciales, así el test declara solo lo que le importa sin romper el tipado. **No escribas objetos parciales a mano** (`{ id, nombre }`) — es lo que tenía el chequeo de tipos en 63 errores. Viven fuera de `__tests__` porque Jest tomaría ese archivo como una suite vacía.
+
+### Cuidado con las aserciones sobre clases CSS
+
+Varios tests afirmaban sobre clases de Tailwind literales (`text-red-500`, `text-gray-400`, `green`) y se rompieron cuando el sistema de diseño pasó a tokens (`text-danger`, `text-text-muted`, `text-success`). Uno incluso pasaba **por el motivo equivocado**: comprobaba la ausencia de una clase que ya no existía en ningún caso, así que habría seguido verde con el permiso roto.
+
+Prefiere aserciones de comportamiento (¿el doble clic abre el editor?) y, cuando el estado visual sea el contrato, apunta al token semántico, no al color.
+
+### Test files (17 suites, 183 tests — todas en verde)
 
 | Archivo | Cubre |
 |---------|-------|
@@ -286,15 +344,18 @@ await user.upload(fileInput, file)
 
 ## Registration (`/registro`)
 
-- **Página pública** en `src/app/registro/page.tsx` — formulario con email, password, confirmar password. Usa `react-hook-form` + `registroSchema` (Zod, incluye `refine` para verificar que las contraseñas coincidan).
+- **Página pública** en `src/app/registro/page.tsx` — formulario con email, password, confirmar password. Usa `react-hook-form` + `registroSchema` (Zod, incluye `refine` para verificar que las contraseñas coincidan). Muestra en vivo `PasswordRequisitos` (medidor de longitud + sellos por regla) y `PasswordCoincidencia`.
+- **Reglas de contraseña**: mínimo 10 caracteres, con mayúscula, minúscula, número y símbolo. Alineadas con lo configurado en Authentication → Providers del panel de Supabase.
 - **Server action** en `src/app/registro/actions.ts` — `registrarAction`:
   1. Valida con `registroSchema`
-  2. Crea usuario via `supabaseAdmin.auth.admin.createUser({ email, password, email_confirm: true })`
-  3. Inicia sesión automática con `supabase.auth.signInWithPassword()`
-  4. Redirige a `/`
-- En caso de error (email duplicado, etc.) redirige a `/error`.
+  2. Rechaza contraseñas filtradas consultando HaveIBeenPwned por k-anonimato (`src/lib/auth/passwordFiltrada.ts`). Si la API falla o tarda más de 3s, deja pasar: bloquear por un servicio externo caído es peor que el riesgo que evita.
+  3. Crea el usuario con `supabase.auth.signUp()` y `emailRedirectTo` a `/auth/confirm`
+  4. Redirige a `/registro/confirmar` ("Revisa tu correo")
+- **La cuenta queda pendiente hasta que se abre el enlace del correo.** Antes se usaba `admin.createUser({ email_confirm: true })` con login automático, lo que permitía registrarse con la dirección de otra persona.
+- Requiere en el panel de Supabase: plantilla de "Confirm signup" apuntando a `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/`, y el Site URL / Redirect URLs del dominio de producción.
+- En caso de error redirige a `/error`, que explica el motivo cuando se pasa `?motivo=` (hoy `password-filtrada`).
 - El link "Crear cuenta nueva" en `/login` apunta a `/registro`.
-- La API route `/api/crear-usuario` (usada por el admin panel) **no se modificó** — coexiste con el nuevo flujo público.
+- La API route `/api/crear-usuario` (usada por el admin panel para dar de alta usuarios ya confirmados) **exige sesión con `rol_id >= 2`, verificada en el servidor**. Antes no validaba nada: un POST con curl creaba cuentas usando la service role key.
 
 ## Webpay Plus (Transbank)
 
